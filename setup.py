@@ -3,7 +3,10 @@ from setuptools import setup
 
 
 FULLNAME = "Trunov Andrew"
+
+PROJECT_YEAR = 2024
 CURRENT_YEAR = datetime.now().year
+LICENSE_YEAR = str(PROJECT_YEAR) + "-" + str(CURRENT_YEAR)
 
 
 with open("README.md", "r") as file:
@@ -12,7 +15,7 @@ with open("README.md", "r") as file:
 
 with open("LICENSE", "r") as file:
     license = file.read()
-    license = license.replace("[year]", str(CURRENT_YEAR))
+    license = license.replace("[year]", LICENSE_YEAR)
     license = license.replace("[fullname]", FULLNAME)
 
 
