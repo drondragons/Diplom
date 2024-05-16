@@ -1,6 +1,5 @@
 from datetime import datetime
-from setuptools import setup
-import setuptools
+from setuptools import setup, find_packages
 
 
 FULLNAME = "Trunov Andrew"
@@ -51,5 +50,8 @@ setup(
     description="Дипломная работа",
     url="https://github.com/drondragons/Diplom",
     long_description=readme,
+    long_description_content_type="text/markdown",
     license=license,
+    packages=find_packages("src"),
+    package_dir={"": "src"}
 )
