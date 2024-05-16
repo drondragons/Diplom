@@ -20,14 +20,13 @@ class NumberValidator(Validator):
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
-        message = str()
-        if value < minimum:
-            message = f"Недопустимое значение ({format_number(value)})! \
-Значение должно быть не меньше {format_number(minimum)}!"
-        if value > maximum:
-            message = f"Недопустимое значение ({format_number(value)})! \
-Значение должно быть не больше {format_number(maximum)}!"
-        return (ValueError, message) if message else (None, message)
+        new_minimum = min(minimum, maximum)
+        new_maximum = max(minimum, maximum)
+        if value < new_minimum:
+            return ValueError, f"Недопустимое значение ({format_number(value)})! Значение должно быть не меньше {format_number(new_minimum)}!"
+        if value > new_maximum:
+            return ValueError, f"Недопустимое значение ({format_number(value)})! Значение должно быть не больше {format_number(new_maximum)}!"
+        return None, str()
     
     @classmethod
     def validate(
@@ -100,7 +99,11 @@ class FractionValidator(NumberValidator):
         minimum: Fraction = DEFAULT_NUMBER_MINIMUM, 
         maximum: Fraction = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        return super().validate(value, Fraction, minimum, maximum)
+        exception, message = cls.validate_type(value, Fraction)
+        if not exception:
+            exception, message = super().validate(float(value), float, minimum, maximum)
+        return exception, message
+            
     
     def __new__(cls) -> None:
         super().__new__(cls)

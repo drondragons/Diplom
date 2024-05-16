@@ -31,8 +31,7 @@ class Validator:
     def validate_type(cls, value: object, expected_type: type) -> Tuple[None | TypeError, str]:
         return (None, str()) \
             if isinstance(value, expected_type) else \
-                (TypeError, f"""Недопустимый тип '{type(value).__name__}'! 
-Ожидался тип {cls.format_union_types(expected_type)}!""")
+                (TypeError, f"Недопустимый тип '{type(value).__name__}'! Ожидался тип {cls.format_union_types(expected_type)}!")
             
     @classmethod
     def validate_value(cls, value: object, compareTo: object) -> Tuple[None | ValueError, str]:

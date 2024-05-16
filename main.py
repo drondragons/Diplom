@@ -1,16 +1,15 @@
-from src import Validator, NumberValidator, FractionValidator
+from src import Validator, NumberValidator, FractionValidator, IntValidator, DecimalValidator, ListValidator
 # from config import add_project_to_path
 
 from fractions import Fraction
+from decimal import Decimal
 
-def main() -> None:
-    # add_project_to_path()
-    e, m = Validator.validate_type(1.0, int)
-    print(e)
-    print(m)
+def main() -> None:    
+    e, m = ListValidator.validate([str(), 1], str, 1, 2)
+    print(e, m)
     
-    print(Fraction())
-    print(FractionValidator.validate(Fraction()))
+    e, m = FractionValidator.validate(Fraction(1), 0, 1)
+    print(e, m)
     
 
 if __name__ == "__main__":
