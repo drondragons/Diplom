@@ -1,5 +1,5 @@
-PACKAGE_NAME = Diploma-work
+.PHONY: clean
 
-PYTHON = python
-
-.DEFAULT_GOAL := help
+clean:
+	rm -rf build 
+	rm -rf src/*.egg-info
