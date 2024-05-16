@@ -1,6 +1,6 @@
 from typing import Tuple
 from .constants import *
-from . import format_number
+from .. import format_number
 from .validator import Validator
 
 __all__ = [
@@ -99,11 +99,7 @@ class FractionValidator(NumberValidator):
         minimum: Fraction = DEFAULT_NUMBER_MINIMUM, 
         maximum: Fraction = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type(value, Fraction)
-        if not exception:
-            exception, message = super().validate(float(value), float, minimum, maximum)
-        return exception, message
+        return super().validate(value, Fraction, minimum, maximum,)
             
-    
     def __new__(cls) -> None:
         super().__new__(cls)

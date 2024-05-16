@@ -1,5 +1,5 @@
 from .constants import *
-from . import format_number
+from .. import format_number
 from typing import List, Tuple
 from .validator import Validator
 
