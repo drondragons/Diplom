@@ -9,8 +9,8 @@ class Validator:
     
     @classmethod
     @abstractmethod
-    def validate() -> str:    
-        raise NotImplementedError("Нереализованный абстрактный статический метод validate!")
+    def validate(cls) -> str:    
+        raise NotImplementedError(f"\n\t{cls.__name__}: Нереализованный абстрактный статический метод validate!")
     
     @classmethod
     def format_union_types(cls, types: Union[Type]) -> str:
@@ -40,4 +40,4 @@ class Validator:
                 (ValueError, f"Несовпадение значения ({value}) с ({compareTo})!")
     
     def __new__(cls) -> None:
-        raise TypeError(f"Экземпляры класса '{cls.__name__}' не могут быть созданы!")
+        raise TypeError(f"\n\t{cls.__name__}: Экземпляры класса '{cls.__name__}' не могут быть созданы!")

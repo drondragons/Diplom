@@ -8,7 +8,12 @@ from src import Real, OPERATORS
 
 from src.measurement import Meter
 
+from src.factory_method import RealFactoryMethod
+
 def main() -> None:    
+    # IntValidator()
+    ListValidator()
+    
     # Real(123).__index__()
     # ~Real()
     # str() == Real()
@@ -26,13 +31,13 @@ def main() -> None:
     print(Real().__add__(134894))
     try:
         # Real().__len__
-        Real("vdkf")
+        print(Meter(Real(122930942)))
     
     except Exception as e:
         print(e)
     
     
-    
+    Meter()
     
     # e, m = ListValidator.validate([str(), 1], str, 1, 2)
     # print(e, m)

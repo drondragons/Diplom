@@ -40,9 +40,6 @@ class NumberValidator(Validator):
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)
         return exception, message
-        
-    def __new__(cls) -> None:
-        super().__new__(cls)
     
 
 class IntValidator(NumberValidator):
@@ -55,9 +52,6 @@ class IntValidator(NumberValidator):
         maximum: int = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
         return super().validate(value, int, minimum, maximum)
-    
-    def __new__(cls) -> None:
-        super().__new__(cls)
         
 
 class FloatValidator(NumberValidator):
@@ -71,9 +65,6 @@ class FloatValidator(NumberValidator):
     ) -> Tuple[None | TypeError | ValueError, str]:
         return super().validate(value, float, minimum, maximum)
     
-    def __new__(cls) -> None:
-        super().__new__(cls)
-        
         
 class DecimalValidator(NumberValidator):
     
@@ -85,9 +76,6 @@ class DecimalValidator(NumberValidator):
         maximum: Decimal = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
         return super().validate(value, Decimal, minimum, maximum)
-    
-    def __new__(cls) -> None:
-        super().__new__(cls)
         
         
 class FractionValidator(NumberValidator):
@@ -99,7 +87,4 @@ class FractionValidator(NumberValidator):
         minimum: Fraction = DEFAULT_NUMBER_MINIMUM, 
         maximum: Fraction = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        return super().validate(value, Fraction, minimum, maximum,)
-            
-    def __new__(cls) -> None:
-        super().__new__(cls)
+        return super().validate(value, Fraction, minimum, maximum)

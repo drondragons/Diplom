@@ -25,17 +25,6 @@ class ListValidator(Validator):
             return ValueError, f"Слишком большое количество элементов ({format_number(value)})! Количество элементов должно быть не больше {format_number(maximum)}!"
         return None, str()
 
-    # @classmethod
-    # def validateListElements(
-    #     cls, 
-    #     value: list,
-    #     _type: type,
-    #     compareTo: object,
-    #     message: str = str()
-    # ) -> None:
-    #     cls.validateElementsType(value, _type, message)
-    #     cls.validateElementsValue(value, compareTo, message)
-
     @classmethod
     def validate_elements_type(
         cls,
@@ -49,47 +38,6 @@ class ListValidator(Validator):
                 message = f"Недопустимый тип '{type(element).__name__}' элемента №{index}! Ожидался тип {cls.format_union_types(expected_type)}!"
                 break
         return (TypeError, message) if message else (None, message)
-
-    # @classmethod
-    # def validateElementsType(
-    #     cls,
-    #     value: list,
-    #     _type: type, 
-    #     message: str = str()
-    # ) -> None:
-    #     for index, element in enumerate(value):
-    #         cls.validateType(
-    #             element, 
-    #             _type, 
-    #             f"элемента №{index} списка {message}"
-    #         )
-            
-    # @classmethod
-    # def validateElementsValue(
-    #     cls, 
-    #     value: list,
-    #     compareTo: object,
-    #     message: str = str()
-    # ) -> None:
-    #     for index, element in enumerate(value):
-    #         cls.validateValue(
-    #             element, 
-    #             compareTo, 
-    #             f"элемента №{index} списка {message}"
-    #         ) 
-    
-    # @classmethod
-    # def validateListElementTypes(
-    #     cls,
-    #     value: list,
-    #     elementType: type,
-    #     minimum: float = DEFAULT_MINIMUM_NUMBER, 
-    #     maximum: float = DEFAULT_MAXIMUM_NUMBER, 
-    #     message: str = str()
-    # ) -> None:
-    #     cls.validateType(value, list, message)
-    #     cls.validateInterval(value, minimum, maximum, message)
-    #     cls.validateElementsType(value, elementType, message)
         
     @classmethod
     def validate(
@@ -105,6 +53,3 @@ class ListValidator(Validator):
         if not exception:
             exception, message = cls.validate_elements_type(value, element_type)
         return exception, message
-        
-    def __new__(cls) -> None:
-        super().__new__(cls)

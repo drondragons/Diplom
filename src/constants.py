@@ -1,7 +1,5 @@
 import operator
 
-DEFAULT_REAL_VALUE = 0
-
 COMPARISON_OPERATORS = {
     operator.eq: "==",
     operator.ne: "!=",

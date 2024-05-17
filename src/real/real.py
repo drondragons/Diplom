@@ -1,9 +1,10 @@
 import math
 import operator
+from typing import Tuple
 from .. import format_number
-from typing import Any, Tuple
+from ..constants import OPERATORS
+from .constants import DEFAULT_REAL_VALUE
 from ..validators.constants import NUMBER_TYPES
-from .constants import DEFAULT_REAL_VALUE, OPERATORS
 from ..validators.number_validator import NumberValidator
 
 __all__ = [
@@ -94,7 +95,7 @@ class Real:
         return ~self
     def __invert__(self) -> "Real":
         message = f"Операция {OPERATORS[operator.inv]}{self.class_name} недоступна!"
-        raise TypeError(self.__error(message))
+        raise TypeError(Real.__error(self, message))
     
     def __floor__(self) -> "Real":
         return Real(math.floor(self.value))
