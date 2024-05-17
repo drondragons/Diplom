@@ -1,10 +1,10 @@
 from src import Validator, NumberValidator, FractionValidator, IntValidator, DecimalValidator, ListValidator
-# from config import add_project_to_path
 
 from fractions import Fraction
 from decimal import Decimal
 import math
 import sys
+from src import Real, OPERATORS
 
 from src.measurement import Meter
 
@@ -23,7 +23,7 @@ def main() -> None:
     
     t = [dir(int), dir(float), dir(Decimal), dir(Fraction)]
     for item in t:
-        print("__sizeof__" in item)
+        print("__or__" in item)
         
     print(math.floor(Meter(Fraction(12323/234))))
     print(math.ceil(Meter(Fraction(12323/234))))
@@ -40,6 +40,26 @@ def main() -> None:
     print(Meter(Fraction(123/243)).__sizeof__())
     print(sys.getsizeof(object()))
     
+    # print(len(int(1)))
+    
+    print(1 == Real(1))
+    print(Real(1) == 1)
+    print(1 != Real(1))
+    print(Real(1) != 1)
+    print(1 < Real(1))
+    print(Real(1) < 1)
+    print(1 > Real(1))
+    print(Real(1) > 1)
+    print(1 <= Real(1))
+    print(Real(1) <= 1)
+    print(1 >= Real(1))
+    print(Real(1) >= 1)
+    
+    # print(~Real(1))
+    print(Real(1).__inv__())
+    print(Real(1).__invert__())
+    
+    print(OPERATORS)
     
     # '__add__', '__and__', '__bool__', '__class__',
     # '__delattr__', '__dir__', '__divmod__', '__doc__', '__eq__',

@@ -35,10 +35,10 @@ class Meter:
         
     def __format_value(self) -> str:
         meter_forms = [self.FULL_FORM + form for form in DEFAULT_PLURAL_FORM]
-        return f"{format_number(self.value)} {format_plural_form(self.value, meter_forms)}"
+        return f"{format_number(self.value)} {format_plural_form(self.value, meter_forms)}\n"
         
     def __str__(self) -> str:
-        return f"{self.__format_value()}\n"
+        return self.__format_value()
     
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} (value: {self.value})"
