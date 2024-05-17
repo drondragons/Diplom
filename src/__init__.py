@@ -4,6 +4,7 @@ from fractions import Fraction
 def format_number(value: object) -> str:
     if isinstance(value, float | Fraction):
         value = Decimal(float(value))
+    value = get_pretty_number(value)
     return "{:,}".format(value).replace(",", " ")
 
 def get_pretty_number(value: object) -> int | float:
