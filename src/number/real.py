@@ -1,7 +1,7 @@
 import math
 import operator
-from typing import Tuple
 from .. import format_number
+from typing import Any, Tuple
 from ..validators.constants import NUMBER_TYPES
 from .constants import DEFAULT_REAL_VALUE, OPERATORS
 from ..validators.number_validator import NumberValidator
@@ -245,8 +245,16 @@ class Real:
     
     def __format__(self, format_spec: str = str(), /) -> "Real":
         message = f"Операция форматирования (format({self.class_name})) недоступна!"
-        raise TypeError(self.__error(message))
+        raise TypeError(Real.__error(self, message))
     
     def __index__(self) -> "Real":
         message = f"Операция индексирования (Iterable[{self.class_name}]) недоступна!"
-        raise TypeError(self.__error(message))
+        raise TypeError(Real.__error(self, message))
+    
+    def __getattribute__(self, name: str) -> str:
+        try:
+            return super().__getattribute__(name)
+        except AttributeError:
+            pass
+        message = f"Класс '{self.class_name}' не содержит атрибут {name}!"
+        raise AttributeError(Real.__error(self, message))

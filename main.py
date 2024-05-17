@@ -21,7 +21,17 @@ def main() -> None:
     # print(str() - Real(10))
     # print(Real(10) @ 1)
     # print(10 @ Real(1))
-    print(str() @ Real())
+    # print(str() @ Real())
+    print(dir(Real))
+    print(Real().__add__(134894))
+    try:
+        # Real().__len__
+        Real("vdkf")
+    
+    except Exception as e:
+        print(e)
+    
+    
     
     
     # e, m = ListValidator.validate([str(), 1], str, 1, 2)
@@ -96,11 +106,11 @@ def main() -> None:
     
     # print(Real(3) @ 1)
     # # '__class__',
-    # '__delattr__', '__dir__', '__divmod__', '__doc__',
+    # '__delattr__', '__dir__', '__doc__',
     # '__getattribute__',
     # '__getnewargs__', '__init_subclass__',
     # '__new__', 
-    # '__rdivmod__', '__reduce__', '__reduce_ex__', 
+    # '__reduce__', '__reduce_ex__', 
     # '__setattr__', 
     # '__sizeof__', '__subclasshook__',
     # 'as_integer_ratio', 'bit_count', 'bit_length', 'conjugate', 'denominator',
