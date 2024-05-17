@@ -1,40 +1,34 @@
 import random
 from ..real import Real
+from .constants import *
 from ..validators import NUMBER_TYPES
+from .factory_method import FactoryMethod
 from ..validators import Validator, NumberValidator
 
 __all__ = [
     "RealFactoryMethod",
 ]
 
-class RealFactoryMethod:
-    
-    DEFAULT_MAXIMUM = 100
-    DEFAULT_MINIMUM = -DEFAULT_MAXIMUM
+class RealFactoryMethod(FactoryMethod):
     
     @classmethod
     def generate(
         cls, 
-        minimum: NUMBER_TYPES = DEFAULT_MINIMUM,
-        maximum: NUMBER_TYPES = DEFAULT_MAXIMUM,
+        minimum: NUMBER_TYPES = DEFAULT_MINIMUM_VALUE,
+        maximum: NUMBER_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True
     ) -> Real:
-        exception, message = Validator.validate_type(is_int, bool)
-        if exception:
-            raise exception(message)
-        
-        exception, message = NumberValidator.validate(minimum, NUMBER_TYPES)
-        if exception:
-            raise exception(message)
-        
-        exception, message = NumberValidator.validate(maximum, NUMBER_TYPES)
-        if exception:
-            raise exception(message)
-        
-        new_minimum = min(minimum, maximum)
-        new_maximum = max(minimum, maximum)
-    
+        methods = {
+            (is_int, bool): Validator.validate_type,
+            (minimum, NUMBER_TYPES): NumberValidator.validate,
+            (maximum, NUMBER_TYPES): NumberValidator.validate,
+        }
+        for arg, method in methods.items():
+            exception, message = method(*arg)
+            if exception:
+                raise exception(f"\n\t{cls.__name__}.generate: " + message)
         method = random.randint if is_int else random.uniform
+        new_minimum, new_maximum = min(minimum, maximum), max(minimum, maximum)
         return Real(method(new_minimum, new_maximum))
     
     def __new__(cls) -> None:

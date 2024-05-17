@@ -39,5 +39,5 @@ class Validator:
             if value == compareTo else \
                 (ValueError, f"Несовпадение значения ({value}) с ({compareTo})!")
     
-    def __new__(cls) -> None:
-        raise TypeError(f"\n\t{cls.__name__}: Экземпляры класса '{cls.__name__}' не могут быть созданы!")
+    def __new__(self) -> None:
+        raise TypeError(f"\n\t{self.__name__}: Экземпляры класса '{self.__name__}' не могут быть созданы!")

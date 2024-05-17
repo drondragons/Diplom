@@ -7,6 +7,9 @@ __all__ = [
 class FactoryMethod:
     
     @classmethod
+    @abstractmethod
+    def generate(cls) -> object:
+        raise NotImplementedError(f"\n\t{cls.__name__}: Нереализованный абстрактный статический метод generate!")
     
-    def __new__(cls) -> None:
-        raise TypeError(f"Экземпляры класса '{cls.__name__}' не могут быть созданы!")
+    def __new__(self) -> None:
+        raise TypeError(f"\n\t{self.__name__}: Экземпляры класса '{self.__name__}' не могут быть созданы!")

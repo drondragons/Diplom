@@ -244,15 +244,14 @@ class Real:
         
     # ------------------- Other magic methods ---------------------------
     
-    def __format__(self, format_spec: str = str(), /) -> "Real":
-        message = f"Операция форматирования (format({self.class_name})) недоступна!"
-        raise TypeError(Real.__error(self, message))
+    def __format__(self, format_spec: str = str(), /) -> str:
+        return self.__str__()
     
     def __index__(self) -> "Real":
         message = f"Операция индексирования (Iterable[{self.class_name}]) недоступна!"
         raise TypeError(Real.__error(self, message))
     
-    def __getattribute__(self, name: str) -> str:
+    def __getattribute__(self, name: str) -> None:
         try:
             return super().__getattribute__(name)
         except AttributeError:
