@@ -124,7 +124,7 @@
 # from src import Validator, IntValidator
 from src import MeterConverter, Meter, KiloMeter, CentiMeter, MeterFactoryMethod
 from src import Real, RealFactoryMethod
-from src import Money
+from src import Money, Dollar, Ruble
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
@@ -136,6 +136,9 @@ def main() -> None:
     t = Real(r)
     
     print(Money(133))
+    print(Money(78324))
+    print(Dollar(8394))
+    print(Ruble(192))
     
     # print(MeterConverter.convert(KiloMeter(Real(15)), CentiMeter))
     # print(MeterConverter.auto_convert(CentiMeter(Real(30000))))
