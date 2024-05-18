@@ -2,7 +2,7 @@ import math
 import operator
 from typing import Tuple
 
-from .constants import REAL_TYPES, DEFAULT_LENGTH_VALUE
+from .. import REAL_TYPES
 
 from ... import format_plural_form
 from ... import DEFAULT_PLURAL_FORM, OPERATORS
@@ -41,6 +41,8 @@ class Meter(metaclass=MeterMeta):
     FULL_FORM = "метр"
     PREFIX_METER = str()
     
+    DEFAULT_LENGTH_VALUE = 0
+    
     @property
     def class_name(self) -> str:
         return self.__class__.__name__
@@ -65,6 +67,9 @@ class Meter(metaclass=MeterMeta):
     def __format_value(self) -> str:
         meter_forms = [self.FULL_FORM + form for form in DEFAULT_PLURAL_FORM]
         return f"{self.value} {format_plural_form(self.value, meter_forms)}"
+        
+    def print_short_form(self) -> str:
+        return f"{self.value} {self.SHORT_FORM}\n"
         
     def __str__(self) -> str:
         return f"{self.__format_value()}\n"

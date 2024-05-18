@@ -1,12 +1,11 @@
 from .meter import Meter
 from .meter import METER_CLASSES
-from .meter_validator import MeterValidator
 
-from .constants import REAL_TYPES
-from ...real import Real, RealFactoryMethod
+from .. import REAL_TYPES
+
+from ...real import RealFactoryMethod
 
 from ...validators import Validator
-from ...validators import NUMBER_TYPES
 
 
 __all__ = [

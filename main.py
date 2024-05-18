@@ -124,6 +124,7 @@
 # from src import Validator, IntValidator
 from src import MeterConverter, Meter, KiloMeter, CentiMeter, MeterFactoryMethod
 from src import Real, RealFactoryMethod
+from src import Money
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
@@ -134,11 +135,13 @@ def main() -> None:
     r = Real(1)
     t = Real(r)
     
+    print(Money(133))
+    
     # print(MeterConverter.convert(KiloMeter(Real(15)), CentiMeter))
     # print(MeterConverter.auto_convert(CentiMeter(Real(30000))))
     print(RealFactoryMethod.generate(Real(), Real(3)))
     for _ in range(10):
-        print(MeterFactoryMethod.generate(1, 3))
+        print(MeterFactoryMethod.generate(2,))
     # print(RealValidator.validate(Real(1), 10))
     # print(RealFactoryMethod.generate(100, 90))
     # print(Meter(Real(1)))

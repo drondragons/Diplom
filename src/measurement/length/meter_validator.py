@@ -1,7 +1,8 @@
 from typing import Tuple
 
 from .meter import Meter
-from .constants import REAL_TYPES
+
+from .. import REAL_TYPES
 
 from ...real import RealValidator
 from ...validators import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM

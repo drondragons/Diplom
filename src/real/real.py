@@ -2,8 +2,6 @@ import math
 import operator
 from typing import Tuple
 
-from .constants import DEFAULT_REAL_VALUE
-
 from .. import format_number
 from ..constants import OPERATORS
 from ..validators import NUMBER_TYPES
@@ -20,6 +18,8 @@ class Real:
     __slots__ = [
         "__value"
     ]
+    
+    DEFAULT_REAL_VALUE = 0
     
     @property
     def class_name(self) -> str:
