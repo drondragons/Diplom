@@ -23,7 +23,13 @@ __all__ = [
 ]
 
 
-class Meter:
+class MeterMeta(type):
+
+    def __subclasscheck__(self, subclass: type) -> bool:
+        return subclass in METER_CLASSES
+
+
+class Meter(metaclass=MeterMeta):
     
     __slots__ = [
         "__value",
@@ -44,23 +50,24 @@ class Meter:
         return self.__value
     
     @value.setter
-    def value(self, value: Real) -> None:
-        exception, message = RealValidator.validate(value, 0)
+    def value(self, value: REAL_TYPES) -> None:
+        value = Real(value)
+        exception, message = RealValidator.validate_interval(value, 0)
         if exception:
             raise exception(f"\n\t{self.class_name}: {message}")
         self.__value = value
         
-    def __init__(self, value: Real = Real(DEFAULT_LENGTH_VALUE)) -> None:
-        self.value = value
+    def __init__(self, value: REAL_TYPES = DEFAULT_LENGTH_VALUE) -> None:
+        self.value = value.value if isinstance(value, Meter) else value
         
     # ------------------- Output ---------------------------
         
     def __format_value(self) -> str:
         meter_forms = [self.FULL_FORM + form for form in DEFAULT_PLURAL_FORM]
-        return f"{self.value} {format_plural_form(self.value, meter_forms)}\n"
+        return f"{self.value} {format_plural_form(self.value, meter_forms)}"
         
     def __str__(self) -> str:
-        return self.__format_value()
+        return f"{self.__format_value()}\n"
     
     def __repr__(self) -> str:
         return f"{self.class_name} (value: {self.__format_value()})"
@@ -286,7 +293,7 @@ class NanoMeter(Meter):
     
     PREFIX_FORM = "нано"
     SHORT_FORM = "н" + Meter.SHORT_FORM
-    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM    
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM   
 
 
 class DeciMeter(Meter):
@@ -350,3 +357,16 @@ class MicroMeter(Meter):
     PREFIX_FORM = "микро"
     SHORT_FORM = "мк" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
+    
+
+METER_CLASSES = [
+    KiloMeter,
+    Meter,
+    DeciMeter,
+    CentiMeter,
+    MilliMeter,
+    MicroMeter,
+    NanoMeter,
+    PikoMeter,
+    FemtoMeter,
+]

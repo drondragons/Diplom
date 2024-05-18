@@ -30,14 +30,14 @@ class Real:
         return self.__value
     
     @value.setter
-    def value(self, value: object) -> None:
+    def value(self, value: NUMBER_TYPES) -> None:
         exception, message = NumberValidator.validate(value, NUMBER_TYPES)
         if exception:
             raise exception(f"\n\t{self.class_name}: {message}")
         self.__value = value
         
-    def __init__(self, value: object = DEFAULT_REAL_VALUE) -> None:
-        self.value = value
+    def __init__(self, value: NUMBER_TYPES = DEFAULT_REAL_VALUE) -> None:
+        self.value = value.value if isinstance(value, Real) else value
         
     # ------------------- Output ---------------------------
         
