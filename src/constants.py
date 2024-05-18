@@ -1,4 +1,4 @@
-import operator
+from . import operator
 
 COMPARISON_OPERATORS = {
     operator.eq: "==",

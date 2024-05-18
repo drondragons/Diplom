@@ -1,9 +1,13 @@
 from abc import abstractmethod
-from typing import Type, Tuple, Union, get_args
+from typing import Type, Union, get_args
+
+from . import Tuple
+
 
 __all__ = [
-    "Validator"
+    "Validator",
 ]
+
 
 class Validator:
     

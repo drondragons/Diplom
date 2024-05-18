@@ -1,1 +1,1 @@
-from .real_factory_method import *
+from .factory_method import *

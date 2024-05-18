@@ -123,12 +123,26 @@
 
 from src import Validator, IntValidator
 
-from src.real import Real, RealValidator
-from src.factory_method import RealFactoryMethod
+from src.real import Real, RealValidator, RealFactoryMethod
+# from src.factory_method import RealFactoryMethod
+# from src.measurement import Meter, KiloMeter
 
 def main() -> None:
+    # Validator.validate()
+    print(RealFactoryMethod.generate())
     # print(RealValidator.validate(Real(1), 10))
-    print(RealFactoryMethod.generate(100, 90))
+    # print(RealFactoryMethod.generate(100, 90))
+    # print(Meter(Real(1)))
+    
+    # meter = Meter(Real(1.2348743))
+    # print(meter.__floor__())
+    # print(meter)
+     
+    # kilometer = KiloMeter(Real(-38924))
+    # print(kilometer)
+    # print(kilometer.class_name)
+    # print(kilometer != 38924)
+    # kilometer.jknsdjv
     
     
 

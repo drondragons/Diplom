@@ -1,9 +1,11 @@
-from typing import Tuple
+from . import Tuple
 from .validator import Validator
 
+
 __all__ = [
-    "StringValidator"
+    "StringValidator",
 ]
+
 
 class StringValidator(Validator):
     

@@ -1,10 +1,15 @@
 from abc import abstractmethod
 
+
 __all__ = [
-    "FactoryMethod"
+    "FactoryMethod",
 ]
 
+
 class FactoryMethod:
+    
+    DEFAULT_MAXIMUM_VALUE = 100
+    DEFAULT_MINIMUM_VALUE = -DEFAULT_MAXIMUM_VALUE
     
     @classmethod
     @abstractmethod

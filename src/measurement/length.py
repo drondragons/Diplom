@@ -1,13 +1,21 @@
 import math
 import operator
-from ..real import Real
+from typing import Tuple
 from ..constants import OPERATORS
 from .. import format_plural_form
-from ..validators.number_validator import NumberValidator
-from .constants import NUMBER_TYPES, DEFAULT_LENGTH_VALUE, DEFAULT_PLURAL_FORM
+from ..real import Real, RealValidator
+from .constants import DEFAULT_LENGTH_VALUE, DEFAULT_PLURAL_FORM, NUMBER_TYPES
 
 __all__ = [
     "Meter",
+    "NanoMeter",
+    "DeciMeter",
+    "KiloMeter",
+    "PikoMeter",
+    "MilliMeter",
+    "CentiMeter",
+    "FemtoMeter",
+    "MicroMeter",
 ]
 
 class Meter:
@@ -30,14 +38,12 @@ class Meter:
     
     @value.setter
     def value(self, value: Real) -> None:
-        print(type(value))
-        exception, message = NumberValidator.validate(value, Real, 0)
-        print(exception, message)
+        exception, message = RealValidator.validate(value, 0)
         if exception:
             raise exception(f"\n\t{self.class_name}: {message}")
         self.__value = value
         
-    def __init__(self, value: object = DEFAULT_LENGTH_VALUE) -> None:
+    def __init__(self, value: Real = Real(DEFAULT_LENGTH_VALUE)) -> None:
         self.value = value
         
     # ------------------- Output ---------------------------
@@ -72,18 +78,18 @@ class Meter:
     @staticmethod
     def __validate(right: object, left: object, operator: operator) -> None:
         message = Meter.__type_error(right, left, operator)
-        if not isinstance(right, Meter | Real | NUMBER_TYPES):
+        if not isinstance(right, Meter | NUMBER_TYPES):
             raise TypeError(Meter.__error(left, message))
-        if not isinstance(left, Meter | Real | NUMBER_TYPES):
-            raise TypeError(Real.__error(right, message))
+        if not isinstance(left, Meter | NUMBER_TYPES):
+            raise TypeError(Meter.__error(right, message))
     
     # ------------------- Operate ---------------------------
     
     @staticmethod
     def __operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, NUMBER_TYPES) and isinstance(left, Real):
+        if isinstance(right, NUMBER_TYPES) and isinstance(left, Meter):
             return operator(right, left.value)
-        if isinstance(right, Real) and isinstance(left, NUMBER_TYPES):
+        if isinstance(right, Meter) and isinstance(left, NUMBER_TYPES):
             return operator(right.value, left)
         return operator(right.value, left.value)
     
@@ -102,8 +108,7 @@ class Meter:
         return ~self
     def __invert__(self) -> "Meter":
         message = f"Операция {OPERATORS[operator.inv]}{self.class_name} недоступна!"
-        raise TypeError()
-        raise TypeError(f"'{self.__class__.__name__}': Бинарная операция инверсии (~self) недоступна!")
+        raise TypeError(Meter.__error(self, message))
     
     def __floor__(self) -> "Meter":
         return Meter(math.floor(self.value))
@@ -117,18 +122,169 @@ class Meter:
     def __float__(self) -> float:
         return float(self.value)
     
+    def __bool__(self) -> bool:
+        return self.value != 0
+    
     # ------------------- Binary operators ---------------------------
     
     def __round__(self, n: int = 0) -> "Meter":
         return Meter(round(self.value, n))
     
+    # ------------------- Comparison operators ---------------------------
     
-    def __format__(self, format_spec: str = str(), /) -> "Meter":
-        raise TypeError(f"'{self.__class__.__name__}': Операция форматирования (format(self)) недоступна!")
+    @staticmethod
+    def __compare(right: object, left: object, operator: operator) -> bool:
+        Meter.__validate(right, left, operator)
+        return Meter.__operate(right, left, operator)
+    
+    def __eq__(self, other: object) -> bool:
+        return Meter.__compare(self, other, operator.eq)
+    def __ne__(self, other: object) -> bool:
+        return Meter.__compare(self, other, operator.ne)
+    
+    def __lt__(self, other: object) -> bool:
+        return Meter.__compare(self, other, operator.lt)
+    def __le__(self, other: object) -> bool:
+        return Meter.__compare(self, other, operator.le)
+    
+    def __gt__(self, other: object) -> bool:
+        return Meter.__compare(self, other, operator.gt)
+    def __ge__(self, other: object) -> bool:
+        return Meter.__compare(self, other, operator.ge)
+    
+    # ------------------- Mathematical operators ---------------------------
+    
+    @staticmethod
+    def __math(right: object, left: object, operator: operator) -> "Meter":
+        Meter.__validate(right, left, operator)
+        return Meter(Meter.__operate(right, left, operator))
+    
+    def __add__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.add)
+    def __radd__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.add)
+    def __iadd__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.iadd)
+    
+    def __sub__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.sub)
+    def __rsub__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.sub)
+    def __isub__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.isub)
+    
+    def __mul__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.mul)
+    def __rmul__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.mul)
+    def __imul__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.imul)
+    
+    def __pow__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.pow)
+    def __rpow__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.pow)
+    def __ipow__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.ipow)
+    
+    def __truediv__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.truediv)
+    def __rtruediv__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.truediv)
+    def __itruediv__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.itruediv)
+    
+    def __floordiv__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.floordiv)
+    def __rfloordiv__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.floordiv)
+    def __ifloordiv__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.ifloordiv)
+    
+    def __mod__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.mod)
+    def __rmod__(self, other: object) -> "Meter":
+        return Meter.__math(other, self, operator.mod)
+    def __imod__(self, other: object) -> "Meter":
+        return Meter.__math(self, other, operator.imod)
+    
+    def __divmod__(self, other: object) -> Tuple["Meter", "Meter"]:
+        return (self // other, self % other)
+    def __rdivmod__(self, other: object) -> Tuple["Meter", "Meter"]:
+        return (other // self, other % self)
+    
+    def __matmul__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.matmul)))
+    def __rmatmul__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(other, self, operator.matmul)))
+    def __imatmul__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.imatmul)))
+        
+    def __rshift__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.rshift)))
+    def __rrshift__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(other, self, operator.rshift)))
+    def __irshift__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.irshift)))
+    
+    def __lshift__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.lshift)))
+    def __rlshift__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(other, self, operator.lshift)))
+    def __ilshift__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.ilshift)))
+        
+    def __or__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.or_)))
+    def __ror__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(other, self, operator.or_)))
+    def __ior__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.ior)))
+        
+    def __and__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.and_)))
+    def __rand__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(other, self, operator.and_)))
+    def __iand__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.iand)))
+        
+    def __xor__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.xor)))
+    def __rxor__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(other, self, operator.xor)))
+    def __ixor__(self, other: object) -> "Meter":
+        raise TypeError(Meter.__error(self, Meter.__type_error(self, other, operator.ixor)))
+    
+    # ------------------- Other magic methods ---------------------------
+    
+    def __format__(self, format_spec: str = str(), /) -> str:
+        return self.__str__()
     
     def __index__(self) -> "Meter":
-        raise TypeError(f"'{self.__class__.__name__}': Операция индексирования (self[index]) недоступна!")
+        message = f"Операция индексирования (Iterable[{self.class_name}]) недоступна!"
+        raise TypeError(Meter.__error(self, message))
     
+    def __getattribute__(self, name: str) -> None:
+        try:
+            return super().__getattribute__(name)
+        except AttributeError:
+            pass
+        message = f"Класс '{self.class_name}' не содержит атрибут {name}!"
+        raise AttributeError(Meter.__error(self, message))
+    
+
+class NanoMeter(Meter):
+    
+    PREFIX_FORM = "нано"
+    SHORT_FORM = "н" + Meter.SHORT_FORM
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM    
+
+
+class DeciMeter(Meter):
+    
+    PREFIX_FORM = "деци"
+    SHORT_FORM = "д" + Meter.SHORT_FORM
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
     
     
 class KiloMeter(Meter):
@@ -137,23 +293,37 @@ class KiloMeter(Meter):
     SHORT_FORM = "к" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
     
-    
-class NanoMeter(Meter):
-    
-    PREFIX_FORM = "нано"
-    SHORT_FORM = "н" + Meter.SHORT_FORM
-    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
-    
-    
-class DeciMeter(Meter):
-    
-    PREFIX_FORM = "деци"
-    SHORT_FORM = "д" + Meter.SHORT_FORM
-    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
-    
 
 class PikoMeter(Meter):
     
     PREFIX_FORM = "пико"
     SHORT_FORM = "п" + Meter.SHORT_FORM
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
+    
+    
+class MilliMeter(Meter):
+    
+    PREFIX_FORM = "милли"
+    SHORT_FORM = "м" + Meter.SHORT_FORM
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
+    
+    
+class CentiMeter(Meter):
+    
+    PREFIX_FORM = "санти"
+    SHORT_FORM = "с" + Meter.SHORT_FORM
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
+    
+
+class FemtoMeter(Meter):
+    
+    PREFIX_FORM = "фемто"
+    SHORT_FORM = "ф" + Meter.SHORT_FORM
+    FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
+    
+
+class MicroMeter(Meter):
+    
+    PREFIX_FORM = "микро"
+    SHORT_FORM = "мк" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM

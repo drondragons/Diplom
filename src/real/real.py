@@ -1,15 +1,18 @@
 import math
-import operator
-from typing import Tuple
-from .. import format_number
-from ..constants import OPERATORS
+
+from . import NUMBER_TYPES
+from . import Tuple, NumberValidator
+
 from .constants import DEFAULT_REAL_VALUE
-from ..validators.constants import NUMBER_TYPES
-from ..validators.number_validator import NumberValidator
+
+from .. import operator, format_number
+from ..constants import OPERATORS
+
 
 __all__ = [
-    "Real"
+    "Real",
 ]
+
 
 class Real:
     

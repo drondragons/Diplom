@@ -1,7 +1,9 @@
-from typing import Tuple
-from .constants import *
-from .. import format_number
 from .validator import Validator
+from . import Tuple, Decimal, Fraction
+from .constants import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
+
+from .. import format_number
+
 
 __all__ = [
     "NumberValidator", 
@@ -10,6 +12,7 @@ __all__ = [
     "DecimalValidator",
     "FractionValidator",
 ]
+
 
 class NumberValidator(Validator):
     

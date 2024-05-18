@@ -1,5 +1,4 @@
-from decimal import Decimal
-from fractions import Fraction
+from . import Decimal, Fraction
 
 NUMBER_TYPES = int | float | Decimal | Fraction
 
