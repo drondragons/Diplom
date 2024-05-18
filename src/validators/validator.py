@@ -1,7 +1,5 @@
 from abc import abstractmethod
-from typing import Type, Union, get_args
-
-from . import Tuple
+from typing import Type, Union, Tuple, get_args
 
 
 __all__ = [

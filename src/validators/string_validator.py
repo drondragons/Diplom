@@ -1,4 +1,4 @@
-from . import Tuple
+from typing import Tuple
 from .validator import Validator
 
 

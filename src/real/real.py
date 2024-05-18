@@ -1,12 +1,13 @@
 import math
-
-from . import NUMBER_TYPES
-from . import Tuple, NumberValidator
+import operator
+from typing import Tuple
 
 from .constants import DEFAULT_REAL_VALUE
 
-from .. import operator, format_number
+from .. import format_number
 from ..constants import OPERATORS
+from ..validators import NUMBER_TYPES
+from ..validators import NumberValidator
 
 
 __all__ = [

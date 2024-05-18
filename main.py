@@ -121,15 +121,17 @@
 #     # 'as_integer_ratio', 'bit_count', 'bit_length', 'conjugate', 'denominator',
 #     # 'from_bytes', 'imag', 'numerator', 'real', 'to_bytes'
 
-from src import Validator, IntValidator
-
-from src.real import Real, RealValidator, RealFactoryMethod
+# from src import Validator, IntValidator
+from src import MeterConverter, Meter, KiloMeter, CentiMeter
+from src import Real
+# from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
 
 def main() -> None:
     # Validator.validate()
-    print(RealFactoryMethod.generate())
+    print(MeterConverter.convert(KiloMeter(Real(15)), CentiMeter))
+    # print(RealFactoryMethod.generate())
     # print(RealValidator.validate(Real(1), 10))
     # print(RealFactoryMethod.generate(100, 90))
     # print(Meter(Real(1)))

@@ -1,10 +1,14 @@
 import math
 import operator
 from typing import Tuple
-from ..constants import OPERATORS
-from .. import format_plural_form
-from ..real import Real, RealValidator
-from .constants import DEFAULT_LENGTH_VALUE, DEFAULT_PLURAL_FORM, NUMBER_TYPES
+
+from .constants import REAL_TYPES, DEFAULT_LENGTH_VALUE
+
+from ... import format_plural_form
+from ... import DEFAULT_PLURAL_FORM, OPERATORS
+
+from ...real import Real, RealValidator
+
 
 __all__ = [
     "Meter",
@@ -18,11 +22,14 @@ __all__ = [
     "MicroMeter",
 ]
 
+
 class Meter:
     
     __slots__ = [
         "__value",
     ]
+    
+    SIZE_SI = 10 ** 0
     
     SHORT_FORM = "м"
     FULL_FORM = "метр"
@@ -78,18 +85,18 @@ class Meter:
     @staticmethod
     def __validate(right: object, left: object, operator: operator) -> None:
         message = Meter.__type_error(right, left, operator)
-        if not isinstance(right, Meter | NUMBER_TYPES):
+        if not isinstance(right, Meter | REAL_TYPES):
             raise TypeError(Meter.__error(left, message))
-        if not isinstance(left, Meter | NUMBER_TYPES):
+        if not isinstance(left, Meter | REAL_TYPES):
             raise TypeError(Meter.__error(right, message))
     
     # ------------------- Operate ---------------------------
     
     @staticmethod
     def __operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, NUMBER_TYPES) and isinstance(left, Meter):
+        if isinstance(right, REAL_TYPES) and isinstance(left, Meter):
             return operator(right, left.value)
-        if isinstance(right, Meter) and isinstance(left, NUMBER_TYPES):
+        if isinstance(right, Meter) and isinstance(left, REAL_TYPES):
             return operator(right.value, left)
         return operator(right.value, left.value)
     
@@ -275,12 +282,16 @@ class Meter:
 
 class NanoMeter(Meter):
     
+    SIZE_SI = 10 ** (-9)
+    
     PREFIX_FORM = "нано"
     SHORT_FORM = "н" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM    
 
 
 class DeciMeter(Meter):
+    
+    SIZE_SI = 10 ** (-1)
     
     PREFIX_FORM = "деци"
     SHORT_FORM = "д" + Meter.SHORT_FORM
@@ -289,12 +300,16 @@ class DeciMeter(Meter):
     
 class KiloMeter(Meter):
     
+    SIZE_SI = 10 ** 3
+    
     PREFIX_FORM = "кило"
     SHORT_FORM = "к" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
     
 
 class PikoMeter(Meter):
+    
+    SIZE_SI = 10 ** (-12)
     
     PREFIX_FORM = "пико"
     SHORT_FORM = "п" + Meter.SHORT_FORM
@@ -303,12 +318,16 @@ class PikoMeter(Meter):
     
 class MilliMeter(Meter):
     
+    SIZE_SI = 10 ** (-3)
+    
     PREFIX_FORM = "милли"
     SHORT_FORM = "м" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
     
     
 class CentiMeter(Meter):
+    
+    SIZE_SI = 10 ** (-2)
     
     PREFIX_FORM = "санти"
     SHORT_FORM = "с" + Meter.SHORT_FORM
@@ -317,12 +336,16 @@ class CentiMeter(Meter):
 
 class FemtoMeter(Meter):
     
+    SIZE_SI = 10 ** (-15)
+    
     PREFIX_FORM = "фемто"
     SHORT_FORM = "ф" + Meter.SHORT_FORM
     FULL_FORM = PREFIX_FORM + Meter.FULL_FORM
     
 
 class MicroMeter(Meter):
+    
+    SIZE_SI = 10 ** (-6)
     
     PREFIX_FORM = "микро"
     SHORT_FORM = "мк" + Meter.SHORT_FORM

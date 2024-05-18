@@ -1,9 +1,9 @@
 import random
 
-from . import NUMBER_TYPES
-from . import Validator, NumberValidator
-
 from .real import Real
+
+from ..validators import NUMBER_TYPES
+from ..validators import Validator, NumberValidator
 
 from ..factory_method import FactoryMethod
 

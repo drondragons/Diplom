@@ -1,6 +1,5 @@
-from typing import List
+from typing import List, Tuple
 
-from . import Tuple
 from .validator import Validator
 from .constants import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 

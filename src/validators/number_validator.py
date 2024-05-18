@@ -1,5 +1,8 @@
+from typing import Tuple
+from decimal import Decimal
+from fractions import Fraction
+
 from .validator import Validator
-from . import Tuple, Decimal, Fraction
 from .constants import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 
 from .. import format_number

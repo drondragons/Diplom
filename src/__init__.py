@@ -1,4 +1,3 @@
-import operator
 from decimal import Decimal
 from fractions import Fraction
 

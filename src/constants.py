@@ -1,4 +1,4 @@
-from . import operator
+import operator
 
 COMPARISON_OPERATORS = {
     operator.eq: "==",
@@ -48,3 +48,10 @@ OPERATORS = {
     **MATHEMATICAL_OPERATORS, 
     **BITWISE_OPERATORS,
 }
+
+
+DEFAULT_PLURAL_FORM = [
+    "",
+    "а",
+    "ов",
+]
