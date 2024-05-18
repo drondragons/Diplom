@@ -122,8 +122,8 @@
 #     # 'from_bytes', 'imag', 'numerator', 'real', 'to_bytes'
 
 # from src import Validator, IntValidator
-from src import MeterConverter, Meter, KiloMeter, CentiMeter, MeterFactoryMethod
-from src import Real, RealFactoryMethod
+from src import MeterConverter, Meter, KiloMeter, CentiMeter, LengthFactoryMethod, KiloMeterFactoryMethod
+from src import Real, RealFactoryMethod, MeterConverter, Length
 from src import Money, Dollar, Ruble
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
@@ -135,6 +135,13 @@ def main() -> None:
     r = Real(1)
     t = Real(r)
     
+    meter = CentiMeter(KiloMeter(12))
+    print(meter, meter.__repr__(), meter.print_short_form())
+    kilometer = KiloMeter(KiloMeter(15))
+    print(kilometer, kilometer.print_short_form())
+    kilometer = Length(Meter(99))
+    print(kilometer, kilometer.print_short_form())
+    
     print(Money(133))
     print(Money(78324))
     print(Dollar(8394))
@@ -144,7 +151,10 @@ def main() -> None:
     # print(MeterConverter.auto_convert(CentiMeter(Real(30000))))
     print(RealFactoryMethod.generate(Real(), Real(3)))
     for _ in range(10):
-        print(MeterFactoryMethod.generate(2,))
+        print(LengthFactoryMethod.generate(2))
+        print(KiloMeterFactoryMethod.generate(90, 500))
+        
+    print(MeterConverter.auto_convert(KiloMeter(0.0002)))
     # print(RealValidator.validate(Real(1), 10))
     # print(RealFactoryMethod.generate(100, 90))
     # print(Meter(Real(1)))

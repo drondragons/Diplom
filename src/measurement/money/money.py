@@ -2,7 +2,7 @@ import math
 import operator
 from typing import Tuple
 
-from .. import REAL_TYPES
+from .. import REAL_TYPES, DEFAULT_FULL_FORM, DEFAULT_SHORT_FORM, DEFAULT_FORMS
 
 from ... import format_plural_form
 from ... import OPERATORS, DEFAULT_PLURAL_FORM
@@ -31,15 +31,11 @@ class Money(metaclass=MoneyMeta):
         "__value",
     ]
     
-    SHORT_FORM = "у.е."
-    FULL_FORM = "условная единица"
+    SHORT_FORM = DEFAULT_SHORT_FORM
+    FULL_FORM = DEFAULT_FULL_FORM
     INTERNATIONAL_FORM = str()
     SYMBOL = str()
-    PLURAL_MONEY_FORMS = [
-        FULL_FORM,
-        "условные единицы",
-        "условных единиц",
-    ]
+    PLURAL_MONEY_FORMS = DEFAULT_FORMS
     
     DEFAULT_MONEY_VALUE = 0
     

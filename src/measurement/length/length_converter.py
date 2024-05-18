@@ -1,6 +1,6 @@
-from .meter import Meter
-from .meter import METER_CLASSES
-from .meter_validator import MeterValidator
+from .length import Meter
+from .length import METER_CLASSES
+from .length_validator import LengthValidator
 
 from ..converter import Converter
 
@@ -14,11 +14,11 @@ class MeterConverter(Converter):
     
     @classmethod
     def convert(cls, input: Meter, output: type = Meter) -> Meter:
-        exception, message = MeterValidator.validate_type(input, Meter)
+        exception, message = LengthValidator.validate_type(input, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
         if output not in METER_CLASSES:
-            message = f"Недопустимый тип '{output.__name__}'! Ожидался тип {MeterValidator.format_union_types(output)}!"
+            message = f"Недопустимый тип '{output.__name__}'! Ожидался тип {LengthValidator.format_union_types(output)}!"
             raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
         return output(input.value * input.SIZE_SI / output.SIZE_SI)
     
@@ -49,9 +49,9 @@ class MeterConverter(Converter):
     
     @classmethod
     def auto_convert(cls, value: Meter) -> Meter:
-        exception, message = MeterValidator.validate_type(value, Meter)
+        exception, message = LengthValidator.validate_type(value, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
         return cls.__decrease_meter_type(value) \
             if value <= 1 else \
-                cls.__increase_meter_type(value) 
+                cls.__increase_meter_type(value)

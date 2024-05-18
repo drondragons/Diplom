@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from .meter import Meter
+from .length import Length
 
 from .. import REAL_TYPES
 
@@ -9,16 +9,16 @@ from ...validators import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 
 
 __all__ = [
-    "MeterValidator"
+    "LengthValidator"
 ]
 
 
-class MeterValidator(RealValidator):
+class LengthValidator(RealValidator):
     
     @classmethod
     def validate_interval(
         cls,
-        value: Meter, 
+        value: Length, 
         minimum: REAL_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
@@ -27,11 +27,11 @@ class MeterValidator(RealValidator):
     @classmethod
     def validate(
         cls,
-        value: Meter, 
+        value: Length, 
         minimum: REAL_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type(value, Meter)
+        exception, message = cls.validate_type(value, Length)
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)
         return exception, message
