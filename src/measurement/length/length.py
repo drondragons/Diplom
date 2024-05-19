@@ -6,7 +6,6 @@ from .. import REAL_TYPES, DEFAULT_FORMS, DEFAULT_SHORT_FORM, DEFAULT_FULL_FORM
 
 from ... import format_plural_form
 from ... import DEFAULT_PLURAL_FORM, OPERATORS
-
 from ...real import Real, RealValidator
 
 

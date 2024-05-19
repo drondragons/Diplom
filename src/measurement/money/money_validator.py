@@ -5,7 +5,7 @@ from .money import Money
 from .. import REAL_TYPES
 
 from ...real import RealValidator
-from ...validators import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
+from ...validators import DEFAULT_NUMBER_MAXIMUM
 
 
 __all__ = [
@@ -19,7 +19,7 @@ class MoneyValidator(RealValidator):
     def validate_interval(
         cls,
         value: Money, 
-        minimum: REAL_TYPES = DEFAULT_NUMBER_MINIMUM, 
+        minimum: REAL_TYPES = Money.DEFAULT_MONEY_VALUE, 
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
         return super().validate_interval(value, minimum, maximum)
@@ -28,7 +28,7 @@ class MoneyValidator(RealValidator):
     def validate(
         cls,
         value: Money, 
-        minimum: REAL_TYPES = DEFAULT_NUMBER_MINIMUM, 
+        minimum: REAL_TYPES = Money.DEFAULT_MONEY_VALUE, 
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
         exception, message = cls.validate_type(value, Money)

@@ -2,7 +2,6 @@ import operator
 from typing import Iterator
 
 from .. import OPERATORS
-
 from ..validators import StringValidator
 
 

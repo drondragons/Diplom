@@ -4,7 +4,6 @@ from .real import Real
 
 from ..validators import Validator
 from ..validators import NUMBER_TYPES
-
 from ..factory_method import FactoryMethod
 
 

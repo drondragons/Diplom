@@ -27,6 +27,7 @@ def format_plural_form(value: object, forms: list[str]) -> str:
 from .real import *
 from .constants import *
 from .title import *
+from .geometry import *
 from .validators import *
 from .measurement import *
 from .factory_method import *
