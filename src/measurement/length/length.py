@@ -1,6 +1,6 @@
 import math
 import operator
-from typing import Any, Tuple
+from typing import Tuple
 
 from .. import REAL_TYPES, DEFAULT_FORMS, DEFAULT_SHORT_FORM, DEFAULT_FULL_FORM
 

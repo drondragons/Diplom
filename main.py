@@ -125,13 +125,40 @@
 from src import MeterConverter, Meter, KiloMeter, CentiMeter, LengthFactoryMethod, KiloMeterFactoryMethod
 from src import Real, RealFactoryMethod, MeterConverter, Length
 from src import Money, Dollar, Ruble, Square, SquareConverter, Volume, VolumeConverter
+from src import Title
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
 
 def main() -> None:
-    
-    # Validator.validate()
+    # print(3.5 * Title())
+    r = Title()
+    print(r)
+    r[90] = "jksnjinsfj"
+    print(r)
+    print(dir(str))
+    print("Hello" + " world")
+    print("Hello" * 3)
+    print(3 * "Hello")
+    s = "Hello"
+    s *= 3
+    print(s.center(50, ""))
+    # s.cas
+    s[2] = "|"
+    print(s)
+    print(iter("Hello world"))
+    # "Hello world".__iter__()
+    # '__class__', '__contains__', '__delattr__', '__dir__', '__doc__',
+    # '__getitem__',
+    # '__getnewargs__', '__init__', '__init_subclass__',
+    # '__mod__',  
+    # '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__',
+    # '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 
+    # 'count', 'encode', 'endswith', 'expandtabs', 'find',
+    # 'format', 'format_map', 'index', 'join', 'ljust', 'lower', 'lstrip', 'maketrans',
+    # 'partition', 'removeprefix', 'removesuffix', 'replace', 'rfind', 'rindex',
+    # 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines',
+    # 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill'
     y = int(int(1))
     r = Real(1)
     t = Real(r)
