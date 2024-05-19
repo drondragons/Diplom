@@ -68,10 +68,10 @@ class Length(metaclass=LengthMeta):
         return f"{self.value} {format_plural_form(self.value, DEFAULT_FORMS)}"
         
     def print_short_form(self) -> str:
-        return f"{self.value} {self.SHORT_FORM}\n"
+        return f"{self.value} {self.SHORT_FORM}"
         
     def __str__(self) -> str:
-        return f"{self.__format_value()}\n"
+        return f"{self.__format_value()}"
     
     def __repr__(self) -> str:
         return f"{self.class_name} (value: {self.__format_value()})"
@@ -306,7 +306,7 @@ class Meter(Length):
         return f"{self.value} {format_plural_form(self.value, meter_forms)}"
     
     def __str__(self) -> str:
-        return f"{self.__format_value()}\n"
+        return f"{self.__format_value()}"
     
     def __repr__(self) -> str:
         return f"{self.class_name} (value: {self.__format_value()})"

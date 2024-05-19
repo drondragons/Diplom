@@ -124,12 +124,13 @@
 # from src import Validator, IntValidator
 from src import MeterConverter, Meter, KiloMeter, CentiMeter, LengthFactoryMethod, KiloMeterFactoryMethod
 from src import Real, RealFactoryMethod, MeterConverter, Length
-from src import Money, Dollar, Ruble
+from src import Money, Dollar, Ruble, Square, SquareConverter, Volume, VolumeConverter
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
 
 def main() -> None:
+    
     # Validator.validate()
     y = int(int(1))
     r = Real(1)
@@ -141,7 +142,23 @@ def main() -> None:
     print(kilometer, kilometer.print_short_form())
     kilometer = Length(Meter(99))
     print(kilometer, kilometer.print_short_form())
+    for i in range(10):
+        print(Square.print_full_form(Length(i)))
+        print(Square.print_short_form(Length(i)))
+        print(Square.print_full_form(KiloMeter(i)))
+        print(Square.print_short_form(KiloMeter(i)))
+        print(Volume.print_full_form(Length(i)))
+        print(Volume.print_short_form(Length(i)))
+        print(Volume.print_full_form(KiloMeter(i)))
+        print(Volume.print_short_form(KiloMeter(i)))
     
+    print(MeterConverter.auto_convert(KiloMeter(0.0002)))
+    
+    print(SquareConverter.auto_convert(KiloMeter(0.1)))
+    print(SquareConverter.auto_convert(KiloMeter(0.01)))
+    print(SquareConverter.auto_convert(Meter(0.001)))    
+    print(SquareConverter.auto_convert(CentiMeter(0.0001)))
+    print(VolumeConverter.auto_convert(CentiMeter(0.001)))
     print(Money(133))
     print(Money(78324))
     print(Dollar(8394))

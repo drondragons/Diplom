@@ -39,7 +39,7 @@ class MoneyFactoryMethod(RealFactoryMethod):
         return money_type(super().generate(minimum.value, maximum.value, is_int))
     
     
-class RubleFactorMethod(MoneyFactoryMethod):
+class RubleFactoryMethod(MoneyFactoryMethod):
     
     @classmethod
     def generate(
@@ -51,7 +51,7 @@ class RubleFactorMethod(MoneyFactoryMethod):
         return super().generate(minimum, maximum, is_int, Ruble)
     
     
-class DollarFactorMethod(MoneyFactoryMethod):
+class DollarFactoryMethod(MoneyFactoryMethod):
     
     @classmethod
     def generate(
@@ -63,7 +63,7 @@ class DollarFactorMethod(MoneyFactoryMethod):
         return super().generate(minimum, maximum, is_int, Dollar)
     
     
-class EuroFactorMethod(MoneyFactoryMethod):
+class EuroFactoryMethod(MoneyFactoryMethod):
     
     @classmethod
     def generate(
@@ -75,7 +75,7 @@ class EuroFactorMethod(MoneyFactoryMethod):
         return super().generate(minimum, maximum, is_int, Euro)
     
     
-class YuanFactorMethod(MoneyFactoryMethod):
+class YuanFactoryMethod(MoneyFactoryMethod):
     
     @classmethod
     def generate(

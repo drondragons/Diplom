@@ -13,3 +13,5 @@ DEFAULT_FORMS = [
 
 from .money import *
 from .length import *
+from .square import *
+from .volume import *
