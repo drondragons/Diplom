@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from typing import Type, Union, Tuple, get_args
+from types import UnionType
+from typing import Type, Union, Tuple, List, get_args
 
 
 __all__ = [
@@ -15,9 +16,9 @@ class Validator:
         raise NotImplementedError(f"\n\t{cls.__name__}: Нереализованный абстрактный статический метод validate!")
     
     @classmethod
-    def format_union_types(cls, types: Union[Type]) -> str:
-        args = get_args(types)
-        if not args:
+    def format_union_types(cls, types: Type | Union[Type] | List[Type]) -> str:
+        args = tuple(types) if not isinstance(types, Type) else types if not isinstance(types, UnionType) else get_args(types)
+        if not isinstance(args, tuple):
             return f"'{types.__name__}'"
         return cls.__pretty_format_string_with_types(cls.__get_string_from_union_types(args))
     

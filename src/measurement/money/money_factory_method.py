@@ -1,5 +1,11 @@
+import random
+
 from .money import *
-from .money import MONEY_CLASSES
+from .ruble import *
+from .dollar import *
+from .euro import *
+from .yuan import *
+from .pound import *
 
 from .. import REAL_TYPES
 
@@ -13,6 +19,7 @@ __all__ = [
     "DollarFactoryMethod",
     "EuroFactoryMethod",
     "YuanFactoryMethod",
+    "PoundFactoryMethod",
 ]
 
 
@@ -27,7 +34,7 @@ class MoneyFactoryMethod(RealFactoryMethod):
         minimum: REAL_TYPES = DEFAULT_MINIMUM_VALUE, 
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
-        money_type: type = Money
+        money_type: type = None
     ) -> Money:
         minimum = Money(minimum)
         maximum = Money(maximum)
@@ -37,10 +44,16 @@ class MoneyFactoryMethod(RealFactoryMethod):
             message = f"Недопустимый тип '{type(is_int).__name__}'! Ожидался тип bool!"
             raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
         
-        if money_type not in MONEY_CLASSES:
-            message = f"Недопустимый тип '{type(money_type).__name__}'! Ожидался тип {Validator.format_union_types(money_type)}!"
+        if not isinstance(money_type, type) and money_type != None:
+            message = f"Ожидался тип, а не объект {money_type.__class__.__name__}!"
+            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
+        
+        money_types = [Money] + [subclass for subclass in Money.__subclasses__()]
+        if money_type not in (money_types + [None]):
+            message = f"Недопустимый тип '{money_type.__name__}'! Ожидался тип {Validator.format_union_types(money_types)}!"
             raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
         
+        money_type = random.choice(money_types) if not money_type else money_type
         return money_type(super().generate(minimum.value, maximum.value, is_int))
     
     
@@ -90,3 +103,15 @@ class YuanFactoryMethod(MoneyFactoryMethod):
         is_int: bool = True
     ) -> Yuan:
         return super().generate(minimum, maximum, is_int, Yuan)
+    
+
+class PoundFactoryMethod(MoneyFactoryMethod):
+    
+    @classmethod
+    def generate(
+        cls,
+        minimum: REAL_TYPES = MoneyFactoryMethod.DEFAULT_MINIMUM_VALUE, 
+        maximum: REAL_TYPES = MoneyFactoryMethod.DEFAULT_MAXIMUM_VALUE,
+        is_int: bool = True
+    ) -> Pound:
+        return super().generate(minimum, maximum, is_int, Pound)

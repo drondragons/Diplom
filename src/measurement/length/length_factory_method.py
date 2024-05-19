@@ -1,3 +1,5 @@
+import random
+
 from .length import Length
 from .meter import Meter
 from .kilometer import KiloMeter
@@ -40,7 +42,7 @@ class LengthFactoryMethod(RealFactoryMethod):
         minimum: REAL_TYPES = DEFAULT_MINIMUM_VALUE, 
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
-        length_type: type = Length
+        length_type: type = None
     ) -> Length:
         minimum = Length(minimum)
         maximum = Length(maximum)
@@ -50,11 +52,16 @@ class LengthFactoryMethod(RealFactoryMethod):
             message = f"Недопустимый тип '{type(is_int).__name__}'! Ожидался тип bool!"
             raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
         
-        meter_types = [Meter] + [subclass for subclass in Meter.__subclasses__()]
-        if length_type not in meter_types and length_type != Length:
-            message = f"Недопустимый тип '{type(length_type).__name__}'! Ожидался тип {Validator.format_union_types(length_type)}!"
+        if not isinstance(length_type, type) and length_type != None:
+            message = f"Ожидался тип, а не объект {length_type.__class__.__name__}!"
             raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
         
+        meter_types = [Length, Meter] + [subclass for subclass in Meter.__subclasses__()]
+        if length_type not in (meter_types + [None]):
+            message = f"Недопустимый тип '{length_type.__name__}'! Ожидался тип {Validator.format_union_types(meter_types)}!"
+            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
+        
+        length_type = random.choice(meter_types) if not length_type else length_type
         return length_type(super().generate(minimum.value, maximum.value, is_int))
     
 

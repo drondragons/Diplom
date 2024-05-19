@@ -133,54 +133,18 @@ from src import Length, Meter, KiloMeter, NanoMeter, DeciMeter, MilliMeter, Leng
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
-from src import LengthFactoryMethod
+from src import LengthFactoryMethod, Money, Ruble, Dollar, Euro, MoneyFactoryMethod
 
-def main() -> None:    
-    print(LengthFactoryMethod.generate(10, 23, False, KiloMeter))
-    print(LengthFactoryMethod.generate(10, 23, True, int))
-    print(MeterConverter.auto_convert(KiloMeter(0.1)))
-    print(float(Meter(9)))
-    print(int(Length()))
-    print(int(Meter()))
-    print(int(KiloMeter(9.3)))
-    print(KiloMeter(10) == Meter(10))
-    print(KiloMeter(10) == Meter(10000))
-    print(Meter(10) == KiloMeter(0.001))
-    # print(KiloMeter(10) == Length(10))
-    print(KiloMeter(10) == 10)
-    print(KiloMeter(10) * 10)
-    print(KiloMeter(10) * Meter(10))
-    print(NanoMeter(10))
-    print(KiloMeter(1) * NanoMeter(10))
-    print(KiloMeter(1) * DeciMeter(10))
-    print(NanoMeter(1) * KiloMeter(10))
-    print(DeciMeter(1) * KiloMeter(10))
-    print(MilliMeter(1) * KiloMeter(10))
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+def main() -> None:
+    for _ in range(10):
+        print(MoneyFactoryMethod.generate())
+        print(LengthFactoryMethod.generate())
+    print(Dollar(10))
     
-    print(Meter(Length(10)))
-    print(Meter(Meter(10)))
-    print(Length(Meter(10)))
-    print(hash(Meter(10)))
-    print(hash(Meter(10)))
-    print(hash(Length(10)))
-    print(hash(KiloMeter(10)))
-    print(Length(15) * 5)
-    print(Meter(15) * 5)
-    print(Meter(15) * Meter(5))
-    print(Meter(15) @ 4)
-    # print(Meter(15) * Length(5))
-    # print(Length(15) * Meter(5))
-    print(Meter(15) == Length(10))
-    print(Meter(15) == Length(15))
-    # print(Meter().nsdjknk)
+    print(Dollar(10) + Euro(15) * Money(3))
+    # print(Ruble(10) == Ruble(10))
     
     
-    
-    print(type(math.floor(Meter(10))))
-    print(type(math.floor(KiloMeter(10))))
-    print(type(Meter(829) * KiloMeter(12)))
-    print(type(Meter(10) * Meter(23)))
     
     print(Square.print_short_form(Length(10000000)))
     
