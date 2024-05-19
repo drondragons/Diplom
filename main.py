@@ -122,53 +122,83 @@
 #     # 'from_bytes', 'imag', 'numerator', 'real', 'to_bytes'
 
 # from src import Validator, IntValidator
-from src import MeterConverter, Meter, KiloMeter, CentiMeter, LengthFactoryMethod, KiloMeterFactoryMethod
-from src import Real, RealFactoryMethod, MeterConverter, Length
-from src import Money, Dollar, Ruble, Square, SquareConverter, Volume, VolumeConverter
-from src import Title
-from src import Line, LineFactoryMethod
+# from src import MeterConverter, Meter, KiloMeter, CentiMeter, LengthFactoryMethod, KiloMeterFactoryMethod
+# from src import Real, RealFactoryMethod, MeterConverter, Length
+# from src import Money, Dollar, Ruble, Square, SquareConverter, Volume, VolumeConverter
+# from src import Title
+# from src import Line, LineFactoryMethod
+# from src import Rectangle
+# import math
+from src import Length, Meter, KiloMeter, NanoMeter, DeciMeter, MilliMeter, LengthValidator, LengthConverter, MeterConverter
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
+from src import LengthFactoryMethod
 
-def main() -> None:
+def main() -> None:    
+    print(LengthFactoryMethod.generate(10, 23, False, KiloMeter))
+    print(LengthFactoryMethod.generate(10, 23, True, int))
+    print(MeterConverter.auto_convert(KiloMeter(0.1)))
+    print(float(Meter(9)))
+    print(int(Length()))
+    print(int(Meter()))
+    print(int(KiloMeter(9.3)))
+    print(KiloMeter(10) == Meter(10))
+    print(KiloMeter(10) == Meter(10000))
+    print(Meter(10) == KiloMeter(0.001))
+    # print(KiloMeter(10) == Length(10))
+    print(KiloMeter(10) == 10)
+    print(KiloMeter(10) * 10)
+    print(KiloMeter(10) * Meter(10))
+    print(NanoMeter(10))
+    print(KiloMeter(1) * NanoMeter(10))
+    print(KiloMeter(1) * DeciMeter(10))
+    print(NanoMeter(1) * KiloMeter(10))
+    print(DeciMeter(1) * KiloMeter(10))
+    print(MilliMeter(1) * KiloMeter(10))
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+    
+    print(Meter(Length(10)))
+    print(Meter(Meter(10)))
+    print(Length(Meter(10)))
+    print(hash(Meter(10)))
+    print(hash(Meter(10)))
+    print(hash(Length(10)))
+    print(hash(KiloMeter(10)))
+    print(Length(15) * 5)
+    print(Meter(15) * 5)
+    print(Meter(15) * Meter(5))
+    print(Meter(15) @ 4)
+    # print(Meter(15) * Length(5))
+    # print(Length(15) * Meter(5))
+    print(Meter(15) == Length(10))
+    print(Meter(15) == Length(15))
+    # print(Meter().nsdjknk)
+    
+    
+    
+    print(type(math.floor(Meter(10))))
+    print(type(math.floor(KiloMeter(10))))
+    print(type(Meter(829) * KiloMeter(12)))
+    print(type(Meter(10) * Meter(23)))
+    
+    print(Square.print_short_form(Length(10000000)))
+    
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print(Meter(239834))
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    
     line = Line(Meter(789023))
     print(line)
     print(line.__repr__())
     for _ in range(10):
         print(LineFactoryMethod.generate())
+        
+    r = Rectangle(Line(Meter(10)), Line(Meter(135)))
+    print(r.square)
+    print(r)
+    print("-=-=-=-=-=-=-=--=-=--=-=-")
     
-    # print(3.5 * Title())
-    r = Title()
-    print(r)
-    r[90] = "jksnjinsfj"
-    print(r)
-    print(dir(str))
-    print("Hello" + " world")
-    print("Hello" * 3)
-    print(3 * "Hello")
-    s = "Hello"
-    s *= 3
-    print(s.center(50, ""))
-    # s.cas
-    s[2] = "|"
-    print(s)
-    print(iter("Hello world"))
-    # "Hello world".__iter__()
-    # '__class__', '__contains__', '__delattr__', '__dir__', '__doc__',
-    # '__getitem__',
-    # '__getnewargs__', '__init__', '__init_subclass__',
-    # '__mod__',  
-    # '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__',
-    # '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 
-    # 'count', 'encode', 'endswith', 'expandtabs', 'find',
-    # 'format', 'format_map', 'index', 'join', 'ljust', 'lower', 'lstrip', 'maketrans',
-    # 'partition', 'removeprefix', 'removesuffix', 'replace', 'rfind', 'rindex',
-    # 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines',
-    # 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill'
-    y = int(int(1))
-    r = Real(1)
-    t = Real(r)
     
     meter = CentiMeter(KiloMeter(12))
     print(meter, meter.__repr__(), meter.print_short_form())
@@ -176,7 +206,7 @@ def main() -> None:
     print(kilometer, kilometer.print_short_form())
     kilometer = Length(Meter(99))
     print(kilometer, kilometer.print_short_form())
-    for i in range(10):
+    for i in range(1000, 1010):
         print(Square.print_full_form(Length(i)))
         print(Square.print_short_form(Length(i)))
         print(Square.print_full_form(KiloMeter(i)))

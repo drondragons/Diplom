@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from .length import Meter
-from .length import METER_CLASSES
+from .meter import Meter
+from .length import Length
 from .length_validator import LengthValidator
 
 from ..converter import Converter
@@ -22,7 +22,7 @@ class LengthConverter(Converter):
     
     @classmethod
     def increase_meter_type(cls, value: Meter) -> Meter:
-        meter_types = METER_CLASSES[:METER_CLASSES.index(type(value)) + 1]
+        meter_types = [Meter] + [subclass for subclass in Meter.__subclasses__()]
         result = [
             cls._convert(value, meter)
                 for meter in meter_types
@@ -32,7 +32,7 @@ class LengthConverter(Converter):
         
     @classmethod
     def decrease_meter_type(cls, value: Meter) -> Meter:
-        meter_types = METER_CLASSES[METER_CLASSES.index(type(value)):]
+        meter_types = [Meter] + [subclass for subclass in Meter.__subclasses__()]
         result = [
             cls._convert(value, meter)
                 for meter in meter_types
@@ -53,7 +53,7 @@ class MeterConverter(LengthConverter):
         exception, message = LengthValidator.validate_type(input, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
-        if output not in METER_CLASSES:
+        if not issubclass(output, Meter) and not output == Length:
             message = f"Недопустимый тип '{output.__name__}'! Ожидался тип {LengthValidator.format_union_types(output)}!"
             raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
         return output(input.value * input.SIZE_SI / output.SIZE_SI)

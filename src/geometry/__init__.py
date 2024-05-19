@@ -12,3 +12,4 @@ DEFAULT_SIDE_TITLES = [
 ]
 
 from .one_dimensional import *
+from .two_dimensional import *

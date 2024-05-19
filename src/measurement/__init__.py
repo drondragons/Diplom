@@ -11,7 +11,7 @@ DEFAULT_FORMS = [
     "условных единиц",
 ]
 
-from .money import *
+# from .money import *
 from .length import *
-from .square import *
-from .volume import *
+# from .square import *
+# from .volume import *

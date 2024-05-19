@@ -1,5 +1,13 @@
-from .length import *
-from .length import METER_CLASSES
+from .length import Length
+from .meter import Meter
+from .kilometer import KiloMeter
+from .nanometer import NanoMeter
+from .decimeter import DeciMeter
+from .pikometer import PikoMeter
+from .millimeter import MilliMeter
+from .centimeter import CentiMeter
+from .femtometer import FemtoMeter
+from .micrometer import MicroMeter
 
 from .. import REAL_TYPES
 
@@ -42,7 +50,8 @@ class LengthFactoryMethod(RealFactoryMethod):
             message = f"Недопустимый тип '{type(is_int).__name__}'! Ожидался тип bool!"
             raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
         
-        if length_type not in METER_CLASSES and length_type != Length:
+        meter_types = [Meter] + [subclass for subclass in Meter.__subclasses__()]
+        if length_type not in meter_types and length_type != Length:
             message = f"Недопустимый тип '{type(length_type).__name__}'! Ожидался тип {Validator.format_union_types(length_type)}!"
             raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
         
