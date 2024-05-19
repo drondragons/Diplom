@@ -126,7 +126,7 @@ from src import MeterConverter, Meter, KiloMeter, CentiMeter, LengthFactoryMetho
 from src import Real, RealFactoryMethod, MeterConverter, Length
 from src import Money, Dollar, Ruble, Square, SquareConverter, Volume, VolumeConverter
 from src import Title
-from src import Line
+from src import Line, LineFactoryMethod
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
@@ -135,6 +135,8 @@ def main() -> None:
     line = Line(Meter(789023))
     print(line)
     print(line.__repr__())
+    for _ in range(10):
+        print(LineFactoryMethod.generate())
     
     # print(3.5 * Title())
     r = Title()

@@ -20,9 +20,9 @@ class StringValidator(Validator):
     def validate(
         cls, 
         value: str, 
-        canBeEmpty: bool = False
+        can_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
         exception, message = cls.validate_type(value, str)
-        if not exception and not canBeEmpty:
+        if not exception and not can_be_empty:
             exception, message = cls.validate_on_empty_string(value)
         return exception, message
