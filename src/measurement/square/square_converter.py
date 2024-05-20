@@ -14,7 +14,7 @@ class SquareConverter(LengthConverter):
     
     @classmethod
     def _convert(cls, input: Meter, output: type = Meter) -> Meter:
-        exception, message = LengthValidator.validate_type(input, Meter)
+        exception, message = LengthValidator.validate_object_type(input, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
         if output not in METER_CLASSES:
@@ -32,7 +32,7 @@ class SquareConverter(LengthConverter):
 
     @classmethod
     def auto_convert(cls, value: Meter) -> str:
-        exception, message = LengthValidator.validate_type(value, Meter)
+        exception, message = LengthValidator.validate_object_type(value, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
         value = cls.decrease_meter_type(value) \

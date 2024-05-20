@@ -129,13 +129,27 @@
 # from src import Line, LineFactoryMethod
 # from src import Rectangle
 # import math
-from src import Length, Meter, KiloMeter, NanoMeter, DeciMeter, MilliMeter, LengthValidator, LengthConverter, MeterConverter
+# from src import Length, Meter, KiloMeter, NanoMeter, DeciMeter, MilliMeter, LengthValidator, LengthConverter, MeterConverter
 # from src.real import Real, RealValidator, RealFactoryMethod
 # from src.factory_method import RealFactoryMethod
 # from src.measurement import Meter, KiloMeter
-from src import LengthFactoryMethod, Money, Ruble, Dollar, Euro, MoneyFactoryMethod
+# from src import LengthFactoryMethod, Money, Ruble, Dollar, Euro, MoneyFactoryMethod
+
+from src import Validator, StringValidator, NumberValidator, ListValidator
 
 def main() -> None:
+    print(Validator.format_union_types(int | int))
+    print(Validator.validate_object_type(int(), str))
+    print(Validator.validate_value(int(), int(3)))
+    # print(Validator.format_union_types(str))
+    # print(Validator.format_union_types(int | float))
+    # print(StringValidator.validate(str()))
+    print(NumberValidator.validate(int(), int))
+    print(ListValidator.validate([str()], int))
+    
+    
+    MeterConverter.convert(KiloMeter, Meter)
+    
     for _ in range(10):
         print(MoneyFactoryMethod.generate())
         print(LengthFactoryMethod.generate())

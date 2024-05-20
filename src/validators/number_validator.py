@@ -1,4 +1,5 @@
 from typing import Tuple
+from typing import get_args
 from decimal import Decimal
 from fractions import Fraction
 
@@ -26,6 +27,11 @@ class NumberValidator(Validator):
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
+        for item in (value, minimum, maximum):
+            exception, message = cls.validate_object_type(item, NUMBER_TYPES)
+            if exception:
+                return exception, message
+        
         new_minimum = min(minimum, maximum)
         new_maximum = max(minimum, maximum)
         if value < new_minimum:
@@ -42,7 +48,15 @@ class NumberValidator(Validator):
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type(value, _type)
+        number_types = get_args(NUMBER_TYPES)
+        
+        exception, message = cls.validate_type(_type)
+        if exception:
+            return exception, message
+        if _type not in number_types:
+            return (TypeError, f"Недопустимый тип {type(value).__name__}! Ожидался тип {cls.format_union_types(NUMBER_TYPES)}!")
+    
+        exception, message = cls.validate_object_type(value, _type)
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)
         return exception, message

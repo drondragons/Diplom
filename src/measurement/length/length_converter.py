@@ -50,7 +50,7 @@ class MeterConverter(LengthConverter):
     
     @classmethod
     def _convert(cls, input: Meter, output: type = Meter) -> Meter:
-        exception, message = LengthValidator.validate_type(input, Meter)
+        exception, message = LengthValidator.validate_object_type(input, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
         if not issubclass(output, Meter) and not output == Length:
@@ -64,7 +64,7 @@ class MeterConverter(LengthConverter):
     
     @classmethod
     def auto_convert(cls, value: Meter) -> Meter:
-        exception, message = LengthValidator.validate_type(value, Meter)
+        exception, message = LengthValidator.validate_object_type(value, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
         return cls.decrease_meter_type(value) \

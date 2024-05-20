@@ -24,7 +24,7 @@ class RealFactoryMethod(FactoryMethod):
         minimum = Real(minimum)
         maximum = Real(maximum)
         
-        exception, message = Validator.validate_type(is_int, bool)
+        exception, message = Validator.validate_object_type(is_int, bool)
         if exception:
             raise exception(f"\n\t{cls.__name__}.generate: " + message)
         

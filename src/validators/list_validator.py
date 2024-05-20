@@ -20,6 +20,15 @@ class ListValidator(Validator):
         minimum: int = DEFAULT_NUMBER_MINIMUM, 
         maximum: int = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
+        exception, message = cls.validate_object_type(value, list)
+        if exception:
+            return exception, message
+        
+        for item in (minimum, maximum):
+            exception, message = cls.validate_object_type(item, int)
+            if exception:
+                return exception, message
+        
         value = len(value)
         new_minimum = min(minimum, maximum)
         new_maximum = max(minimum, maximum)
@@ -35,13 +44,21 @@ class ListValidator(Validator):
         value: List[object],
         expected_type: type
     ) -> Tuple[None | TypeError, str]:
+        exception, message = cls.validate_object_type(value, list)
+        if exception:
+            return exception, message
+        
+        excpetion, message = cls.validate_type(expected_type)
+        if excpetion:
+            return exception, message
+        
         message = str()
-        for index, element in enumerate(value, 1):
-            exception, message = cls.validate_type(element, expected_type)
+        exception = None
+        for element in value:
+            exception, message = cls.validate_object_type(element, expected_type)
             if exception:
-                message = f"Недопустимый тип '{type(element).__name__}' элемента №{index}! Ожидался тип {cls.format_union_types(expected_type)}!"
                 break
-        return (TypeError, message) if message else (None, message)
+        return exception, message
         
     @classmethod
     def validate(
@@ -51,7 +68,9 @@ class ListValidator(Validator):
         minimum: int = DEFAULT_NUMBER_MINIMUM,
         maximum: int = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type(value, list)
+        exception, message = cls.validate_type(element_type)
+        if not exception:
+            exception, message = cls.validate_object_type(value, list)
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)
         if not exception:

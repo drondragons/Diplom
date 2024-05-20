@@ -47,7 +47,7 @@ class LengthFactoryMethod(RealFactoryMethod):
         minimum = Length(minimum)
         maximum = Length(maximum)
         
-        exception, message = Validator.validate_type(is_int, bool)
+        exception, message = Validator.validate_object_type(is_int, bool)
         if exception:
             message = f"Недопустимый тип '{type(is_int).__name__}'! Ожидался тип bool!"
             raise TypeError(f"\n\t{cls.__name__}.generate: " + message)

@@ -24,7 +24,7 @@ class TitleValidator(StringValidator):
         value: Title, 
         can_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type(value, Title)
+        exception, message = cls.validate_object_type(value, Title)
         if not exception and not can_be_empty:
             exception, message = cls.validate_on_empty_string(value)
         return exception, message

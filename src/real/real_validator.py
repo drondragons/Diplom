@@ -35,7 +35,7 @@ class RealValidator(Validator):
         minimum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type(value, Real)
+        exception, message = cls.validate_object_type(value, Real)
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)
         return exception, message
