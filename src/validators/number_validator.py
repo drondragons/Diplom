@@ -53,9 +53,12 @@ class NumberValidator(Validator):
         exception, message = cls.validate_type(_type)
         if exception:
             return exception, message
-        if _type not in number_types:
-            return (TypeError, f"Недопустимый тип {type(value).__name__}! Ожидался тип {cls.format_union_types(NUMBER_TYPES)}!")
-    
+        
+        new_type = _type if isinstance(_type, type) else get_args(_type)
+        if (isinstance(new_type, type) and new_type not in number_types) or \
+            (not isinstance(new_type, type) and not set(new_type).issubset(number_types)):
+            return (TypeError, f"Недопустимый тип {cls.format_union_types(_type)}! Ожидался тип {cls.format_union_types(NUMBER_TYPES)}!")
+        
         exception, message = cls.validate_object_type(value, _type)
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)

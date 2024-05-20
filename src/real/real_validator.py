@@ -20,6 +20,11 @@ class RealValidator(Validator):
         minimum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
+        for item in (value, minimum, maximum):
+            exception, message = cls.validate_object_type(item, Real | NUMBER_TYPES)
+            if exception:
+                return exception, message
+        
         new_minimum = min(minimum, maximum)
         new_maximum = max(minimum, maximum)
         if value < new_minimum:

@@ -16,21 +16,21 @@ class Validator:
         raise NotImplementedError(f"\n\t{cls.__name__}: Нереализованный абстрактный статический метод validate!")
     
     @classmethod
-    def format_union_types(cls, types: Type | Union[Type] | List[Type]) -> str:
-        if not isinstance(types, type | UnionType | list):
-            raise TypeError(f"Ожидался тип, объединение или список типов!")
-        if isinstance(types, list) and not types:
-            raise TypeError(f"Список типов пуст!")
-        if isinstance(types, list) and not all(isinstance(item, type) for item in types):
-            raise TypeError(f"Список типов содержит объекты!")
+    def format_union_types(cls, types: Type | Union[Type] | List[Type] | Tuple[Type]) -> str:
+        if not isinstance(types, type | UnionType | list | tuple):
+            raise TypeError(f"Ожидался тип, объединение, кортеж или список типов!")
+        if isinstance(types, list | tuple) and not types:
+            raise TypeError(f"Список или кортеж типов пуст!")
+        if isinstance(types, list | tuple) and not all(isinstance(item, type) for item in types):
+            raise TypeError(f"Список или кортеж типов содержит объекты!")
         
         args = None
         if isinstance(types, type):
             return f"'{types.__name__}'"
         elif isinstance(types, UnionType):
             args = get_args(types)
-        elif isinstance(types, list):
-            args = tuple(args)
+        elif isinstance(types, list | tuple):
+            args = tuple(types)
         return cls.__pretty_format_string_with_types(cls.__get_string_from_union_types(args))
     
     @classmethod
@@ -49,14 +49,14 @@ class Validator:
     
     @classmethod
     def validate_object_type(cls, value: object, expected_type: type | Union[Type]) -> Tuple[None | TypeError, str]:
-        if isinstance(value, type):
-            return (TypeError, f"Ожидался объект, а не тип объекта '{value.__name__}'!")
+        if isinstance(value, type | UnionType):
+            return (TypeError, f"Ожидался объект, а не тип объекта {cls.format_union_types(value)}!")
         exception, message = cls.validate_type(expected_type)
         if exception:
             return exception, message
         return (None, str()) \
             if isinstance(value, expected_type) else \
-                (TypeError, f"Недопустимый тип '{type(value).__name__}'! Ожидался тип {cls.format_union_types(expected_type)}!")
+                (TypeError, f"Недопустимый тип {cls.format_union_types(value)}! Ожидался тип {cls.format_union_types(expected_type)}!")
             
     @classmethod
     def validate_value(cls, value: object, compareTo: object) -> Tuple[None | ValueError, str]:

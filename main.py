@@ -136,16 +136,16 @@
 # from src import LengthFactoryMethod, Money, Ruble, Dollar, Euro, MoneyFactoryMethod
 
 from src import Validator, StringValidator, NumberValidator, ListValidator
+from src import Title, TitleValidator
+from src import Real, RealValidator
 
 def main() -> None:
-    print(Validator.format_union_types(int | int))
-    print(Validator.validate_object_type(int(), str))
-    print(Validator.validate_value(int(), int(3)))
-    # print(Validator.format_union_types(str))
-    # print(Validator.format_union_types(int | float))
-    # print(StringValidator.validate(str()))
-    print(NumberValidator.validate(int(), int))
-    print(ListValidator.validate([str()], int))
+    print(Title())
+    print(Title("Hello"))
+    print(TitleValidator.validate(Title(), False))
+    print(NumberValidator.validate(int(), int | float | str))
+    print(Real(int()))
+    # print(Real(str))
     
     
     MeterConverter.convert(KiloMeter, Meter)

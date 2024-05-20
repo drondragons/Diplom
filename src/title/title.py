@@ -1,7 +1,7 @@
 import operator
 from typing import Iterator
 
-from .. import OPERATORS
+from ..constants import OPERATORS
 from ..validators import StringValidator
 
 
@@ -28,7 +28,7 @@ class Title:
     
     @value.setter
     def value(self, value: str) -> None:
-        exception, message = StringValidator.validate(value, False)
+        exception, message = StringValidator.validate(value)
         if exception:
             raise exception(f"\n\t{self.class_name}: {message}")
         self.__value = value
