@@ -36,13 +36,11 @@ class MoneyFactoryMethod(RealFactoryMethod):
         is_int: bool = True,
         money_type: type = None
     ) -> Money:
-        minimum = Money(minimum)
-        maximum = Money(maximum)
+        s = f"\n\t{cls.__name__}.generate: "
         
-        exception, message = Validator.validate_object_type(is_int, bool)
-        if exception:
-            message = f"Недопустимый тип '{type(is_int).__name__}'! Ожидался тип bool!"
-            raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
+        Validator._handle_exception(Validator.validate_object_type, s, minimum, REAL_TYPES)
+        Validator._handle_exception(Validator.validate_object_type, s, maximum, REAL_TYPES)
+        Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
         
         if not isinstance(money_type, type) and money_type != None:
             message = f"Ожидался тип, а не объект {money_type.__class__.__name__}!"
@@ -54,7 +52,7 @@ class MoneyFactoryMethod(RealFactoryMethod):
             raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
         
         money_type = random.choice(money_types) if not money_type else money_type
-        return money_type(super().generate(minimum.value, maximum.value, is_int))
+        return money_type(super().generate(minimum, maximum, is_int))
     
     
 class RubleFactoryMethod(MoneyFactoryMethod):

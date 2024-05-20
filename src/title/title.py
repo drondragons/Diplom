@@ -28,9 +28,8 @@ class Title:
     
     @value.setter
     def value(self, value: str) -> None:
-        exception, message = StringValidator.validate(value)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
+        s = f"\n\t{self.class_name}: "
+        StringValidator._handle_exception(StringValidator.validate, s, value)
         self.__value = value
     
     def __init__(self, value: str = DEFAULT_TITLE) -> None:

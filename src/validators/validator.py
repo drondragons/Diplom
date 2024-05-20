@@ -72,5 +72,11 @@ class Validator:
             if value == compareTo else \
                 (ValueError, f"Несовпадение значения {value} с {compareTo}!")
     
+    @classmethod
+    def _handle_exception(cls, function, message, *args):
+        exception, _message = function(*args)
+        if exception:
+            raise exception(message + _message)
+    
     def __new__(self) -> None:
         raise TypeError(f"\n\t{self.__name__}: Экземпляры класса '{self.__name__}' не могут быть созданы!")

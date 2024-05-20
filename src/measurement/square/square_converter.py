@@ -35,7 +35,7 @@ class SquareConverter(LengthConverter):
         exception, message = LengthValidator.validate_object_type(value, Meter)
         if exception:
             raise exception(f"\n\t{cls.__name__}.convert: " + message)
-        value = cls.decrease_meter_type(value) \
+        value = cls._decrease_meter_type(value) \
             if value <= 1 else \
-                cls.increase_meter_type(value)
+                cls._increase_meter_type(value)
         return Square.print_full_form(value)

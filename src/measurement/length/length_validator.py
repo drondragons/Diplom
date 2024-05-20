@@ -22,7 +22,10 @@ class LengthValidator(RealValidator):
         minimum: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE, 
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
-        return super().validate_interval(value, minimum, maximum)
+        exception, message = cls.validate_object_type(value, Length)
+        if exception:
+            return exception, message
+        return cls._validate_interval(value, minimum, maximum)
     
     @classmethod
     def validate(

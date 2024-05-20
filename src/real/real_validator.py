@@ -14,13 +14,12 @@ __all__ = [
 class RealValidator(Validator):
     
     @classmethod
-    def validate_interval(
-        cls,
+    def _validate_interval(cls,
         value: Real, 
         minimum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
-        for item in (value, minimum, maximum):
+        for item in (minimum, maximum):
             exception, message = cls.validate_object_type(item, Real | NUMBER_TYPES)
             if exception:
                 return exception, message
@@ -32,6 +31,18 @@ class RealValidator(Validator):
         if value > new_maximum:
             return ValueError, f"Недопустимое значение ({value})! Значение должно быть не больше {new_maximum}!"
         return None, str()
+    
+    @classmethod
+    def validate_interval(
+        cls,
+        value: Real, 
+        minimum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
+        maximum: Real | NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
+    ) -> Tuple[None | ValueError, str]:
+        exception, message = cls.validate_object_type(value, Real)
+        if exception:
+            return exception, message
+        return cls._validate_interval(value, minimum, maximum)
     
     @classmethod
     def validate(

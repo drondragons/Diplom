@@ -22,7 +22,10 @@ class MoneyValidator(RealValidator):
         minimum: REAL_TYPES = Money.DEFAULT_MONEY_VALUE, 
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
-        return super().validate_interval(value, minimum, maximum)
+        exception, message = cls.validate_object_type(value, Money)
+        if exception:
+            return exception, message
+        return cls._validate_interval(value, minimum, maximum)
     
     @classmethod
     def validate(

@@ -138,19 +138,12 @@
 from src import Validator, StringValidator, NumberValidator, ListValidator
 from src import Title, TitleValidator
 from src import Real, RealValidator, RealFactoryMethod
+from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter
+
+from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro
 
 def main() -> None:
-    print(Validator.validate_object_type(True, bool))
-    print(Title())
-    print(Title("Hello"))
-    print(TitleValidator.validate(Title(), False))
-    print(NumberValidator.validate(int(), int | float | str))
-    print(Real(int()))
-    print(RealFactoryMethod.generate(is_int=True))
-    # print(Real(str))
-    
-    
-    MeterConverter.convert(KiloMeter, Meter)
+    print(MoneyValidator.validate(Ruble(1), int(), int()))
     
     for _ in range(10):
         print(MoneyFactoryMethod.generate())

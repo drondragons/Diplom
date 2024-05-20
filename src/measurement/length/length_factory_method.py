@@ -44,13 +44,11 @@ class LengthFactoryMethod(RealFactoryMethod):
         is_int: bool = True,
         length_type: type = None
     ) -> Length:
-        minimum = Length(minimum)
-        maximum = Length(maximum)
+        s = f"\n\t{cls.__name__}.generate: "
         
-        exception, message = Validator.validate_object_type(is_int, bool)
-        if exception:
-            message = f"Недопустимый тип '{type(is_int).__name__}'! Ожидался тип bool!"
-            raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
+        Validator._handle_exception(Validator.validate_object_type, s, minimum, REAL_TYPES)
+        Validator._handle_exception(Validator.validate_object_type, s, maximum, REAL_TYPES)
+        Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
         
         if not isinstance(length_type, type) and length_type != None:
             message = f"Ожидался тип, а не объект {length_type.__class__.__name__}!"
@@ -62,7 +60,7 @@ class LengthFactoryMethod(RealFactoryMethod):
             raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
         
         length_type = random.choice(meter_types) if not length_type else length_type
-        return length_type(super().generate(minimum.value, maximum.value, is_int))
+        return length_type(super().generate(minimum, maximum, is_int))
     
 
 class MeterFactoryMethod(LengthFactoryMethod):
