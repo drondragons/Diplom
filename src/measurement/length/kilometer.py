@@ -38,7 +38,6 @@ class KiloMeter(Meter):
             return operator(right, left.value)
         if type(right) == KiloMeter and isinstance(left, REAL_TYPES):
             return operator(right.value, left)
-        print("Kilometer", MeterConverter.convert(right).value, MeterConverter.convert(left).value)
         return operator(MeterConverter.convert(right).value, MeterConverter.convert(left).value)
     
     # ------------------- Unary operators ---------------------------

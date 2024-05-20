@@ -16,8 +16,7 @@ __all__ = [
 
 class MoneyConverter(Converter):
     
-    CBR_URL = "http://www.cbr.ru/scripts/XML_daily.asp"
-    # ?date_req=21/05/2024
+    CBR_URL = "http://www.cbr.ru/scripts/XML_daily.asp" # ?date_req=21/05/2024
     PROJECT_DIR = os.getcwd()
     CURRENT_DIR = os.path.join(PROJECT_DIR, "src", "measurement", "money")
     FILE_PATH = os.path.join(CURRENT_DIR, "currency.xml")
@@ -46,12 +45,9 @@ class MoneyConverter(Converter):
             date.fromtimestamp(os.path.getmtime(cls.FILE_PATH)) != date.today()):
             df = cls._get_currency()
             cls._save_currency(df)
-            # print("______________________________________________")
-            # print(df)
-            # print("______________________________________________")
         else:
             df = cls._load_currency()
-        # df = pandas.read_xml(cls.CBR_URL, encoding="cp1251")
+            
         currencies = df[df["CharCode"].isin(international_forms)]
         
         result = dict.fromkeys(international_forms)

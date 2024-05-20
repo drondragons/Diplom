@@ -19,9 +19,8 @@ class Square:
     
     @classmethod
     def print_full_form(cls, length: Length) -> str:
-        exception, message = LengthValidator.validate(length)
-        if exception:
-            raise exception(f"\n\t{cls.__name__}.print_form: " + message)
+        s = f"\n\t{cls.__name__}.print_full_form: "
+        LengthValidator._handle_exception(LengthValidator.validate, s, length)
         square_forms = [form[0] for form in cls.DEFAULT_SQUARE_FORMS] \
             if type(length) == Length else \
                 [form[1] for form in cls.DEFAULT_SQUARE_FORMS]
@@ -31,9 +30,8 @@ class Square:
     
     @classmethod
     def print_short_form(cls, length: Length) -> str:
-        exception, message = LengthValidator.validate(length)
-        if exception:
-            raise exception(f"\n\t{cls.__name__}.print_form: " + message)
+        s = f"\n\t{cls.__name__}.print_short_form: "
+        LengthValidator._handle_exception(LengthValidator.validate, s, length)
         words = str(length.print_short_form())[len(str(length.value)) + 1:]
         return f"{length.value} {cls.DEFAULT_SHORT_SQUARE_FORM} {words}"
     

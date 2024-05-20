@@ -24,7 +24,7 @@ class Euro(Money):
     # ------------------- Hash ---------------------------
     
     def __hash__(self) -> int:
-        return hash(self.value)
+        return hash((self.class_name, self.value))
     
     # ------------------- Operate ---------------------------
     

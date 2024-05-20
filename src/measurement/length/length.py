@@ -40,11 +40,7 @@ class Length(metaclass=LengthMeta):
     
     @value.setter
     def value(self, value: REAL_TYPES) -> None:
-        value = Real(value)
-        exception, message = RealValidator.validate_interval(value, 0)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
-        self.__value = value
+        self.__value = Real(value)
         
     def __init__(self, value: REAL_TYPES = DEFAULT_LENGTH_VALUE) -> None:
         self.value = value.value if isinstance(value, Length) else value

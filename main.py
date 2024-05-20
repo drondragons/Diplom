@@ -141,6 +141,9 @@ from src import Real, RealValidator, RealFactoryMethod
 from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter
 
 from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro
+from src import Square, SquareConverter
+from src import Volume, VolumeConverter
+# from src import Line
 
 def main() -> None:
     print(MoneyValidator.validate(Ruble(1), int(), int()))
@@ -153,13 +156,12 @@ def main() -> None:
     print(Dollar(10) + Euro(15) * Money(3))
     # print(Ruble(10) == Ruble(10))
     
+    print(Square.print_short_form(Meter(10000000)))
+    print(Meter(10) + KiloMeter(89))
     
-    
-    print(Square.print_short_form(Length(10000000)))
-    
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-    print(Meter(239834))
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print(SquareConverter.auto_convert(Meter(1000000)))
+    print(Volume.print_full_form(Meter(10000)))
+    print(VolumeConverter.auto_convert(Meter(0.0001)))
     
     line = Line(Meter(789023))
     print(line)

@@ -28,7 +28,7 @@ class Ruble(Money):
     # ------------------- Hash ---------------------------
     
     def __hash__(self) -> int:
-        return hash(self.value)
+        return hash((self.class_name, self.value))
     
     # ------------------- Operate ---------------------------
     
@@ -42,8 +42,6 @@ class Ruble(Money):
             return operator(Ruble(left).value, Ruble(right).value)
         left = MoneyConverter.convert(left, Ruble).value
         right = MoneyConverter.convert(right, Ruble).value
-        # print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-        # print(left, right)
         return operator(right, left)
     
     # ------------------- Unary operators ---------------------------

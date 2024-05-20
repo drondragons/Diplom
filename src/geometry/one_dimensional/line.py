@@ -5,7 +5,7 @@ from typing import Tuple
 from .. import LENGTH_TYPES
 
 from ... import OPERATORS
-from ...title import Title, TitleValidator
+from ...title import Title
 from ...measurement import Length, LengthValidator, MeterConverter
 
 
@@ -33,9 +33,8 @@ class Line:
     
     @length.setter
     def length(self, length: Length) -> None:
-        exception, message = LengthValidator.validate(length)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
+        s = f"\n\t{self.class_name}: "
+        LengthValidator._handle_exception(LengthValidator.validate, s, length)
         self.__length = length
         
     @property
@@ -44,10 +43,7 @@ class Line:
     
     @title.setter
     def title(self, title: Title) -> None:
-        exception, message = TitleValidator.validate(title, False)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
-        self.__title = title
+        self.__title = Title(title)
         
     def __init__(
         self, 
@@ -73,7 +69,7 @@ class Line:
     # ------------------- Hash ---------------------------
     
     def __hash__(self) -> int:
-        return hash((self.length, self.title))
+        return hash((self.class_name, self.length, self.title))
     
     # ------------------- Error validation ---------------------------
     

@@ -29,5 +29,5 @@ from .validators import *
 from .real import *
 from .title import *
 from .measurement import *
-# from .geometry import *
-# from .factory_method import *
+from .geometry import *
+from .factory_method import *

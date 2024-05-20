@@ -33,9 +33,6 @@ class Real:
     def value(self, value: NUMBER_TYPES) -> None:
         s = f"\n\t{self.class_name}: "
         NumberValidator._handle_exception(NumberValidator.validate, s, value, NUMBER_TYPES)
-        # exception, message = NumberValidator.validate(value, NUMBER_TYPES)
-        # if exception:
-        #     raise exception(f"\n\t{self.class_name}: {message}")
         self.__value = value
         
     def __init__(self, value: NUMBER_TYPES = DEFAULT_REAL_VALUE) -> None:
@@ -55,7 +52,7 @@ class Real:
     # ------------------- Hash ---------------------------
     
     def __hash__(self) -> int:
-        return hash(self.value)
+        return hash((self.class_name, self.value))
     
     # ------------------- Error validation ---------------------------
     

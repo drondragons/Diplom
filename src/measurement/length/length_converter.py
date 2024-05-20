@@ -57,8 +57,10 @@ class MeterConverter(LengthConverter):
         s = f"\n\t{cls.__name__}.convert: "
         LengthValidator._handle_exception(LengthValidator.validate_object_type, s, input, Meter)
         LengthValidator._handle_exception(LengthValidator.validate_type, s, output)
-        if not issubclass(output, Meter) and not output == Length:
-            message = f"Недопустимый тип '{output.__name__}'! Ожидался тип {LengthValidator.format_union_types(output)}!"
+        
+        meter_types = [Meter, Length] + [subclass for subclass in Meter.__subclasses__()]
+        if output not in meter_types:
+            message = f"Недопустимый тип {LengthValidator.format_union_types(output)}! Ожидался тип {LengthValidator.format_union_types(meter_types)}!"
             raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
         return cls._convert(input, output)
     
