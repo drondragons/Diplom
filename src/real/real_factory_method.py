@@ -27,6 +27,7 @@ class RealFactoryMethod(FactoryMethod):
         s = f"\n\t{cls.__name__}.generate: "
         Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
         
+        new_minimum = min(minimum, maximum)
+        new_maximum = max(minimum, maximum)
         method = random.randint if is_int else random.uniform
-        new_minimum, new_maximum = min(minimum, maximum), max(minimum, maximum)
         return Real(method(new_minimum.value, new_maximum.value))

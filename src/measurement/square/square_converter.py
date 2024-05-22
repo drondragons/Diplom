@@ -1,6 +1,7 @@
 from .square import Square
 
-from ..length import Length, Meter, LengthValidator, LengthConverter
+from ..length import Length, Meter
+from ..length import LengthValidator, MeterConverter
 
 
 __all__ = [
@@ -8,25 +9,20 @@ __all__ = [
 ]
 
 
-class SquareConverter(LengthConverter):
+class SquareConverter(MeterConverter):
     
     @classmethod
     def _convert(cls, input: Meter, output: type = Meter) -> Meter:    
         first = input.SIZE_SI ** 2
         second = output.SIZE_SI ** 2
-        
         return output(input.value * first / second)
     
     @classmethod
     def convert(cls, input: Meter, output: type = Meter) -> str:
         s = f"\n\t{cls.__name__}.convert: "
-        LengthValidator._handle_exception(LengthValidator.validate, s, input)
-        LengthValidator._handle_exception(LengthValidator.validate_type, s, output)
-        
         meter_types = [Meter, Length] + [subclass for subclass in Meter.__subclasses__()]
-        if output not in meter_types:
-            message = f"Недопустимый тип {LengthValidator.format_union_types(output)}! Ожидался тип {LengthValidator.format_union_types(meter_types)}!"
-            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
+        LengthValidator._handle_exception(LengthValidator.validate, s, input)
+        LengthValidator._handle_exception(LengthValidator.validate_type_of_type, s, output, meter_types)
         return Square.print_full_form(cls._convert(input, output))
 
     @classmethod

@@ -61,12 +61,10 @@ class MoneyConverter(Converter):
     
     @classmethod
     def convert(cls, input: Money, output: type = Money) -> Money:
-        exception, message = MoneyValidator.validate_object_type(input, Money)
-        if exception:
-            raise exception(f"\n\t{cls.__name__}.convert: " + message)
-        if not issubclass(output, Money):
-            message = f"Недопустимый тип '{output.__name__}'! Ожидался тип {MoneyValidator.format_union_types(output)}!"
-            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
+        s = f"\n\t{cls.__name__}.convert: "
+        subclasses = [Money] + [subclass for subclass in Money.__subclasses__()]
+        MoneyValidator._handle_exception(MoneyValidator.validate_object_type, s, input, Money)
+        MoneyValidator._handle_exception(MoneyValidator.validate_type_of_type, s, output, subclasses)
         
         daily_currency = cls._get_daily_currency_values()
 

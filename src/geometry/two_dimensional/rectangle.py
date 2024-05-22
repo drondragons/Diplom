@@ -1,7 +1,7 @@
 from ..one_dimensional import Line, LineValidator
 
-from ...title import Title, TitleValidator
-from ...measurement import Length, Square, SquareConverter
+from ...title import Title
+from ...measurement import SquareConverter, MeterConverter
 
 
 __all__ = [
@@ -29,9 +29,10 @@ class Rectangle:
     
     @length.setter
     def length(self, length: Line) -> None:
-        exception, message = LineValidator.validate(length)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
+        s = f"\n\t{self.class_name}: "
+        LineValidator._handle_exception(LineValidator.validate, s, length)
+        if length.title == Line.DEFAULT_TITLE:
+            length.title = "Длина"
         self.__length = length
         
     @property
@@ -40,9 +41,10 @@ class Rectangle:
     
     @width.setter
     def width(self, width: Line) -> None:
-        exception, message = LineValidator.validate(width)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
+        s = f"\n\t{self.class_name}: "
+        LineValidator._handle_exception(LineValidator.validate, s, width)
+        if width.title == Line.DEFAULT_TITLE:
+            width.title = "Ширина"
         self.__width = width
         
     @property
@@ -50,45 +52,63 @@ class Rectangle:
         return self.__title
     
     @title.setter
-    def title(self, title: Title) -> None:
-        exception, message = TitleValidator.validate(title, False)
-        if exception:
-            raise exception(f"\n\t{self.class_name}: {message}")
-        self.__title = title
+    def title(self, title: str | Title) -> None:
+        self.__title = Title(title)
         
     @property
-    def square(self) -> str:
-        width_type = type(self.width.length)
-        length_type = type(self.length.length)
-        # print(width_type, length_type)
-        # print(type(self.width.length * self.length.length))
-        if width_type == length_type:
-            # print("+++++++++++++")
-            square = width_type(self.width.length * self.length.length)
-            # print(type(square))
-            if width_type == Length:
-                # print("&&&&&&&&&&&&")
-                return Square.print_full_form(square)
-            return SquareConverter.auto_convert(square)
-                
-        print(type(self.width.length), type(self.length.length))
-        if type(self.width.length) == type(self.length.length):
-            print(self.width * self.length)
+    def area(self) -> str:
+        square = self.width.length * self.length.length
+        square = MeterConverter.convert(square)
+        return SquareConverter.auto_convert(square)
+    
+    @property
+    def perimeter(self) -> Line:
+        perimeter = 2 * (self.length + self.width)
+        print(perimeter, type(perimeter))
+        perimeter.title = "Периметр"
+        return perimeter
+    
+    def is_square(self) -> bool:
+        return self.length == self.width
     
     def __init__(
         self, 
         length: Line = Line(title = Title("Длина")),
         width: Line = Line(title = Title("Ширина")),
-        title: Title = Title(DEFAULT_TITLE)
+        title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         self.width = width
         self.length = length
         self.title = title
         
     # ------------------- Output ---------------------------
-        
+    
+    def print_title(self) -> str:
+        return "Квадрат" \
+            if self.title == self.DEFAULT_TITLE and self.is_square() else \
+                self.title
+    
+    def print_area(self) -> str:
+        return f"Площадь:\t{self.area}"
+    
     def __str__(self) -> str:
-        return f"{self.title}:\n\t{self.length}\n\t{self.width}"
+        result = f"{self.print_title()}:"
+        result += f"\n\t{self.length}\n\t{self.width}"
+        return result + f"\n\t{self.print_area()}\n\t{self.perimeter}\n"
     
     def __repr__(self) -> str:
         return f"{self.class_name} (title: {self.title}, length: {self.length}, width: {self.width})"
+    
+    # ------------------- Hash ---------------------------
+    
+    def __hash__(self) -> int:
+        return hash((self.class_name, self.length, self.width, self.title))
+    
+    # ------------------- Comparison operators ---------------------------
+    
+    def __bool__(self) -> bool:
+        return self.length != 0 and self.width != 0
+    
+    # def __eq__(self, other: object) -> bool:
+        
+        # return self.length ==

@@ -2,10 +2,12 @@ import math
 import operator
 from typing import Tuple
 
+from . import _money_operate
 from .money import Money
-from .money_converter import MoneyConverter
 
 from .. import REAL_TYPES
+
+from ... import _validation_operation
 
 
 __all__ = [
@@ -34,15 +36,7 @@ class Ruble(Money):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == Ruble:
-            return operator(right, left.value)
-        if type(right) == Ruble and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        if type(right) == Money or type(left) == Money:
-            return operator(Ruble(left).value, Ruble(right).value)
-        left = MoneyConverter.convert(left, Ruble).value
-        right = MoneyConverter.convert(right, Ruble).value
-        return operator(right, left)
+        return _money_operate(right, REAL_TYPES, left, Ruble, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -62,8 +56,7 @@ class Ruble(Money):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        Ruble._validate(right, left, operator)
-        return Ruble._operate(right, left, operator)
+        return _validation_operation(right, left, operator, Ruble)
     
     def __eq__(self, other: object) -> bool:
         return Ruble._compare(self, other, operator.eq)
@@ -84,8 +77,7 @@ class Ruble(Money):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "Ruble":
-        Ruble._validate(right, left, operator)
-        return Ruble(Ruble._operate(right, left, operator))
+        return Ruble(_validation_operation(right, left, operator, Ruble))
     
     def __add__(self, other: object) -> "Ruble":
         return Ruble._math(self, other, operator.add)

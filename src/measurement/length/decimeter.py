@@ -2,10 +2,12 @@ import math
 import operator
 from typing import Tuple
 
+from . import _meter_math, _meter_operate
 from .meter import Meter
-from .length_converter import MeterConverter
 
 from .. import REAL_TYPES
+
+from ... import _validation_operation
 
 
 __all__ = [
@@ -34,11 +36,7 @@ class DeciMeter(Meter):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == DeciMeter:
-            return operator(right, left.value)
-        if type(right) == DeciMeter and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        return operator(MeterConverter.convert(right).value, MeterConverter.convert(left).value)
+        return _meter_operate(right, REAL_TYPES, left, DeciMeter, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -58,8 +56,7 @@ class DeciMeter(Meter):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        DeciMeter._validate(right, left, operator)
-        return DeciMeter._operate(right, left, operator)
+        return _validation_operation(right, left, operator, DeciMeter)
     
     def __eq__(self, other: object) -> bool:
         return DeciMeter._compare(self, other, operator.eq)
@@ -80,11 +77,7 @@ class DeciMeter(Meter):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "DeciMeter":
-        DeciMeter._validate(right, left, operator)
-        real = DeciMeter._operate(right, left, operator)
-        if isinstance(right, REAL_TYPES) or isinstance(left, REAL_TYPES):
-            return DeciMeter(real)
-        return MeterConverter.convert(Meter(real), DeciMeter)
+        return _meter_math(right, REAL_TYPES, left, DeciMeter, operator)
     
     def __add__(self, other: object) -> "DeciMeter":
         return DeciMeter._math(self, other, operator.add)

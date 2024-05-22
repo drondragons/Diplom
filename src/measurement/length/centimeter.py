@@ -2,10 +2,12 @@ import math
 import operator
 from typing import Tuple
 
+from . import _meter_math, _meter_operate
 from .meter import Meter
-from .length_converter import MeterConverter
 
 from .. import REAL_TYPES
+
+from ... import _validation_operation
 
 
 __all__ = [
@@ -34,11 +36,7 @@ class CentiMeter(Meter):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == CentiMeter:
-            return operator(right, left.value)
-        if type(right) == CentiMeter and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        return operator(MeterConverter.convert(right).value, MeterConverter.convert(left).value)
+        return _meter_operate(right, REAL_TYPES, left, CentiMeter, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -58,8 +56,7 @@ class CentiMeter(Meter):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        CentiMeter._validate(right, left, operator)
-        return CentiMeter._operate(right, left, operator)
+        return _validation_operation(right, left, operator, CentiMeter)
     
     def __eq__(self, other: object) -> bool:
         return CentiMeter._compare(self, other, operator.eq)
@@ -80,11 +77,7 @@ class CentiMeter(Meter):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "CentiMeter":
-        CentiMeter._validate(right, left, operator)
-        real = CentiMeter._operate(right, left, operator)
-        if isinstance(right, REAL_TYPES) or isinstance(left, REAL_TYPES):
-            return CentiMeter(real)
-        return MeterConverter.convert(Meter(real), CentiMeter)
+        return _meter_math(right, REAL_TYPES, left, CentiMeter, operator)
     
     def __add__(self, other: object) -> "CentiMeter":
         return CentiMeter._math(self, other, operator.add)

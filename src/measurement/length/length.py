@@ -6,9 +6,10 @@ from .length_meta import LengthMeta
 
 from .. import REAL_TYPES, DEFAULT_FULL_FORM, DEFAULT_SHORT_FORM, DEFAULT_FORMS
 
-from ... import format_plural_form
+from ... import _format_plural_form
+from ... import _error, _validate, _operate, _type_error, _validation_operation
 from ... import OPERATORS
-from ...real import Real, RealValidator
+from ...real import Real
 
 
 __all__ = [
@@ -48,7 +49,7 @@ class Length(metaclass=LengthMeta):
     # ------------------- Output ---------------------------
         
     def __format_value(self) -> str:
-        return f"{self.value} {format_plural_form(self.value, DEFAULT_FORMS)}"
+        return f"{self.value} {_format_plural_form(self.value, DEFAULT_FORMS)}"
         
     def print_short_form(self) -> str:
         return f"{self.value} {self.SHORT_FORM}"
@@ -64,35 +65,17 @@ class Length(metaclass=LengthMeta):
     def __hash__(self) -> int:
         return hash((self.class_name, self.value))
     
-    # ------------------- Error validation ---------------------------
-    
-    @staticmethod
-    def _error(obj: object, message: str = str()) -> str:
-        return f"\n\t{type(obj).__name__}: {message}"
-    
-    @staticmethod
-    def _type_error(right: object, left: object, operator: operator) -> str:
-        left_name = f"'{type(left).__name__}'"
-        right_name = f"'{type(right).__name__}'"
-        return f"Операция {right_name} {OPERATORS[operator]} {left_name} недоступна!"
+    # ------------------- Validation ---------------------------
     
     @staticmethod
     def _validate(right: object, left: object, operator: operator) -> None:
-        message = Length._type_error(right, left, operator)
-        if not isinstance(right, Length | REAL_TYPES):
-            raise TypeError(Length._error(left, message))
-        if not isinstance(left, Length | REAL_TYPES):
-            raise TypeError(Length._error(right, message))
+        _validate(right, Length | REAL_TYPES, left, Length | REAL_TYPES, operator)
     
     # ------------------- Operate ---------------------------
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and isinstance(left, Length):
-            return operator(right, left.value)
-        if isinstance(right, Length) and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        return operator(right.value, left.value)
+        return _operate(right, REAL_TYPES, left, Length, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -100,7 +83,7 @@ class Length(metaclass=LengthMeta):
         return self
     def __neg__(self) -> "Length":
         message = f"Операция {OPERATORS[operator.sub]}{self.class_name} недоступна!"
-        raise TypeError(Length._error(self, message))
+        raise TypeError(_error(self, message))
     
     def __abs__(self) -> "Length":
         return self
@@ -109,7 +92,7 @@ class Length(metaclass=LengthMeta):
         return ~self
     def __invert__(self) -> "Length":
         message = f"Операция {OPERATORS[operator.inv]}{self.class_name} недоступна!"
-        raise TypeError(Length._error(self, message))
+        raise TypeError(_error(self, message))
     
     def __floor__(self) -> "Length":
         return Length(math.floor(self.value))
@@ -135,8 +118,7 @@ class Length(metaclass=LengthMeta):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        Length._validate(right, left, operator)
-        return Length._operate(right, left, operator)
+        return _validation_operation(right, left, operator, Length)
     
     def __eq__(self, other: object) -> bool:
         return Length._compare(self, other, operator.eq)
@@ -157,8 +139,7 @@ class Length(metaclass=LengthMeta):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "Length":
-        Length._validate(right, left, operator)
-        return Length(Length._operate(right, left, operator))
+        return Length(_validation_operation(right, left, operator, Length))
     
     def __add__(self, other: object) -> "Length":
         return Length._math(self, other, operator.add)
@@ -215,46 +196,46 @@ class Length(metaclass=LengthMeta):
         return (other // self, other % self)
     
     def __matmul__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.matmul)))
+        raise TypeError(_error(self, _type_error(self, other, operator.matmul)))
     def __rmatmul__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(other, self, operator.matmul)))
+        raise TypeError(_error(self, _type_error(other, self, operator.matmul)))
     def __imatmul__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.imatmul)))
+        raise TypeError(_error(self, _type_error(self, other, operator.imatmul)))
         
     def __rshift__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.rshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.rshift)))
     def __rrshift__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(other, self, operator.rshift)))
+        raise TypeError(_error(self, _type_error(other, self, operator.rshift)))
     def __irshift__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.irshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.irshift)))
     
     def __lshift__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.lshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.lshift)))
     def __rlshift__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(other, self, operator.lshift)))
+        raise TypeError(_error(self, _type_error(other, self, operator.lshift)))
     def __ilshift__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.ilshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.ilshift)))
         
     def __or__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.or_)))
+        raise TypeError(_error(self, _type_error(self, other, operator.or_)))
     def __ror__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(other, self, operator.or_)))
+        raise TypeError(_error(self, _type_error(other, self, operator.or_)))
     def __ior__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.ior)))
+        raise TypeError(_error(self, _type_error(self, other, operator.ior)))
         
     def __and__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.and_)))
+        raise TypeError(_error(self, _type_error(self, other, operator.and_)))
     def __rand__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(other, self, operator.and_)))
+        raise TypeError(_error(self, _type_error(other, self, operator.and_)))
     def __iand__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.iand)))
+        raise TypeError(_error(self, _type_error(self, other, operator.iand)))
         
     def __xor__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.xor)))
+        raise TypeError(_error(self, _type_error(self, other, operator.xor)))
     def __rxor__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(other, self, operator.xor)))
+        raise TypeError(_error(self, _type_error(other, self, operator.xor)))
     def __ixor__(self, other: object) -> "Length":
-        raise TypeError(Length._error(self, Length._type_error(self, other, operator.ixor)))
+        raise TypeError(_error(self, _type_error(self, other, operator.ixor)))
     
     # ------------------- Other magic methods ---------------------------
     
@@ -263,7 +244,7 @@ class Length(metaclass=LengthMeta):
     
     def __index__(self) -> "Length":
         message = f"Операция индексирования (Iterable[{self.class_name}]) недоступна!"
-        raise TypeError(Length._error(self, message))
+        raise TypeError(_error(self, message))
     
     def __getattribute__(self, name: str) -> None:
         try:
@@ -271,4 +252,4 @@ class Length(metaclass=LengthMeta):
         except AttributeError:
             pass
         message = f"Класс '{self.class_name}' не содержит атрибут {name}!"
-        raise AttributeError(Length._error(self, message))
+        raise AttributeError(_error(self, message))

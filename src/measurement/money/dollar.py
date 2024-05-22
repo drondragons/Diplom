@@ -2,12 +2,13 @@ import math
 import operator
 from typing import Tuple
 
+from . import _money_operate
 from .money import Money
-from .money_converter import MoneyConverter
 
 from .. import REAL_TYPES
 
 from ... import DEFAULT_PLURAL_FORM
+from ... import _validation_operation
 
 
 __all__ = [
@@ -32,15 +33,7 @@ class Dollar(Money):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == Dollar:
-            return operator(right, left.value)
-        if type(right) == Dollar and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        if type(right) == Money or type(left) == Money:
-            return operator(Dollar(left).value, Dollar(right).value)
-        left = MoneyConverter.convert(left, Dollar).value
-        right = MoneyConverter.convert(right, Dollar).value
-        return operator(right, left)
+        return _money_operate(right, REAL_TYPES, left, Dollar, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -60,8 +53,7 @@ class Dollar(Money):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        Dollar._validate(right, left, operator)
-        return Dollar._operate(right, left, operator)
+        return _validation_operation(right, left, operator, Dollar)
     
     def __eq__(self, other: object) -> bool:
         return Dollar._compare(self, other, operator.eq)
@@ -82,8 +74,7 @@ class Dollar(Money):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "Dollar":
-        Dollar._validate(right, left, operator)
-        return Dollar(Dollar._operate(right, left, operator))
+        return Dollar(_validation_operation(right, left, operator, Dollar))
     
     def __add__(self, other: object) -> "Dollar":
         return Dollar._math(self, other, operator.add)

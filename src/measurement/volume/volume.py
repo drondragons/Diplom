@@ -1,6 +1,6 @@
 from ..length import Length, LengthValidator
 
-from ... import format_plural_form
+from ... import _format_plural_form
 
 
 __all__ = [
@@ -24,7 +24,7 @@ class Volume:
         square_forms = [form[0] for form in cls.DEFAULT_SQUARE_FORMS] \
             if type(length) == Length else \
                 [form[1] for form in cls.DEFAULT_SQUARE_FORMS]
-        form = format_plural_form(length.value.value, square_forms)
+        form = _format_plural_form(length.value.value, square_forms)
         words = str(length)[len(str(length.value)) + 1:]
         return f"{length.value} {form} {words}"
     

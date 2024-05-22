@@ -2,10 +2,12 @@ import math
 import operator
 from typing import Tuple
 
+from . import _money_operate
 from .money import Money
-from .money_converter import MoneyConverter
 
 from .. import REAL_TYPES
+
+from ... import _validation_operation
 
 
 __all__ = [
@@ -34,16 +36,8 @@ class Yuan(Money):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == Yuan:
-            return operator(right, left.value)
-        if type(right) == Yuan and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        if type(right) == Money or type(left) == Money:
-            return operator(Yuan(left).value, Yuan(right).value)
-        left = MoneyConverter.convert(left, Yuan).value
-        right = MoneyConverter.convert(right, Yuan).value
-        return operator(right, left)
-    
+        return _money_operate(right, REAL_TYPES, left, Yuan, operator)
+        
     # ------------------- Unary operators ---------------------------
     
     def __floor__(self) -> "Yuan":
@@ -62,9 +56,8 @@ class Yuan(Money):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        Yuan._validate(right, left, operator)
-        return Yuan._operate(right, left, operator)
-    
+        return _validation_operation(right, left, operator, Yuan)
+        
     def __eq__(self, other: object) -> bool:
         return Yuan._compare(self, other, operator.eq)
     def __ne__(self, other: object) -> bool:
@@ -84,9 +77,8 @@ class Yuan(Money):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "Yuan":
-        Yuan._validate(right, left, operator)
-        return Yuan(Yuan._operate(right, left, operator))
-    
+        return Yuan(_validation_operation(right, left, operator, Yuan))
+        
     def __add__(self, other: object) -> "Yuan":
         return Yuan._math(self, other, operator.add)
     def __radd__(self, other: object) -> "Yuan":

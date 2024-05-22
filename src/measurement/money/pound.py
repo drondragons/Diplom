@@ -2,12 +2,13 @@ import math
 import operator
 from typing import Tuple
 
+from . import _money_operate
 from .money import Money
-from .money_converter import MoneyConverter
 
 from .. import REAL_TYPES
 
 from ... import DEFAULT_PLURAL_FORM
+from ... import _validation_operation
 
 
 __all__ = [
@@ -32,16 +33,8 @@ class Pound(Money):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == Pound:
-            return operator(right, left.value)
-        if type(right) == Pound and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        if type(right) == Money or type(left) == Money:
-            return operator(Pound(left).value, Pound(right).value)
-        left = MoneyConverter.convert(left, Pound).value
-        right = MoneyConverter.convert(right, Pound).value
-        return operator(right, left)
-    
+        return _money_operate(right, REAL_TYPES, left, Pound, operator)
+        
     # ------------------- Unary operators ---------------------------
     
     def __floor__(self) -> "Pound":
@@ -60,8 +53,7 @@ class Pound(Money):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        Pound._validate(right, left, operator)
-        return Pound._operate(right, left, operator)
+        return _validation_operation(right, left, operator, Pound)
     
     def __eq__(self, other: object) -> bool:
         return Pound._compare(self, other, operator.eq)
@@ -82,8 +74,7 @@ class Pound(Money):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "Pound":
-        Pound._validate(right, left, operator)
-        return Pound(Pound._operate(right, left, operator))
+        return Pound(_validation_operation(right, left, operator, Pound))
     
     def __add__(self, other: object) -> "Pound":
         return Pound._math(self, other, operator.add)

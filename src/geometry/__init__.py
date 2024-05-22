@@ -12,4 +12,7 @@ DEFAULT_SIDE_TITLES = [
 ]
 
 from .one_dimensional import *
-# from .two_dimensional import *
+
+LINE_TYPES = Line | LENGTH_TYPES
+
+from .two_dimensional import *

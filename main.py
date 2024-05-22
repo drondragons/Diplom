@@ -138,94 +138,41 @@
 from src import Validator, StringValidator, NumberValidator, ListValidator
 from src import Title, TitleValidator
 from src import Real, RealValidator, RealFactoryMethod
-from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter
+from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter, CentiMeter
 
 from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro
 from src import Square, SquareConverter
 from src import Volume, VolumeConverter
-# from src import Line
+from src import Line, LineFactoryMethod, Rectangle
+
+from types import NoneType
+from src import Validator
 
 def main() -> None:
-    print(MoneyValidator.validate(Ruble(1), int(), int()))
+    print(Real(10) * 10 + Real(8) / 7 / Real(0.1) ** Real(2))
+    print(10 * 10 + 8 / 7 / 0.1 ** 2)
     
-    for _ in range(10):
-        print(MoneyFactoryMethod.generate())
-        print(LengthFactoryMethod.generate())
-    print(Dollar(10))
-    
-    print(Dollar(10) + Euro(15) * Money(3))
-    # print(Ruble(10) == Ruble(10))
-    
-    print(Square.print_short_form(Meter(10000000)))
-    print(Meter(10) + KiloMeter(89))
-    
-    print(SquareConverter.auto_convert(Meter(1000000)))
-    print(Volume.print_full_form(Meter(10000)))
-    print(VolumeConverter.auto_convert(Meter(0.0001)))
-    
-    line = Line(Meter(789023))
-    print(line)
-    print(line.__repr__())
-    for _ in range(10):
-        print(LineFactoryMethod.generate())
-        
-    r = Rectangle(Line(Meter(10)), Line(Meter(135)))
-    print(r.square)
-    print(r)
-    print("-=-=-=-=-=-=-=--=-=--=-=-")
+    print(Dollar(10) + Euro(10) + Ruble(10) + Dollar(10) + Euro(10))
     
     
-    meter = CentiMeter(KiloMeter(12))
-    print(meter, meter.__repr__(), meter.print_short_form())
-    kilometer = KiloMeter(KiloMeter(15))
-    print(kilometer, kilometer.print_short_form())
-    kilometer = Length(Meter(99))
-    print(kilometer, kilometer.print_short_form())
-    for i in range(1000, 1010):
-        print(Square.print_full_form(Length(i)))
-        print(Square.print_short_form(Length(i)))
-        print(Square.print_full_form(KiloMeter(i)))
-        print(Square.print_short_form(KiloMeter(i)))
-        print(Volume.print_full_form(Length(i)))
-        print(Volume.print_short_form(Length(i)))
-        print(Volume.print_full_form(KiloMeter(i)))
-        print(Volume.print_short_form(KiloMeter(i)))
-    
-    print(MeterConverter.auto_convert(KiloMeter(0.0002)))
-    
-    print(SquareConverter.auto_convert(KiloMeter(0.1)))
-    print(SquareConverter.auto_convert(KiloMeter(0.01)))
-    print(SquareConverter.auto_convert(Meter(0.001)))    
-    print(SquareConverter.auto_convert(CentiMeter(0.0001)))
-    print(VolumeConverter.auto_convert(CentiMeter(0.001)))
-    print(Money(133))
-    print(Money(78324))
-    print(Dollar(8394))
-    print(Ruble(192))
-    
-    # print(MeterConverter.convert(KiloMeter(Real(15)), CentiMeter))
-    # print(MeterConverter.auto_convert(CentiMeter(Real(30000))))
-    print(RealFactoryMethod.generate(Real(), Real(3)))
-    for _ in range(10):
-        print(LengthFactoryMethod.generate(2))
-        print(KiloMeterFactoryMethod.generate(90, 500))
-        
-    print(MeterConverter.auto_convert(KiloMeter(0.0002)))
-    # print(RealValidator.validate(Real(1), 10))
-    # print(RealFactoryMethod.generate(100, 90))
-    # print(Meter(Real(1)))
-    
-    # meter = Meter(Real(1.2348743))
-    # print(meter.__floor__())
-    # print(meter)
-     
-    # kilometer = KiloMeter(Real(-38924))
-    # print(kilometer)
-    # print(kilometer.class_name)
-    # print(kilometer != 38924)
-    # kilometer.jknsdjv
-    
-    
+    # print(Line(Meter(10000)))
+    # print(Line(Meter(10000)))
+    # print(Meter(10000))
+    # print(Meter(0.1))
+    # print(Line(Meter(1000)))
+    # print(Line(CentiMeter(1000)))
+    # print(Line(Meter(0.001)))
+    print("_+_+_+_+_+_+_+_+_+__+_+_+_+_+_+__")
+    # print(Line(Meter(1000)))
+    print(Line(Meter(100_000)))
+    print(Line(Meter(0.2)))
+    print(Line(Meter(0.0000000000000001)))
+    print(Rectangle(Line(Meter(100)), Line(Meter(0.000_1))))
+    # print(Line(Meter(0.1)))
+    # print(Line(CentiMeter(1000)))
+    # print(Line(Length(10000)))
+    # print(Line(KiloMeter(10000)))
+    # print(Line(CentiMeter(10000)))
 
 if __name__ == "__main__":
     main()

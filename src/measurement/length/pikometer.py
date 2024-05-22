@@ -2,10 +2,12 @@ import math
 import operator
 from typing import Tuple
 
+from . import _meter_math, _meter_operate
 from .meter import Meter
-from .length_converter import MeterConverter
 
 from .. import REAL_TYPES
+
+from ... import _validation_operation
 
 
 __all__ = [
@@ -34,12 +36,8 @@ class PikoMeter(Meter):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == PikoMeter:
-            return operator(right, left.value)
-        if type(right) == PikoMeter and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        return operator(MeterConverter.convert(right).value, MeterConverter.convert(left).value)
-    
+        return _meter_operate(right, REAL_TYPES, left, PikoMeter, operator)
+        
     # ------------------- Unary operators ---------------------------
     
     def __floor__(self) -> "PikoMeter":
@@ -58,8 +56,7 @@ class PikoMeter(Meter):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        PikoMeter._validate(right, left, operator)
-        return PikoMeter._operate(right, left, operator)
+        return _validation_operation(right, left, operator, PikoMeter)
     
     def __eq__(self, other: object) -> bool:
         return PikoMeter._compare(self, other, operator.eq)
@@ -80,11 +77,7 @@ class PikoMeter(Meter):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "PikoMeter":
-        PikoMeter._validate(right, left, operator)
-        real = PikoMeter._operate(right, left, operator)
-        if isinstance(right, REAL_TYPES) or isinstance(left, REAL_TYPES):
-            return PikoMeter(real)
-        return MeterConverter.convert(Meter(real), PikoMeter)
+        return _meter_math(right, REAL_TYPES, left, PikoMeter, operator)
     
     def __add__(self, other: object) -> "PikoMeter":
         return PikoMeter._math(self, other, operator.add)

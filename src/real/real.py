@@ -2,8 +2,9 @@ import math
 import operator
 from typing import Tuple
 
-from .. import format_number
-from ..constants import OPERATORS
+from .. import OPERATORS
+from .. import _format_number
+from .. import _error, _validate, _operate, _type_error, _validation_operation
 from ..validators import NUMBER_TYPES
 from ..validators import NumberValidator
 
@@ -41,7 +42,7 @@ class Real:
     # ------------------- Output ---------------------------
         
     def __format_value(self) -> str:
-        return f"{format_number(self.value)}"
+        return f"{_format_number(self.value)}"
         
     def __str__(self) -> str:
         return self.__format_value()
@@ -54,35 +55,17 @@ class Real:
     def __hash__(self) -> int:
         return hash((self.class_name, self.value))
     
-    # ------------------- Error validation ---------------------------
+    # ------------------- Validation ---------------------------
     
     @staticmethod
-    def __error(obj: object, message: str = str()) -> str:
-        return f"\n\t{type(obj).__name__}: {message}"
-    
-    @staticmethod
-    def __type_error(right: object, left: object, operator: operator) -> str:
-        left_name = f"'{type(left).__name__}'"
-        right_name = f"'{type(right).__name__}'"
-        return f"Операция {right_name} {OPERATORS[operator]} {left_name} недоступна!"
-    
-    @staticmethod
-    def __validate(right: object, left: object, operator: operator) -> None:
-        message = Real.__type_error(right, left, operator)
-        if not isinstance(right, Real | NUMBER_TYPES):
-            raise TypeError(Real.__error(left, message))
-        if not isinstance(left, Real | NUMBER_TYPES):
-            raise TypeError(Real.__error(right, message))
+    def _validate(right: object, left: object, operator: operator) -> None:
+        _validate(right, Real | NUMBER_TYPES, left, Real | NUMBER_TYPES, operator)
     
     # ------------------- Operate ---------------------------
     
     @staticmethod
-    def __operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, NUMBER_TYPES) and isinstance(left, Real):
-            return operator(right, left.value)
-        if isinstance(right, Real) and isinstance(left, NUMBER_TYPES):
-            return operator(right.value, left)
-        return operator(right.value, left.value)
+    def _operate(right: object, left: object, operator: operator) -> object:
+        return _operate(right, NUMBER_TYPES, left, Real, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -98,7 +81,7 @@ class Real:
         return ~self
     def __invert__(self) -> "Real":
         message = f"Операция {OPERATORS[operator.inv]}{self.class_name} недоступна!"
-        raise TypeError(Real.__error(self, message))
+        raise TypeError(_error(self, message))
     
     def __floor__(self) -> "Real":
         return Real(math.floor(self.value))
@@ -124,8 +107,7 @@ class Real:
     
     @staticmethod
     def __compare(right: object, left: object, operator: operator) -> bool:
-        Real.__validate(right, left, operator)
-        return Real.__operate(right, left, operator)
+        return _validation_operation(right, left, operator, Real)
     
     def __eq__(self, other: object) -> bool:
         return Real.__compare(self, other, operator.eq)
@@ -146,8 +128,7 @@ class Real:
     
     @staticmethod
     def __math(right: object, left: object, operator: operator) -> "Real":
-        Real.__validate(right, left, operator)
-        return Real(Real.__operate(right, left, operator))
+        return Real(_validation_operation(right, left, operator, Real))
     
     def __add__(self, other: object) -> "Real":
         return Real.__math(self, other, operator.add)
@@ -204,46 +185,46 @@ class Real:
         return (other // self, other % self)
     
     def __matmul__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.matmul)))
+        raise TypeError(_error(self, _type_error(self, other, operator.matmul)))
     def __rmatmul__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(other, self, operator.matmul)))
+        raise TypeError(_error(self, _type_error(other, self, operator.matmul)))
     def __imatmul__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.imatmul)))
+        raise TypeError(_error(self, _type_error(self, other, operator.imatmul)))
         
     def __rshift__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.rshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.rshift)))
     def __rrshift__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(other, self, operator.rshift)))
+        raise TypeError(_error(self, _type_error(other, self, operator.rshift)))
     def __irshift__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.irshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.irshift)))
     
     def __lshift__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.lshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.lshift)))
     def __rlshift__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(other, self, operator.lshift)))
+        raise TypeError(_error(self, _type_error(other, self, operator.lshift)))
     def __ilshift__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.ilshift)))
+        raise TypeError(_error(self, _type_error(self, other, operator.ilshift)))
         
     def __or__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.or_)))
+        raise TypeError(_error(self, _type_error(self, other, operator.or_)))
     def __ror__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(other, self, operator.or_)))
+        raise TypeError(_error(self, _type_error(other, self, operator.or_)))
     def __ior__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.ior)))
+        raise TypeError(_error(self, _type_error(self, other, operator.ior)))
         
     def __and__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.and_)))
+        raise TypeError(_error(self, _type_error(self, other, operator.and_)))
     def __rand__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(other, self, operator.and_)))
+        raise TypeError(_error(self, _type_error(other, self, operator.and_)))
     def __iand__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.iand)))
+        raise TypeError(_error(self, _type_error(self, other, operator.iand)))
         
     def __xor__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.xor)))
+        raise TypeError(_error(self, _type_error(self, other, operator.xor)))
     def __rxor__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(other, self, operator.xor)))
+        raise TypeError(_error(self, _type_error(other, self, operator.xor)))
     def __ixor__(self, other: object) -> "Real":
-        raise TypeError(Real.__error(self, Real.__type_error(self, other, operator.ixor)))
+        raise TypeError(_error(self, _type_error(self, other, operator.ixor)))
         
     # ------------------- Other magic methods ---------------------------
     
@@ -252,7 +233,7 @@ class Real:
     
     def __index__(self) -> "Real":
         message = f"Операция индексирования (Iterable[{self.class_name}]) недоступна!"
-        raise TypeError(Real.__error(self, message))
+        raise TypeError(_error(self, message))
     
     def __getattribute__(self, name: str) -> None:
         try:
@@ -260,4 +241,4 @@ class Real:
         except AttributeError:
             pass
         message = f"Класс '{self.class_name}' не содержит атрибут {name}!"
-        raise AttributeError(Real.__error(self, message))
+        raise AttributeError(_error(self, message))

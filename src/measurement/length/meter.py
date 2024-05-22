@@ -6,7 +6,8 @@ from .length import Length
 
 from .. import REAL_TYPES
 
-from ... import format_plural_form
+from ... import _format_plural_form
+from ... import _validate, _operate, _validation_operation
 from ... import DEFAULT_PLURAL_FORM
 
 
@@ -31,7 +32,7 @@ class Meter(Length):
     
     def __format_value(self) -> str:
         meter_forms = [self.FULL_FORM + form for form in DEFAULT_PLURAL_FORM]
-        return f"{self.value} {format_plural_form(self.value, meter_forms)}"
+        return f"{self.value} {_format_plural_form(self.value, meter_forms)}"
     
     def __str__(self) -> str:
         return f"{self.__format_value()}"
@@ -44,25 +45,17 @@ class Meter(Length):
     def __hash__(self) -> int:
         return hash((self.class_name, self.value))
     
-    # ------------------- Error validation ---------------------------
+    # ------------------- Validation ---------------------------
     
     @staticmethod
     def _validate(right: object, left: object, operator: operator) -> None:
-        message = Meter._type_error(right, left, operator)
-        if not isinstance(right, Meter | REAL_TYPES):
-            raise TypeError(Meter._error(left, message))
-        if not isinstance(left, Meter | REAL_TYPES):
-            raise TypeError(Meter._error(right, message))
+        _validate(right, Meter | REAL_TYPES, left, Meter | REAL_TYPES, operator)
     
     # ------------------- Operate ---------------------------
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and isinstance(left, Meter):
-            return operator(right, left.value)
-        if isinstance(right, Meter) and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        return operator(right.value, left.value)
+        return _operate(right, REAL_TYPES, left, Meter, operator)
     
     # ------------------- Unary operators ---------------------------
     
@@ -82,8 +75,7 @@ class Meter(Length):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        Meter._validate(right, left, operator)
-        return Meter._operate(right, left, operator)
+        return _validation_operation(right, left, operator, Meter)
     
     def __eq__(self, other: object) -> bool:
         return Meter._compare(self, other, operator.eq)
@@ -104,8 +96,7 @@ class Meter(Length):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "Meter":
-        Meter._validate(right, left, operator)
-        return Meter(Meter._operate(right, left, operator))
+        return Meter(_validation_operation(right, left, operator, Meter))
     
     def __add__(self, other: object) -> "Meter":
         return Meter._math(self, other, operator.add)

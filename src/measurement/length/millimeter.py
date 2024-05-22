@@ -2,10 +2,12 @@ import math
 import operator
 from typing import Tuple
 
+from . import _meter_math, _meter_operate
 from .meter import Meter
-from .length_converter import MeterConverter
 
 from .. import REAL_TYPES
+
+from ... import _validation_operation
 
 
 __all__ = [
@@ -34,12 +36,8 @@ class MilliMeter(Meter):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        if isinstance(right, REAL_TYPES) and type(left) == MilliMeter:
-            return operator(right, left.value)
-        if type(right) == MilliMeter and isinstance(left, REAL_TYPES):
-            return operator(right.value, left)
-        return operator(MeterConverter.convert(right).value, MeterConverter.convert(left).value)
-    
+        return _meter_operate(right, REAL_TYPES, left, MilliMeter, operator)
+        
     # ------------------- Unary operators ---------------------------
     
     def __floor__(self) -> "MilliMeter":
@@ -58,9 +56,8 @@ class MilliMeter(Meter):
     
     @staticmethod
     def _compare(right: object, left: object, operator: operator) -> bool:
-        MilliMeter._validate(right, left, operator)
-        return MilliMeter._operate(right, left, operator)
-    
+        return _validation_operation(right, left, operator, MilliMeter)
+        
     def __eq__(self, other: object) -> bool:
         return MilliMeter._compare(self, other, operator.eq)
     def __ne__(self, other: object) -> bool:
@@ -80,11 +77,7 @@ class MilliMeter(Meter):
     
     @staticmethod
     def _math(right: object, left: object, operator: operator) -> "MilliMeter":
-        MilliMeter._validate(right, left, operator)
-        real = MilliMeter._operate(right, left, operator)
-        if isinstance(right, REAL_TYPES) or isinstance(left, REAL_TYPES):
-            return MilliMeter(real)
-        return MeterConverter.convert(Meter(real), MilliMeter)
+        return _meter_math(right, REAL_TYPES, left, MilliMeter, operator)
     
     def __add__(self, other: object) -> "MilliMeter":
         return MilliMeter._math(self, other, operator.add)

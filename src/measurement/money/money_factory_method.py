@@ -1,4 +1,5 @@
 import random
+from types import NoneType
 
 from .money import *
 from .ruble import *
@@ -34,7 +35,7 @@ class MoneyFactoryMethod(RealFactoryMethod):
         minimum: REAL_TYPES = DEFAULT_MINIMUM_VALUE, 
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
-        money_type: type = None
+        money_type: type = NoneType
     ) -> Money:
         s = f"\n\t{cls.__name__}.generate: "
         
@@ -42,16 +43,11 @@ class MoneyFactoryMethod(RealFactoryMethod):
         Validator._handle_exception(Validator.validate_object_type, s, maximum, REAL_TYPES)
         Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
         
-        if not isinstance(money_type, type) and money_type != None:
-            message = f"Ожидался тип, а не объект {money_type.__class__.__name__}!"
-            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
+        subclasses = [Money] + [subclass for subclass in Money.__subclasses__()]
+        money_types = [NoneType] + subclasses
+        Validator._handle_exception(Validator.validate_type_of_type, s, money_type, money_types)
         
-        money_types = [Money] + [subclass for subclass in Money.__subclasses__()]
-        if money_type not in (money_types + [None]):
-            message = f"Недопустимый тип '{money_type.__name__}'! Ожидался тип {Validator.format_union_types(money_types)}!"
-            raise TypeError(f"\n\t{cls.__name__}.generate: " + message)
-        
-        money_type = random.choice(money_types) if not money_type else money_type
+        money_type = random.choice(subclasses) if money_type == NoneType else money_type
         return money_type(super().generate(minimum, maximum, is_int))
     
     

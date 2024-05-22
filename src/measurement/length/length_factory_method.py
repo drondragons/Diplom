@@ -1,4 +1,5 @@
 import random
+from types import NoneType
 
 from .length import Length
 from .meter import Meter
@@ -42,7 +43,7 @@ class LengthFactoryMethod(RealFactoryMethod):
         minimum: REAL_TYPES = DEFAULT_MINIMUM_VALUE, 
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
-        length_type: type = None
+        length_type: type = NoneType
     ) -> Length:
         s = f"\n\t{cls.__name__}.generate: "
         
@@ -50,16 +51,11 @@ class LengthFactoryMethod(RealFactoryMethod):
         Validator._handle_exception(Validator.validate_object_type, s, maximum, REAL_TYPES)
         Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
         
-        if not isinstance(length_type, type) and length_type != None:
-            message = f"Ожидался тип, а не объект {length_type.__class__.__name__}!"
-            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
-        
-        meter_types = [Length, Meter] + [subclass for subclass in Meter.__subclasses__()]
-        if length_type not in (meter_types + [None]):
-            message = f"Недопустимый тип '{length_type.__name__}'! Ожидался тип {Validator.format_union_types(meter_types)}!"
-            raise TypeError(f"\n\t{cls.__name__}.convert: " + message)
-        
-        length_type = random.choice(meter_types) if not length_type else length_type
+        subclasses = [Meter, Length] + [subclass for subclass in Meter.__subclasses__()]
+        meter_types = [NoneType] + subclasses
+        Validator._handle_exception(Validator.validate_type_of_type, s, length_type, meter_types)
+    
+        length_type = random.choice(subclasses) if length_type == NoneType else length_type
         return length_type(super().generate(minimum, maximum, is_int))
     
 

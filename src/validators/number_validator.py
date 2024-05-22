@@ -1,12 +1,11 @@
 from typing import Tuple
-from typing import get_args
 from decimal import Decimal
 from fractions import Fraction
 
 from .validator import Validator
 from .constants import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 
-from .. import format_number
+from .. import _format_number
 
 
 __all__ = [
@@ -21,6 +20,24 @@ __all__ = [
 class NumberValidator(Validator):
     
     @classmethod
+    def _validate_interval(
+        cls,
+        value: NUMBER_TYPES, 
+        minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
+        maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
+    ) -> Tuple[None | ValueError, str]:
+        new_minimum = min(minimum, maximum)
+        new_maximum = max(minimum, maximum)
+        message = f"Недопустимое значение ({_format_number(value)})! "
+        if value < new_minimum:
+            message += f"Значение должно быть не меньше {_format_number(new_minimum)}!"
+            return ValueError, message
+        if value > new_maximum:
+            message += f"Значение должно быть не больше {_format_number(new_maximum)}!"
+            return ValueError, message
+        return None, str()
+    
+    @classmethod
     def validate_interval(
         cls,
         value: NUMBER_TYPES, 
@@ -31,14 +48,7 @@ class NumberValidator(Validator):
             exception, message = cls.validate_object_type(item, NUMBER_TYPES)
             if exception:
                 return exception, message
-        
-        new_minimum = min(minimum, maximum)
-        new_maximum = max(minimum, maximum)
-        if value < new_minimum:
-            return ValueError, f"Недопустимое значение ({format_number(value)})! Значение должно быть не меньше {format_number(new_minimum)}!"
-        if value > new_maximum:
-            return ValueError, f"Недопустимое значение ({format_number(value)})! Значение должно быть не больше {format_number(new_maximum)}!"
-        return None, str()
+        return cls._validate_interval(value, minimum, maximum)
     
     @classmethod
     def validate(
@@ -48,18 +58,9 @@ class NumberValidator(Validator):
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
-        number_types = get_args(NUMBER_TYPES)
-        
-        exception, message = cls.validate_type(_type)
-        if exception:
-            return exception, message
-        
-        new_type = _type if isinstance(_type, type) else get_args(_type)
-        if (isinstance(new_type, type) and new_type not in number_types) or \
-            (not isinstance(new_type, type) and not set(new_type).issubset(number_types)):
-            return (TypeError, f"Недопустимый тип {cls.format_union_types(_type)}! Ожидался тип {cls.format_union_types(NUMBER_TYPES)}!")
-        
-        exception, message = cls.validate_object_type(value, _type)
+        exception, message = cls.validate_type_of_type(_type, NUMBER_TYPES) 
+        if not exception:
+            exception, message = cls.validate_object_type(value, _type)
         if not exception:
             exception, message = cls.validate_interval(value, minimum, maximum)
         return exception, message
