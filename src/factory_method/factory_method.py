@@ -14,7 +14,11 @@ class FactoryMethod:
     @classmethod
     @abstractmethod
     def generate(cls) -> object:
-        raise NotImplementedError(f"\n\t{cls.__name__}: Нереализованный абстрактный статический метод generate!")
+        message = f"\n\t{cls.__name__}: "
+        message += f"Нереализованный абстрактный статический метод generate!"
+        raise NotImplementedError(message)
     
     def __new__(self) -> None:
-        raise TypeError(f"\n\t{self.__name__}: Экземпляры класса '{self.__name__}' не могут быть созданы!")
+        message = f"\n\t{self.__name__}: "
+        message += f"Экземпляры класса '{self.__name__}' не могут быть созданы!"
+        raise TypeError(message)

@@ -1,6 +1,6 @@
 import os
 import pandas
-from typing import Dict
+from typing import Dict, Type
 from datetime import date
 
 from .money import Money
@@ -60,7 +60,7 @@ class MoneyConverter(Converter):
         return result
     
     @classmethod
-    def convert(cls, input: Money, output: type = Money) -> Money:
+    def convert(cls, input: Money, output: Type = Money) -> Money:
         s = f"\n\t{cls.__name__}.convert: "
         subclasses = [Money] + [subclass for subclass in Money.__subclasses__()]
         MoneyValidator._handle_exception(MoneyValidator.validate_object_type, s, input, Money)

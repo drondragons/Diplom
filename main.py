@@ -137,42 +137,60 @@
 
 from src import Validator, StringValidator, NumberValidator, ListValidator
 from src import Title, TitleValidator
-from src import Real, RealValidator, RealFactoryMethod
+from src import Real, RealValidator, RealFactoryMethod, FemtoMeter
 from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter, CentiMeter
 
-from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro
-from src import Square, SquareConverter
-from src import Volume, VolumeConverter
+from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro, DeciMeter
+from src import SquarePrinter, SquareConverter
+from src import VolumePrinter, VolumeConverter
 from src import Line, LineFactoryMethod, Rectangle
+from src import RectangleFactoryMethod, SquareFactoryMethod, NanoMeter
 
 from types import NoneType
 from src import Validator
 
 def main() -> None:
-    print(Real(10) * 10 + Real(8) / 7 / Real(0.1) ** Real(2))
-    print(10 * 10 + 8 / 7 / 0.1 ** 2)
+    # print(Money(10) + Ruble(10) + Dollar(10))
+    # print(CentiMeter(10) * KiloMeter(0.005))
+    # print(Length(10) + Meter(10) + CentiMeter(10) * KiloMeter(0.005))
+    # print(SquarePrinter.print_full_form(Length(10)))
+    # print(VolumePrinter.print_full_form(Length(10)))
+    # print(MeterConverter.convert(Length(10), KiloMeter))
+    # print(MeterConverter.auto_convert(KiloMeter(0.001)))
+    # # print(Length(10))
+    # # print(Line(Length(10)))
+    # print(Rectangle(Line(Length(10)), Line(Length(10))))
+    # print(Meter(10) == Length(10))
+    # print(CentiMeter(10) + Length(15))
+    # print(Length(10) + CentiMeter(10))
+    # print(MeterConverter.convert(Length(0.01), CentiMeter))
+    # print(CentiMeter(0.01) + Meter(14) / Length(1) * 7 + Meter(12) +\
+        # CentiMeter(23) * KiloMeter(0.4))
+    # print(SquareConverter.auto_convert(Length(49) * Meter(53)))
+    # print(Rectangle(Line(Length(49)), Line(Meter(53))))
+    # print(Rectangle(Line(DeciMeter(9.9)), Line(Length(22))))
+    # print(Rectangle(Line(CentiMeter(1.1)), Line(Length(78))))
+    # print(Rectangle(Line(Length(94)), Line(DeciMeter(8.6))))
+    # print(Rectangle(Line(Length(1)), Line(DeciMeter(9.8))))
+    # print(Rectangle(Line(Length(14)), Line(NanoMeter(36))))
+    # print(Rectangle(Line(Length(3)), Line(Meter(4.9))))
+    # print(Rectangle(Line(Meter(4.9)), Line(Length(3))))
+    # for _ in range(100):
+    # print(RectangleFactoryMethod.generate())
+    rect = RectangleFactoryMethod.generate()
+    print(rect)
+    print(rect.__repr__())
+    # print(RectangleFactoryMethod.generate(length_type=Length))
+    # print(SquareFactoryMethod.generate())
+    # print(SquareConverter.auto_convert(FemtoMeter(0.01)))
+    # print(CentiMeter(10) + CentiMeter(10))
+    # print(CentiMeter(10) * CentiMeter(10))
+    # print(2 * (CentiMeter(10) + CentiMeter(10)))
+    # print(Rectangle(Line(CentiMeter(10)), Line(CentiMeter(15))))
+    # print(Rectangle(Line(Length(10)), Line(CentiMeter(15))))
+    # print(Rectangle(Line(CentiMeter(10)), Line(Length(15))))
+    # print(Rectangle(Line(Length(10)), Line(Length(15))))
     
-    print(Dollar(10) + Euro(10) + Ruble(10) + Dollar(10) + Euro(10))
     
-    
-    # print(Line(Meter(10000)))
-    # print(Line(Meter(10000)))
-    # print(Meter(10000))
-    # print(Meter(0.1))
-    # print(Line(Meter(1000)))
-    # print(Line(CentiMeter(1000)))
-    # print(Line(Meter(0.001)))
-    print("_+_+_+_+_+_+_+_+_+__+_+_+_+_+_+__")
-    # print(Line(Meter(1000)))
-    print(Line(Meter(100_000)))
-    print(Line(Meter(0.2)))
-    print(Line(Meter(0.0000000000000001)))
-    print(Rectangle(Line(Meter(100)), Line(Meter(0.000_1))))
-    # print(Line(Meter(0.1)))
-    # print(Line(CentiMeter(1000)))
-    # print(Line(Length(10000)))
-    # print(Line(KiloMeter(10000)))
-    # print(Line(CentiMeter(10000)))
-
 if __name__ == "__main__":
     main()

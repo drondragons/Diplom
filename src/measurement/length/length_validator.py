@@ -26,7 +26,7 @@ class LengthValidator(RealValidator):
         if not exception:
             exception, message = cls._validate_minimum_maximum(minimum, maximum)
         if not exception:
-            exception, message = RealValidator.validate_interval(Real(minimum), 0, maximum)
+            exception, message = RealValidator.validate_interval(Real(minimum), 0)
         if not exception:
             exception, message = cls._validate_interval(value, minimum, maximum)
         return exception, message

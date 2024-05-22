@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Type
 
 from .validator import Validator
 from .constants import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
@@ -46,7 +46,7 @@ class ListValidator(Validator):
     def validate_elements_type(
         cls,
         value_list: List[object],
-        expected_type: type
+        expected_type: Type
     ) -> Tuple[None | TypeError, str]:
         exception, message = cls.validate_object_type(value_list, list)
         if not exception:
@@ -62,7 +62,7 @@ class ListValidator(Validator):
     def validate(
         cls, 
         value_list: List[object],
-        element_type: type,
+        element_type: Type,
         minimum: int = DEFAULT_NUMBER_MINIMUM,
         maximum: int = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:

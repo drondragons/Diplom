@@ -73,10 +73,9 @@ def _validation_operation(
     _type._validate(right, left, operator)
     return _type._operate(right, left, operator)
 
-
+from .factory_method import *
 from .validators import *
 from .real import *
 from .title import *
 from .measurement import *
 from .geometry import *
-from .factory_method import *

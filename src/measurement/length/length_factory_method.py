@@ -1,5 +1,6 @@
 import random
 from types import NoneType
+from typing import Type
 
 from .length import Length
 from .meter import Meter
@@ -14,7 +15,7 @@ from .micrometer import MicroMeter
 
 from .. import REAL_TYPES
 
-from ...real import RealFactoryMethod
+from ...real import Real, RealFactoryMethod, RealValidator
 from ...validators import Validator
 
 
@@ -43,11 +44,12 @@ class LengthFactoryMethod(RealFactoryMethod):
         minimum: REAL_TYPES = DEFAULT_MINIMUM_VALUE, 
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
-        length_type: type = NoneType
+        length_type: Type = NoneType
     ) -> Length:
         s = f"\n\t{cls.__name__}.generate: "
         
         Validator._handle_exception(Validator.validate_object_type, s, minimum, REAL_TYPES)
+        Validator._handle_exception(RealValidator.validate_interval, s, Real(minimum), 0)
         Validator._handle_exception(Validator.validate_object_type, s, maximum, REAL_TYPES)
         Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
         

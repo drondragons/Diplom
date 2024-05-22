@@ -1,6 +1,6 @@
-from typing import Tuple
 from decimal import Decimal
 from fractions import Fraction
+from typing import Tuple, Type
 
 from .validator import Validator
 from .constants import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
@@ -54,7 +54,7 @@ class NumberValidator(Validator):
     def validate(
         cls,
         value: NUMBER_TYPES, 
-        _type: type,
+        _type: Type,
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:

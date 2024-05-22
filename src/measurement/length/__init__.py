@@ -19,8 +19,13 @@ def _meter_operate(
         return operator(right, left.value)
     if type(right) == left_type and isinstance(left, right_type):
         return operator(right.value, left)
-    left = MeterConverter.convert(left).value
-    right = MeterConverter.convert(right).value
+    if type(left) == Length and type(right) != Length:
+        left = MeterConverter.convert(left, type(right))
+    if type(left) != Length and type(right) == Length:
+        right = MeterConverter.convert(right, type(left))
+    if type(left) != Length and type(right) != Length:
+        left = MeterConverter.convert(left, Meter)
+        right = MeterConverter.convert(right, Meter)
     return operator(right, left)
 
 def _meter_math(
@@ -29,14 +34,12 @@ def _meter_math(
     left: object, 
     left_type: Type | Union[Type],
     operator: operator, 
-    validation_function: Callable,
-    operation_function: Callable
 ) -> object:
     left_type._validate(right, left, operator)
     real = left_type._operate(right, left, operator)
     if isinstance(right, right_type) or isinstance(left, right_type):
         return left_type(real)
-    return MeterConverter.convert(Meter(real), left_type)
+    return real
 
 
 from .kilometer import *

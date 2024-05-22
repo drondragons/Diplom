@@ -37,8 +37,8 @@ class Line:
     @length.setter
     def length(self, length: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LengthValidator._handle_exception(LengthValidator.validate, s, length)
-        self.__length = length 
+        LengthValidator._handle_exception(LengthValidator.validate, s, length, 0)
+        self.__length = MeterConverter.auto_convert(length)
         
     @property
     def title(self) -> Title:
@@ -58,16 +58,11 @@ class Line:
         
     # ------------------- Output ---------------------------
         
-    def __format_length(self) -> str:
-        return self.length \
-            if type(self.length) == Length else \
-                MeterConverter.auto_convert(self.length)
-        
     def __str__(self) -> str:
-        return f"{self.title}:\t{self.__format_length()}"
+        return f"{self.title}:\t{self.length}"
     
     def __repr__(self) -> str:
-        return f"{self.class_name} (title: {self.title}, value: {self.__format_length()})"
+        return f"{self.class_name} (title: {self.title}, length: {self.length})"
 
     # ------------------- Hash ---------------------------
     

@@ -1,3 +1,6 @@
+from typing import Type
+
+
 __all__ = [
     "MoneyMeta"
 ]
@@ -5,5 +8,5 @@ __all__ = [
 
 class MoneyMeta(type):
     
-    def __subclasscheck__(cls, subclass: type) -> bool:
+    def __subclasscheck__(cls, subclass: Type) -> bool:
         return True if cls in subclass.__mro__ else False

@@ -16,3 +16,4 @@ from .one_dimensional import *
 LINE_TYPES = Line | LENGTH_TYPES
 
 from .two_dimensional import *
+from .three_dimensional import *

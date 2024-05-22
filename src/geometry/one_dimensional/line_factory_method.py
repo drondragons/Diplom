@@ -1,14 +1,15 @@
 import random
 from types import NoneType
+from typing import Type
 
 from .line import Line
 
 from .. import REAL_TYPES, DEFAULT_SIDE_TITLES
 
 from ...title import Title
-from ...factory_method import FactoryMethod
-from ...measurement import Length, LengthFactoryMethod
 from ...validators import Validator
+from ...measurement import Length, LengthFactoryMethod
+from ...factory_method import FactoryMethod
 
 
 __all__ = [
@@ -27,7 +28,7 @@ class LineFactoryMethod(FactoryMethod):
         minimum: REAL_TYPES = DEFAULT_MINIMUM_VALUE,
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
-        length_type: type = NoneType,
+        length_type: Type = NoneType,
         title: str | Title = str()
     ) -> Line:
         s = f"\n\t{cls.__name__}.generate: "

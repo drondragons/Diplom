@@ -49,7 +49,8 @@ class Meter(Length):
     
     @staticmethod
     def _validate(right: object, left: object, operator: operator) -> None:
-        _validate(right, Meter | REAL_TYPES, left, Meter | REAL_TYPES, operator)
+        types = Length | Meter | REAL_TYPES
+        _validate(right, types, left, types, operator)
     
     # ------------------- Operate ---------------------------
     

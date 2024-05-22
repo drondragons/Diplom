@@ -29,5 +29,11 @@ class RealFactoryMethod(FactoryMethod):
         
         new_minimum = min(minimum, maximum)
         new_maximum = max(minimum, maximum)
+        if new_maximum - new_minimum < 1 and is_int:
+            message = s
+            message += "Невозможно сгенерировать целое число, "
+            message += f"так как разница между минимумом "
+            message += f"и максимумом меньше единицы!"
+            raise ValueError(message)
         method = random.randint if is_int else random.uniform
         return Real(method(new_minimum.value, new_maximum.value))
