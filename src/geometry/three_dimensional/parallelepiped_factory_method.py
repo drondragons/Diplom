@@ -1,9 +1,10 @@
 from types import NoneType
 from typing import Type
 
+from .parallelepiped import Parallelepiped, Cube
+
 from .. import REAL_TYPES
 from ..one_dimensional import LineFactoryMethod
-from ..two_dimensional import Rectangle, Square
 
 from ...title import Title
 from ...validators import Validator
@@ -12,12 +13,12 @@ from ...factory_method import FactoryMethod
 
 
 __all__ = [
-    "RectangleFactoryMethod",
-    "SquareFactoryMethod",
+    "ParallelepipedFactoryMethod",
+    "CubeFactoryMethod",
 ]
 
 
-class RectangleFactoryMethod(FactoryMethod):
+class ParallelepipedFactoryMethod(FactoryMethod):
     
     DEFAULT_MINIMUM_VALUE = Length.DEFAULT_LENGTH_VALUE
     DEFAULT_MAXIMUM_VALUE = FactoryMethod.DEFAULT_MAXIMUM_VALUE
@@ -29,27 +30,28 @@ class RectangleFactoryMethod(FactoryMethod):
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
         length_type: Type = NoneType,
-        title: str | Title = Rectangle.DEFAULT_TITLE
-    ) -> Rectangle:
+        title: str | Title = Parallelepiped.DEFAULT_TITLE
+    ) -> Parallelepiped:
         s = f"\n\t{cls.__name__}.generate: "
         width = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Ширина")
         length = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Длина")
+        height = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Высота")
         Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
-        return Rectangle(length, width, title)
-        
+        return Parallelepiped(length, width, height, title)
+    
 
-class SquareFactoryMethod(FactoryMethod):
+class CubeFactoryMethod(FactoryMethod):
     
     @classmethod
     def generate(
         cls,
-        minimum: REAL_TYPES = RectangleFactoryMethod.DEFAULT_MINIMUM_VALUE,
-        maximum: REAL_TYPES = RectangleFactoryMethod.DEFAULT_MAXIMUM_VALUE,
+        minimum: REAL_TYPES = ParallelepipedFactoryMethod.DEFAULT_MINIMUM_VALUE,
+        maximum: REAL_TYPES = ParallelepipedFactoryMethod.DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
         length_type: Type = NoneType,
-        title: str | Title = Square.DEFAULT_TITLE
-    ) -> Square:
+        title: str | Title = Cube.DEFAULT_TITLE
+    ) -> Cube:
         s = f"\n\t{cls.__name__}.generate: "
         side = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Сторона")
         Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
-        return Square(side, title)
+        return Cube(side, title)

@@ -1,6 +1,6 @@
-from typing import Tuple, Type
+from typing import Type, Tuple
 
-from .rectangle import Rectangle, Square
+from .parallelepiped import Parallelepiped, Cube
 
 from .. import REAL_TYPES
 from ..one_dimensional import LineValidator
@@ -12,25 +12,27 @@ from ...measurement import Length
 
 
 __all__ = [
-    "RectangleValidator",
-    "SquareValidator",
+    "ParallelepipedValidator",
+    "CubeValidator",
 ]
 
 
-class RectangleValidator(Validator):
+class ParallelepipedValidator(Validator):
     
     @classmethod
     def validate(
         cls,
-        value: Rectangle | Square,
+        value: Parallelepiped | Cube,
         _type: Type,
         minimum_width: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE,
         maximum_width: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
         minimum_length: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE,
         maximum_length: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
+        minimum_height: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE,
+        maximum_height: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
         can_title_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_type_of_type(_type, Rectangle | Square)
+        exception, message = cls.validate_type_of_type(_type, Parallelepiped | Cube)
         if not exception:
             exception, message = cls.validate_object_type(value, _type)
         if not exception:
@@ -48,25 +50,34 @@ class RectangleValidator(Validator):
                 can_title_be_empty
             )
         if not exception:
+            exception, message = LineValidator.validate(
+                value.height,
+                minimum_height,
+                maximum_height,
+                can_title_be_empty
+            )
+        if not exception:
             exception, message = TitleValidator.validate(value.title, can_title_be_empty)
         return exception, message
     
     
-class SquareValidator(RectangleValidator):
+class CubeValidator(ParallelepipedValidator):
     
     @classmethod
     def validate(
         cls,
-        value: Square,
+        value: Cube,
         minimum_side: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE,
         maximum_side: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
         can_title_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
         return super().validate(
-            value,
-            Square,
-            minimum_side, 
-            maximum_side, 
+            value, 
+            Cube,
+            minimum_side,
+            maximum_side,
+            minimum_side,
+            maximum_side,
             minimum_side,
             maximum_side,
             can_title_be_empty

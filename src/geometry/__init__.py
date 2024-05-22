@@ -1,6 +1,6 @@
 from ..real import Real
 from ..validators import NUMBER_TYPES
-from ..measurement.length import Length
+from ..measurement import Length
 
 REAL_TYPES = Real | NUMBER_TYPES
 LENGTH_TYPES = Length | REAL_TYPES

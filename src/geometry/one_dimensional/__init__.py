@@ -16,5 +16,6 @@ def _line_operate(
 
 
 from .line import *
+from .line_builder import *
 from .line_validator import *
 from .line_factory_method import *
