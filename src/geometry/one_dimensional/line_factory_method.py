@@ -6,9 +6,9 @@ from .line import Line
 
 from .. import REAL_TYPES, DEFAULT_SIDE_TITLES
 
-from ...title import Title
 from ...validators import Validator
 from ...measurement import Length, LengthFactoryMethod
+from ...value_objects import Title
 from ...factory_method import FactoryMethod
 
 
@@ -32,7 +32,14 @@ class LineFactoryMethod(FactoryMethod):
         title: str | Title = str()
     ) -> Line:
         s = f"\n\t{cls.__name__}.generate: "
-        length = LengthFactoryMethod.generate(minimum, maximum, is_int, length_type)
-        Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
-        title = random.choice([Line.DEFAULT_TITLE] + DEFAULT_SIDE_TITLES) if not title else title
+        
+        generator = LengthFactoryMethod.generate
+        length = generator(minimum, maximum, is_int, length_type)
+        
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
+        titles = [Line.DEFAULT_TITLE] + DEFAULT_SIDE_TITLES
+        title = random.choice(titles) if not title else title
+        
         return Line(length, Title(title))

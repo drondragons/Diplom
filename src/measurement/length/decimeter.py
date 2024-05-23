@@ -17,10 +17,6 @@ __all__ = [
 
 class DeciMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-1)
     
     PREFIX_FORM = "деци"

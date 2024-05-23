@@ -4,10 +4,10 @@ from .line import Line
 
 from .. import REAL_TYPES
 
-from ...title import TitleValidator
 from ...validators import Validator
 from ...validators import DEFAULT_NUMBER_MAXIMUM
 from ...measurement import Length, LengthValidator
+from ...value_objects import TitleValidator
 
 
 __all__ = [

@@ -75,7 +75,6 @@ def _validation_operation(
 
 from .factory_method import *
 from .validators import *
-from .real import *
-from .title import *
+from .value_objects import *
 from .measurement import *
 from .geometry import *

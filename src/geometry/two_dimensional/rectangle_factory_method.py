@@ -2,12 +2,11 @@ from types import NoneType
 from typing import Type
 
 from .. import REAL_TYPES
-from ..one_dimensional import LineFactoryMethod
 from ..two_dimensional import Rectangle, Square
 
-from ...title import Title
 from ...validators import Validator
-from ...measurement import Length
+from ...measurement import Length, LengthFactoryMethod
+from ...value_objects import Title
 from ...factory_method import FactoryMethod
 
 
@@ -32,9 +31,14 @@ class RectangleFactoryMethod(FactoryMethod):
         title: str | Title = Rectangle.DEFAULT_TITLE
     ) -> Rectangle:
         s = f"\n\t{cls.__name__}.generate: "
-        width = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Ширина")
-        length = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Длина")
-        Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        width = generator(minimum, maximum, is_int, length_type)
+        length = generator(minimum, maximum, is_int, length_type)
+        
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
         return Rectangle(length, width, title)
         
 
@@ -50,6 +54,11 @@ class SquareFactoryMethod(FactoryMethod):
         title: str | Title = Square.DEFAULT_TITLE
     ) -> Square:
         s = f"\n\t{cls.__name__}.generate: "
-        side = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Сторона")
-        Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        side = generator(minimum, maximum, is_int, length_type)
+        
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
         return Square(side, title)

@@ -1,10 +1,10 @@
 import operator
 
-from ..one_dimensional import Line, LineValidator
+from ..one_dimensional import Line
 
 from ... import _error, _validate
-from ...title import Title
-from ...measurement import SquareConverter
+from ...measurement import SquareConverter, Length, LengthValidator
+from ...value_objects import Title
 
 
 __all__ = [
@@ -16,9 +16,9 @@ __all__ = [
 class Rectangle:
     
     __slots__ = [
-        "__width",
-        "__length",
-        "__title",
+        "_width",
+        "_length",
+        "_title",
     ]
     
     DEFAULT_TITLE = "Прямоугольник"
@@ -29,35 +29,33 @@ class Rectangle:
     
     @property
     def length(self) -> Line:
-        return self.__length
+        return self._length
     
     @length.setter
-    def length(self, length: Line) -> None:
+    def length(self, length: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LineValidator._handle_exception(LineValidator.validate, s, length, 0)
-        if length.title == Line.DEFAULT_TITLE:
-            length.title = "Длина"
-        self.__length = length
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, length, 0)
+        self._length = Line(length, "Длина")
         
     @property
     def width(self) -> Line:
-        return self.__width
+        return self._width
     
     @width.setter
-    def width(self, width: Line) -> None:
+    def width(self, width: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LineValidator._handle_exception(LineValidator.validate, s, width, 0)
-        if width.title == Line.DEFAULT_TITLE:
-            width.title = "Ширина"
-        self.__width = width
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, width, 0)
+        self._width = Line(width, "Ширина")
         
     @property
     def title(self) -> Title:
-        return self.__title
+        return self._title
     
     @title.setter
     def title(self, title: str | Title) -> None:
-        self.__title = Title(title)
+        self._title = Title(title)
         
     @property
     def area(self) -> str:
@@ -66,17 +64,16 @@ class Rectangle:
     
     @property
     def perimeter(self) -> Line:
-        perimeter = 2 * (self.length + self.width)
-        perimeter.title = "Периметр"
-        return perimeter
+        perimeter = 2 * (self.length.length + self.width.length)
+        return Line(perimeter, "Периметр")
     
     def is_square(self) -> bool:
         return self.length == self.width
     
     def __init__(
         self, 
-        length: Line = Line(title = Title("Длина")),
-        width: Line = Line(title = Title("Ширина")),
+        length: Length = Length(),
+        width: Length = Length(),
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         self.width = width
@@ -148,36 +145,35 @@ class Square(Rectangle):
     
     @property
     def side(self) -> Line:
-        return self.length
+        return self._length
     
     @side.setter
-    def side(self, side: Line) -> None:
+    def side(self, side: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LineValidator._handle_exception(LineValidator.validate, s, side, 0)
-        if side.title == Line.DEFAULT_TITLE:
-            side.title = "Сторона"
-        self.__width = side
-        self.__length = side
-        
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, side, 0)
+        self._width = Line(side, "Сторона")
+        self._length = Line(side, "Сторона")
+    
     @property
     def length(self) -> Line:
-        return self.__length
+        return self._length
     
     @length.setter
-    def length(self, length: Line) -> None:
+    def length(self, length: Length) -> None:
         self.side = length
         
     @property
     def width(self) -> Line:
-        return self.__width
+        return self._width
     
     @width.setter
-    def width(self, width: Line) -> None:
+    def width(self, width: Length) -> None:
         self.side = width
-        
+     
     def __init__(
         self, 
-        side: Line = Line(title = Title("Сторона")),
+        side: Length = Length(),
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         super().__init__(side, side, title)

@@ -17,10 +17,6 @@ __all__ = [
 
 class CentiMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-2)
     
     PREFIX_FORM = "санти"

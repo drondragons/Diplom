@@ -2,9 +2,9 @@ import random
 
 from .real import Real
 
-from ..validators import Validator
-from ..validators import NUMBER_TYPES
-from ..factory_method import FactoryMethod
+from ...validators import Validator
+from ...validators import NUMBER_TYPES
+from ...factory_method import FactoryMethod
 
 
 __all__ = [
@@ -25,7 +25,8 @@ class RealFactoryMethod(FactoryMethod):
         maximum = Real(maximum)
         
         s = f"\n\t{cls.__name__}.generate: "
-        Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, is_int, bool)
         
         new_minimum = min(minimum, maximum)
         new_maximum = max(minimum, maximum)

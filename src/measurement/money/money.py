@@ -9,7 +9,7 @@ from .. import REAL_TYPES, DEFAULT_FULL_FORM, DEFAULT_SHORT_FORM, DEFAULT_FORMS
 from ... import _format_plural_form
 from ... import _error, _validate, _operate, _type_error, _validation_operation
 from ... import OPERATORS
-from ...real import Real, RealValidator
+from ...value_objects import Real, RealValidator
 
 
 __all__ = [
@@ -20,7 +20,7 @@ __all__ = [
 class Money(metaclass=MoneyMeta):
     
     __slots__ = [
-        "__value",
+        "_value",
     ]
     
     SHORT_FORM = DEFAULT_SHORT_FORM
@@ -37,14 +37,14 @@ class Money(metaclass=MoneyMeta):
     
     @property
     def value(self) -> Real:
-        return self.__value
+        return self._value
     
     @value.setter
     def value(self, value: REAL_TYPES) -> None:
         value = Real(value)
         s = f"\n\t{self.class_name}: "
         RealValidator._handle_exception(RealValidator.validate, s, value, 0)
-        self.__value = value
+        self._value = value
         
     def __init__(self, value: REAL_TYPES = DEFAULT_MONEY_VALUE) -> None:
         self.value = value.value if isinstance(value, Money) else value

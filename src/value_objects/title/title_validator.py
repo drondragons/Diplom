@@ -2,7 +2,7 @@ from typing import Tuple
 
 from .title import Title
 
-from ..validators import StringValidator
+from ...validators import StringValidator
 
 
 __all__ = [

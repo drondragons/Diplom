@@ -8,8 +8,8 @@ from .. import LENGTH_TYPES
 
 from ... import OPERATORS
 from ... import _error, _type_error, _validate, _validation_operation
-from ...title import Title
 from ...measurement import Length, LengthValidator, MeterConverter
+from ...value_objects import Title
 
 
 __all__ = [
@@ -20,8 +20,8 @@ __all__ = [
 class Line:
     
     __slots__ = [
-        "__length",
-        "__title",
+        "_length",
+        "_title",
     ]
     
     DEFAULT_TITLE = "Отрезок"
@@ -32,21 +32,22 @@ class Line:
     
     @property
     def length(self) -> Length:
-        return self.__length
+        return self._length
     
     @length.setter
     def length(self, length: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LengthValidator._handle_exception(LengthValidator.validate, s, length, 0)
-        self.__length = MeterConverter.auto_convert(length)
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, length, 0)
+        self._length = MeterConverter.auto_convert(length)
         
     @property
     def title(self) -> Title:
-        return self.__title
+        return self._title
     
     @title.setter
     def title(self, title: str | Title) -> None:
-        self.__title = Title(title)
+        self._title = Title(title)
         
     def __init__(
         self, 

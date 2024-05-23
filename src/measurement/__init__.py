@@ -1,4 +1,4 @@
-from ..real import Real
+from ..value_objects import Real
 from ..validators import NUMBER_TYPES
 
 REAL_TYPES = Real | NUMBER_TYPES
@@ -10,6 +10,10 @@ DEFAULT_FORMS = [
     "условные единицы",
     "условных единиц",
 ]
+
+def _convert(value: object, right: object, left: object) -> object:
+    return value * right / left
+
 
 from .money import *
 from .length import *

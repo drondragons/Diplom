@@ -2,8 +2,8 @@ from .line import Line
 
 from .. import LENGTH_TYPES
 
-from ...title import Title
 from ...measurement import Length
+from ...value_objects import Title
 
 
 __all__ = [

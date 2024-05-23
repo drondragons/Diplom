@@ -3,7 +3,9 @@ from typing import Type
 from .volume_printer import VolumePrinter
 
 from ..length import Length, Meter
-from ..length import LengthValidator, MeterConverter
+from ..length import MeterConverter
+
+from ...validators import Validator
 
 
 __all__ = [
@@ -24,18 +26,16 @@ class VolumeConverter(MeterConverter):
     @classmethod
     def convert(cls, input: Length, output: Type = Length) -> str:
         s = f"\n\t{cls.__name__}.convert: "
-        meter_types = [Meter, Length] + [subclass for subclass in Meter.__subclasses__()]
-        LengthValidator._handle_exception(LengthValidator.validate_object_type, s, input, meter_types)
-        LengthValidator._handle_exception(LengthValidator.validate_type_of_type, s, output, meter_types)
+        handler = Validator._handle_exception
+        meter_types = [Length] + cls.get_meter_types()
+        handler(Validator.validate_object_type, s, input, meter_types)
+        handler(Validator.validate_type_of_type, s, output, meter_types)
         return VolumePrinter.print_full_form(cls._convert(input, output))
 
     @classmethod
     def auto_convert(cls, value: Meter) -> str:
         s = f"\n\t{cls.__name__}.auto_convert: "
-        meter_types = [Meter, Length] + [subclass for subclass in Meter.__subclasses__()]
-        LengthValidator._handle_exception(LengthValidator.validate_object_type, s, value, meter_types)
-        if type(value) != Length:
-            value = cls._decrease_meter_type(value) \
-                if value <= 1 else \
-                    cls._increase_meter_type(value)
-        return VolumePrinter.print_full_form(value)
+        handler = Validator._handle_exception
+        meter_types = [Length] + cls.get_meter_types()
+        handler(Validator.validate_object_type, s, value, meter_types)
+        return VolumePrinter.print_full_form(cls._auto_convert(value))

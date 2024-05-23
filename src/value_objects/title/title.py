@@ -1,8 +1,8 @@
 import operator
 from typing import Iterator
 
-from .. import _error, _validate, _operate, _type_error, _validation_operation
-from ..validators import StringValidator
+from ... import _error, _validate, _operate, _type_error, _validation_operation
+from ...validators import StringValidator
 
 
 __all__ = [
@@ -13,7 +13,7 @@ __all__ = [
 class Title:
     
     __slots__ = [
-        "__value",
+        "_value",
     ]
     
     DEFAULT_TITLE = "Название"
@@ -24,13 +24,13 @@ class Title:
     
     @property
     def value(self) -> str:
-        return self.__value
+        return self._value
     
     @value.setter
     def value(self, value: str) -> None:
         s = f"\n\t{self.class_name}: "
         StringValidator._handle_exception(StringValidator.validate, s, value)
-        self.__value = value
+        self._value = value
     
     def __init__(self, value: str = DEFAULT_TITLE) -> None:
         self.value = value.value if isinstance(value, Title) else value

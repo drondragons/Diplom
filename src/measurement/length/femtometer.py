@@ -17,10 +17,6 @@ __all__ = [
 
 class FemtoMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-15)
     
     PREFIX_FORM = "фемто"

@@ -20,7 +20,7 @@ class Pound(Money):
     
     SHORT_FORM = str()
     FULL_FORM = "фунт"
-    INTERNATIONAL_FORM = "GBR"
+    INTERNATIONAL_FORM = "GBP"
     SYMBOL = "£"
     PLURAL_MONEY_FORMS = ["фунт" + form for form in DEFAULT_PLURAL_FORM]
     

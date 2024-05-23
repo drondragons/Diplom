@@ -1,4 +1,4 @@
-from ..real import Real
+from ..value_objects import Real
 from ..validators import NUMBER_TYPES
 from ..measurement import Length
 

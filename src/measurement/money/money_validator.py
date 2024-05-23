@@ -4,8 +4,8 @@ from .money import Money
 
 from .. import REAL_TYPES
 
-from ...real import Real, RealValidator
 from ...validators import DEFAULT_NUMBER_MAXIMUM
+from ...value_objects import Real, RealValidator
 
 
 __all__ = [

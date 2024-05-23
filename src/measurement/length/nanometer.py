@@ -17,10 +17,6 @@ __all__ = [
 
 class NanoMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-9)
     
     PREFIX_FORM = "нано"

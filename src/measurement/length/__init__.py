@@ -6,7 +6,7 @@ from .length_converter import *
 
 
 import operator
-from typing import Type, Union, Callable
+from typing import Type, Union
 
 def _meter_operate(
     right: object, 

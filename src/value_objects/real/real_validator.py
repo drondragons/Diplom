@@ -2,8 +2,8 @@ from typing import Tuple
 
 from .real import Real
 
-from ..validators import NumberValidator
-from ..validators import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
+from ...validators import NumberValidator
+from ...validators import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 
 
 __all__ = [

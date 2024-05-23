@@ -2,11 +2,11 @@ import math
 import operator
 from typing import Tuple
 
-from .. import OPERATORS
-from .. import _format_number
-from .. import _error, _validate, _operate, _type_error, _validation_operation
-from ..validators import NUMBER_TYPES
-from ..validators import NumberValidator
+from ... import OPERATORS
+from ... import _format_number
+from ... import _error, _validate, _operate, _type_error, _validation_operation
+from ...validators import NUMBER_TYPES
+from ...validators import NumberValidator
 
 
 __all__ = [
@@ -17,7 +17,7 @@ __all__ = [
 class Real:
     
     __slots__ = [
-        "__value"
+        "_value"
     ]
     
     DEFAULT_REAL_VALUE = 0
@@ -28,13 +28,13 @@ class Real:
     
     @property
     def value(self) -> NUMBER_TYPES:
-        return self.__value
+        return self._value
     
     @value.setter
     def value(self, value: NUMBER_TYPES) -> None:
         s = f"\n\t{self.class_name}: "
         NumberValidator._handle_exception(NumberValidator.validate, s, value, NUMBER_TYPES)
-        self.__value = value
+        self._value = value
         
     def __init__(self, value: NUMBER_TYPES = DEFAULT_REAL_VALUE) -> None:
         self.value = value.value if isinstance(value, Real) else value

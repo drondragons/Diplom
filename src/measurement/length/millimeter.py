@@ -17,10 +17,6 @@ __all__ = [
 
 class MilliMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-3)
     
     PREFIX_FORM = "милли"

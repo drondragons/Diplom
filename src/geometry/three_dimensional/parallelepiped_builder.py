@@ -1,10 +1,9 @@
 from .parallelepiped import Parallelepiped, Cube
 
-from .. import LINE_TYPES, REAL_TYPES
-from ..one_dimensional import Line
+from .. import LENGTH_TYPES, REAL_TYPES
 
-from ...title import Title
 from ...measurement import Length
+from ...value_objects import Title
 
 
 __all__ = [
@@ -16,39 +15,21 @@ __all__ = [
 class ParallelepipedBuilder:
     
     def __init__(self) -> None:
-        self.length = Line(title = "Длина")
-        self.width = Line(title = "Ширина")
-        self.height = Line(title = "Высота")
+        self.length = Length()
+        self.width = Length()
+        self.height = Length()
         self.title = Title(Parallelepiped.DEFAULT_TITLE)
         
-    def add_length(self, value: LINE_TYPES) -> "ParallelepipedBuilder":
-        if isinstance(value, Line):
-            value = value.length
-        elif isinstance(value, Length):
-            value = value
-        elif isinstance(value, REAL_TYPES):
-            value = Length(value)
-        self.length = Line(value, "Длина")
+    def add_length(self, value: LENGTH_TYPES) -> "ParallelepipedBuilder":
+        self.length = Length(value) if isinstance(value, REAL_TYPES) else value
         return self
     
-    def add_width(self, value: LINE_TYPES) -> "ParallelepipedBuilder":
-        if isinstance(value, Line):
-            value = value.length
-        elif isinstance(value, Length):
-            value = value
-        elif isinstance(value, REAL_TYPES):
-            value = Length(value)
-        self.width = Line(value, "Ширина")
+    def add_width(self, value: LENGTH_TYPES) -> "ParallelepipedBuilder":
+        self.width = Length(value) if isinstance(value, REAL_TYPES) else value
         return self
     
-    def add_height(self, value: LINE_TYPES) -> "ParallelepipedBuilder":
-        if isinstance(value, Line):
-            value = value.length
-        elif isinstance(value, Length):
-            value = value
-        elif isinstance(value, REAL_TYPES):
-            value = Length(value)
-        self.height = Line(value, "Высота")
+    def add_height(self, value: LENGTH_TYPES) -> "ParallelepipedBuilder":
+        self.height = Length(value) if isinstance(value, REAL_TYPES) else value
         return self
     
     def add_title(self, value: str | Title) -> "ParallelepipedBuilder":
@@ -62,17 +43,11 @@ class ParallelepipedBuilder:
 class CubeBuilder:
     
     def __init__(self) -> None:
-        self.side = Line(title = "Сторона")
+        self.side = Length()
         self.title = Title(Cube.DEFAULT_TITLE)
         
-    def add_side(self, value: LINE_TYPES) -> "CubeBuilder":
-        if isinstance(value, Line):
-            value = value.length
-        elif isinstance(value, Length):
-            value = value
-        elif isinstance(value, REAL_TYPES):
-            value = Length(value)
-        self.side = Line(value, "Сторона")
+    def add_side(self, value: LENGTH_TYPES) -> "CubeBuilder":
+        self.side = Length(value) if isinstance(value, REAL_TYPES) else value
         return self
     
     def add_title(self, value: str | Title) -> "CubeBuilder":

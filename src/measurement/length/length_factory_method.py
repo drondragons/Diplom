@@ -15,7 +15,7 @@ from .micrometer import MicroMeter
 
 from .. import REAL_TYPES
 
-from ...real import Real, RealFactoryMethod, RealValidator
+from ...value_objects import Real, RealFactoryMethod, RealValidator
 from ...validators import Validator
 
 
@@ -48,14 +48,15 @@ class LengthFactoryMethod(RealFactoryMethod):
     ) -> Length:
         s = f"\n\t{cls.__name__}.generate: "
         
-        Validator._handle_exception(Validator.validate_object_type, s, minimum, REAL_TYPES)
-        Validator._handle_exception(RealValidator.validate_interval, s, Real(minimum), 0)
-        Validator._handle_exception(Validator.validate_object_type, s, maximum, REAL_TYPES)
-        Validator._handle_exception(Validator.validate_object_type, s, is_int, bool)
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, minimum, REAL_TYPES)
+        handler(RealValidator.validate_interval, s, Real(minimum), 0)
+        handler(Validator.validate_object_type, s, maximum, REAL_TYPES)
+        handler(Validator.validate_object_type, s, is_int, bool)
         
         subclasses = [Meter, Length] + [subclass for subclass in Meter.__subclasses__()]
         meter_types = [NoneType] + subclasses
-        Validator._handle_exception(Validator.validate_type_of_type, s, length_type, meter_types)
+        handler(Validator.validate_type_of_type, s, length_type, meter_types)
     
         length_type = random.choice(subclasses) if length_type == NoneType else length_type
         return length_type(super().generate(minimum, maximum, is_int))

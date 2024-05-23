@@ -1,12 +1,14 @@
 import os
 import pandas
-from typing import Dict, Type
+from typing import Dict, Type, List
 from datetime import date
 
 from .money import Money
-from .money_validator import MoneyValidator
 
+from .. import _convert
 from ..converter import Converter
+
+from ...validators import Validator
 
 
 __all__ = [
@@ -20,6 +22,10 @@ class MoneyConverter(Converter):
     PROJECT_DIR = os.getcwd()
     CURRENT_DIR = os.path.join(PROJECT_DIR, "src", "measurement", "money")
     FILE_PATH = os.path.join(CURRENT_DIR, "currency.xml")
+    
+    @classmethod
+    def get_money_types(cls) -> List[Type]:
+        return [subclass for subclass in Money.__subclasses__()]
     
     @classmethod
     def _get_currency(cls) -> pandas.DataFrame:
@@ -60,15 +66,39 @@ class MoneyConverter(Converter):
         return result
     
     @classmethod
-    def convert(cls, input: Money, output: Type = Money) -> Money:
-        s = f"\n\t{cls.__name__}.convert: "
-        subclasses = [Money] + [subclass for subclass in Money.__subclasses__()]
-        MoneyValidator._handle_exception(MoneyValidator.validate_object_type, s, input, Money)
-        MoneyValidator._handle_exception(MoneyValidator.validate_type_of_type, s, output, subclasses)
-        
+    def _convert(cls, input: Money, output: Type = Money) -> Money:
         daily_currency = cls._get_daily_currency_values()
-
         first = daily_currency[input.INTERNATIONAL_FORM]
         second = daily_currency[output.INTERNATIONAL_FORM]
-
-        return output(input.value * first / second)
+        return output(input.value) \
+            if type(input) == Money or type(output) == Money else \
+                output(_convert(input.value, first, second))
+    
+    @classmethod
+    def convert(cls, input: Money, output: Type = Money) -> Money:
+        s = f"\n\t{cls.__name__}.convert: "
+        handler = Validator._handle_exception
+        money_types = cls.get_money_types() + [Money]
+        handler(Validator.validate_object_type, s, input, money_types)
+        handler(Validator.validate_type_of_type, s, output, money_types)
+        return cls._convert(input, output)
+    
+    @classmethod
+    def _increase_meter_type(cls, value: Money) -> Money:
+        return cls._increase_type(value, cls.get_money_types())
+        
+    @classmethod
+    def _decrease_meter_type(cls, value: Money) -> Money:
+        return cls._decrease_type(value, cls.get_money_types())
+    
+    @classmethod
+    def auto_convert(cls, value: Money) -> Money:
+        s = f"\n\t{cls.__name__}.auto_convert: "
+        handler = Validator._handle_exception
+        money_types = cls.get_money_types() + [Money]
+        handler(Validator.validate_object_type, s, value, money_types)
+        if type(value) != Money:
+            value = cls._decrease_meter_type(value) \
+                        if value <= 1 else \
+                            cls._increase_meter_type(value)
+        return value

@@ -17,10 +17,6 @@ __all__ = [
 
 class KiloMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** 3
     
     PREFIX_FORM = "кило"

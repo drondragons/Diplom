@@ -18,10 +18,6 @@ __all__ = [
 
 class Meter(Length):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** 0
     
     SHORT_FORM = "м"

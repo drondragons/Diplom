@@ -4,11 +4,10 @@ from typing import Type
 from .parallelepiped import Parallelepiped, Cube
 
 from .. import REAL_TYPES
-from ..one_dimensional import LineFactoryMethod
 
-from ...title import Title
 from ...validators import Validator
-from ...measurement import Length
+from ...measurement import Length, LengthFactoryMethod
+from ...value_objects import Title
 from ...factory_method import FactoryMethod
 
 
@@ -33,10 +32,15 @@ class ParallelepipedFactoryMethod(FactoryMethod):
         title: str | Title = Parallelepiped.DEFAULT_TITLE
     ) -> Parallelepiped:
         s = f"\n\t{cls.__name__}.generate: "
-        width = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Ширина")
-        length = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Длина")
-        height = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Высота")
-        Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        width = generator(minimum, maximum, is_int, length_type)
+        length = generator(minimum, maximum, is_int, length_type)
+        height = generator(minimum, maximum, is_int, length_type)
+        
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
         return Parallelepiped(length, width, height, title)
     
 
@@ -52,6 +56,11 @@ class CubeFactoryMethod(FactoryMethod):
         title: str | Title = Cube.DEFAULT_TITLE
     ) -> Cube:
         s = f"\n\t{cls.__name__}.generate: "
-        side = LineFactoryMethod.generate(minimum, maximum, is_int, length_type, "Сторона")
-        Validator._handle_exception(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        side = generator(minimum, maximum, is_int, length_type)
+        
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
         return Cube(side, title)

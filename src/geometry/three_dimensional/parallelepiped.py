@@ -1,11 +1,11 @@
 import operator
 
-from ..one_dimensional import Line, LineValidator
+from ..one_dimensional import Line
 from ..two_dimensional import Rectangle
 
 from ... import _validate
-from ...title import Title
-from ...measurement import SquareConverter, VolumeConverter
+from ...measurement import SquareConverter, VolumeConverter, Length, LengthValidator
+from ...value_objects import Title
 
 
 __all__ = [
@@ -17,22 +17,21 @@ __all__ = [
 class Parallelepiped(Rectangle):
     
     __slots__ = [
-        "__height",
+        "_height",
     ]
     
     DEFAULT_TITLE = "Параллелепипед"
     
     @property
     def height(self) -> Line:
-        return self.__height
+        return self._height
     
     @height.setter
-    def height(self, height: Line) -> None:
+    def height(self, height: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LineValidator._handle_exception(LineValidator.validate, s, height, 0)
-        if height.title == Line.DEFAULT_TITLE:
-            height.title = "Высота"
-        self.__height = height
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, height, 0)
+        self._height = Line(height, "Высота")
         
     @property
     def volume(self) -> str:
@@ -48,18 +47,17 @@ class Parallelepiped(Rectangle):
     
     @property
     def perimeter(self) -> Line:
-        perimeter = 4 * (self.length + self.width + self.height)
-        perimeter.title = "Периметр"
-        return perimeter
+        perimeter = 4 * (self.length.length + self.width.length + self.height.length)
+        return Line(perimeter, "Периметр")
     
     def is_cube(self) -> bool:
         return self.length == self.width == self.height
     
     def __init__(
         self, 
-        length: Line = Line(title = Title("Длина")),
-        width: Line = Line(title = Title("Ширина")),
-        height: Line = Line(title = Title("Высота")),
+        length: Length = Length(),
+        width: Length = Length(),
+        height: Length = Length(),
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         self.width = width
@@ -127,42 +125,41 @@ class Cube(Parallelepiped):
         return self.length
     
     @side.setter
-    def side(self, side: Line) -> None:
+    def side(self, side: Length) -> None:
         s = f"\n\t{self.class_name}: "
-        LineValidator._handle_exception(LineValidator.validate, s, side, 0)
-        if side.title == Line.DEFAULT_TITLE:
-            side.title = "Сторона"
-        self.__width = side
-        self.__length = side
-        self.__height = side
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, side, 0)
+        self._width = Line(side, "Сторона")
+        self._length = Line(side, "Сторона")
+        self._height = Line(side, "Сторона")
         
     @property
     def length(self) -> Line:
-        return self.__length
+        return self._length
     
     @length.setter
-    def length(self, length: Line) -> None:
+    def length(self, length: Length) -> None:
         self.side = length
         
     @property
     def width(self) -> Line:
-        return self.__width
+        return self._width
     
     @width.setter
-    def width(self, width: Line) -> None:
+    def width(self, width: Length) -> None:
         self.side = width
         
     @property
     def height(self) -> Line:
-        return self.__height
+        return self._height
         
     @height.setter
-    def height(self, height: Line) -> None:
+    def height(self, height: Length) -> None:
         self.side = height
         
     def __init__(
         self, 
-        side: Line = Line(title = Title("Сторона")),
+        side: Length = Length(),
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         super().__init__(side, side, side, title)

@@ -17,10 +17,6 @@ __all__ = [
 
 class PikoMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-12)
     
     PREFIX_FORM = "пико"

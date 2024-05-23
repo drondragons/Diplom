@@ -17,10 +17,6 @@ __all__ = [
 
 class MicroMeter(Meter):
     
-    __slots__ = [
-        "__value",
-    ]
-    
     SIZE_SI = 10 ** (-6)
     
     PREFIX_FORM = "микро"
