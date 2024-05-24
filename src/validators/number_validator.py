@@ -1,9 +1,9 @@
+from typing import Tuple, Type, List, Union
 from decimal import Decimal
 from fractions import Fraction
-from typing import Tuple, Type
 
+from . import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 from .validator import Validator
-from .constants import NUMBER_TYPES, DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 
 from .. import _format_number
 
@@ -20,7 +20,7 @@ __all__ = [
 class NumberValidator(Validator):
     
     @classmethod
-    def _validate_interval(
+    def __validate_interval(
         cls,
         value: NUMBER_TYPES, 
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
@@ -38,23 +38,24 @@ class NumberValidator(Validator):
         return None, str()
     
     @classmethod
-    def validate_interval(
+    def _validate_interval(
         cls,
         value: NUMBER_TYPES, 
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
-    ) -> Tuple[None | ValueError, str]:
-        for item in (value, minimum, maximum):
-            exception, message = cls.validate_object_type(item, NUMBER_TYPES)
-            if exception:
-                return exception, message
-        return cls._validate_interval(value, minimum, maximum)
+    ) -> Tuple[None | TypeError | ValueError, str]:
+        exception, message = cls.validate_object_type(minimum, NUMBER_TYPES)
+        if not exception:
+            exception, message = cls.validate_object_type(maximum, NUMBER_TYPES)
+        if not exception:
+            exception, message = cls.__validate_interval(value, minimum, maximum)
+        return exception, message
     
     @classmethod
     def validate(
         cls,
         value: NUMBER_TYPES, 
-        _type: Type,
+        _type: Type | Union[Type] | List[Type] | Tuple[Type] = NUMBER_TYPES,
         minimum: NUMBER_TYPES = DEFAULT_NUMBER_MINIMUM, 
         maximum: NUMBER_TYPES = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
@@ -62,7 +63,7 @@ class NumberValidator(Validator):
         if not exception:
             exception, message = cls.validate_object_type(value, _type)
         if not exception:
-            exception, message = cls.validate_interval(value, minimum, maximum)
+            exception, message = cls._validate_interval(value, minimum, maximum)
         return exception, message
     
 

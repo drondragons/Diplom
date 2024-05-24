@@ -1,6 +1,6 @@
 from src import Validator, StringValidator, NumberValidator, ListValidator
-from src import Title, TitleValidator, Cube
-from src import Real, RealValidator, RealFactoryMethod, FemtoMeter
+from src import Title, TitleValidator
+from src import Real, RealValidator, RealFactoryMethod
 from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter, CentiMeter
 
 from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro, DeciMeter
@@ -10,11 +10,20 @@ from src import Line, LineFactoryMethod, Rectangle, CubeFactoryMethod, Square
 from src import RectangleFactoryMethod, SquareFactoryMethod, NanoMeter, ParallelepipedBuilder
 
 from types import NoneType
-from src import Validator, LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Parallelepiped
+from src import Validator
+from src import Money, MoneyConverter, MoneyFactoryMethod, MoneyValidator, Ruble, Dollar
+from src import LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Parallelepiped
 
 from src import Flat, Price, PriceFactoryMethod, FlatFactoryMethod, FlatBuilder
 
 def main() -> None:
+    print(Dollar(Real(13)))
+    print(MoneyConverter.convert(Ruble(100), Ruble))
+    print(MoneyFactoryMethod.generate())
+    print(MoneyValidator.validate(Money(1), int(), int(1)))
+    
+    
+    
     print(RectangleFactoryMethod.generate())
     
     print(MeterConverter.auto_convert(Length(10)))
@@ -74,7 +83,7 @@ def main() -> None:
     
     print(Price(Euro(10), "Цена за метр"))
     print(PriceFactoryMethod.generate())
-    print(FlatFactoryMethod.generate())
+    print(FlatFactoryMethod.generate(18, 19))
     
     builder = FlatBuilder()
     flat = builder.build()

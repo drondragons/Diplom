@@ -16,22 +16,6 @@ __all__ = [
 class MoneyValidator(RealValidator):
     
     @classmethod
-    def validate_interval(
-        cls,
-        value: Money, 
-        minimum: REAL_TYPES = Money.DEFAULT_MONEY_VALUE, 
-        maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM
-    ) -> Tuple[None | ValueError, str]:
-        exception, message = cls.validate_object_type(value, Money)
-        if not exception:
-            exception, message = cls._validate_minimum_maximum(minimum, maximum)
-        if not exception:
-            exception, message = RealValidator.validate_interval(Real(minimum), 0)
-        if not exception:
-            exception, message = cls._validate_interval(value, minimum, maximum)
-        return exception, message
-    
-    @classmethod
     def validate(
         cls,
         value: Money, 
@@ -40,5 +24,13 @@ class MoneyValidator(RealValidator):
     ) -> Tuple[None | TypeError | ValueError, str]:
         exception, message = cls.validate_object_type(value, Money)
         if not exception:
-            exception, message = cls.validate_interval(value, minimum, maximum)
+            exception, message = super().validate(Real(minimum), 0)
+        if not exception:
+            exception, message = super().validate(Real(maximum), 0)
+        if not exception:
+            exception, message = super().validate(
+                value.value,
+                minimum, 
+                maximum
+            )
         return exception, message

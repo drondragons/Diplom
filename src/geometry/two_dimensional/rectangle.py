@@ -35,8 +35,10 @@ class Rectangle:
     @length.setter
     def length(self, length: Length) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, length, 0)
+        
         self._length = Line(length, "Длина")
         
     @property
@@ -46,8 +48,10 @@ class Rectangle:
     @width.setter
     def width(self, width: Length) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, width, 0)
+        
         self._width = Line(width, "Ширина")
         
     @property

@@ -33,13 +33,13 @@ class ParallelepipedFactoryMethod(FactoryMethod):
     ) -> Parallelepiped:
         s = f"\n\t{cls.__name__}.generate: "
         
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
         generator = LengthFactoryMethod.generate
         width = generator(minimum, maximum, is_int, length_type)
         length = generator(minimum, maximum, is_int, length_type)
         height = generator(minimum, maximum, is_int, length_type)
-        
-        handler = Validator._handle_exception
-        handler(Validator.validate_object_type, s, title, str | Title)
         
         return Parallelepiped(length, width, height, title)
     
@@ -57,10 +57,10 @@ class CubeFactoryMethod(FactoryMethod):
     ) -> Cube:
         s = f"\n\t{cls.__name__}.generate: "
         
-        generator = LengthFactoryMethod.generate
-        side = generator(minimum, maximum, is_int, length_type)
-        
         handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        side = generator(minimum, maximum, is_int, length_type)
         
         return Cube(side, title)

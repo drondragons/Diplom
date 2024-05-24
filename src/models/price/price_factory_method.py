@@ -1,4 +1,3 @@
-import random
 from types import NoneType
 from typing import Type
 
@@ -33,10 +32,10 @@ class PriceFactoryMethod(FactoryMethod):
     ) -> Price:
         s = f"\n\t{cls.__name__}.generate: "
         
-        generator = MoneyFactoryMethod.generate
-        money = generator(minimum, maximum, is_int, money_type)
-        
         handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = MoneyFactoryMethod.generate
+        money = generator(minimum, maximum, is_int, money_type)
         
         return Price(money, title)

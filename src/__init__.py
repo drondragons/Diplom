@@ -1,13 +1,20 @@
+from .constants import *
+from .factory_method import *
+
+
 from decimal import Decimal
 from fractions import Fraction
 from typing import Type, Union
-
 
 def _format_number(value: object) -> str:
     if isinstance(value, float | Fraction):
         value = Decimal(float(value))
     value = _get_pretty_number(value)
     return "{:,}".format(value).replace(",", " ")
+
+
+from .validators import *
+
 
 def _get_pretty_number(value: object) -> int | float:
     rounded_value = round(float(value), 6)
@@ -28,10 +35,6 @@ def _format_plural_form(value: object, forms: list[str]) -> str:
 
 def _error(obj: object, message: str = str()) -> str:
     return f"\n\t{type(obj).__name__}: {message}"
-
-
-from .constants import *
-
 
 def _type_error(right: object, left: object, operator: operator) -> str:
     left_name = f"'{type(left).__name__}'"
@@ -57,7 +60,7 @@ def _operate(
     left: object, 
     left_type: Type | Union[Type],
     operator: operator
-) -> None:
+) -> object:
     if isinstance(right, right_type) and isinstance(left, left_type):
         return operator(right, left.value)
     if isinstance(right, left_type) and isinstance(left, right_type):
@@ -73,9 +76,8 @@ def _validation_operation(
     _type._validate(right, left, operator)
     return _type._operate(right, left, operator)
 
-from .factory_method import *
-from .validators import *
-from .measurement import *
+
 from .value_objects import *
+from .measurement import *
 from .geometry import *
 from .models import *

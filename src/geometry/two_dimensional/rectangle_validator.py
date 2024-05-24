@@ -28,7 +28,6 @@ class RectangleValidator(Validator):
         maximum_width: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
         minimum_length: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE,
         maximum_length: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
-        can_title_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
         exception, message = cls.validate_type_of_type(_type, Rectangle | Square)
         if not exception:
@@ -37,18 +36,16 @@ class RectangleValidator(Validator):
             exception, message = LineValidator.validate(
                 value.length,
                 minimum_length,
-                maximum_length,
-                can_title_be_empty
+                maximum_length
             )
         if not exception:
             exception, message = LineValidator.validate(
                 value.width,
                 minimum_width,
-                maximum_width,
-                can_title_be_empty
+                maximum_width
             )
         if not exception:
-            exception, message = TitleValidator.validate(value.title, can_title_be_empty)
+            exception, message = TitleValidator.validate(value.title)
         return exception, message
     
     

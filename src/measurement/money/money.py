@@ -6,9 +6,9 @@ from .money_meta import MoneyMeta
 
 from .. import REAL_TYPES, DEFAULT_FULL_FORM, DEFAULT_SHORT_FORM, DEFAULT_FORMS
 
-from ... import _format_plural_form
-from ... import _error, _validate, _operate, _type_error, _validation_operation
-from ... import OPERATORS
+from ... import _format_plural_form, _error, _validate
+from ... import _operate, _type_error, _validation_operation
+from ...constants import OPERATORS
 from ...value_objects import Real, RealValidator
 
 
@@ -41,9 +41,12 @@ class Money(metaclass=MoneyMeta):
     
     @value.setter
     def value(self, value: REAL_TYPES) -> None:
-        value = Real(value)
         s = f"\n\t{self.class_name}: "
-        RealValidator._handle_exception(RealValidator.validate, s, value, 0)
+        
+        value = Real(value)
+        handler = RealValidator._handle_exception
+        handler(RealValidator.validate, s, value, 0)
+        
         self._value = value
         
     def __init__(self, value: REAL_TYPES = DEFAULT_MONEY_VALUE) -> None:
@@ -82,7 +85,7 @@ class Money(metaclass=MoneyMeta):
     
     @staticmethod
     def _operate(right: object, left: object, operator: operator) -> object:
-        _operate(right, REAL_TYPES, left, Money, operator)
+        return _operate(right, REAL_TYPES, left, Money, operator)
     
     # ------------------- Unary operators ---------------------------
     

@@ -22,11 +22,10 @@ class PriceValidator(Validator):
         value: Price,
         minimum: REAL_TYPES = Money.DEFAULT_MONEY_VALUE,
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
-        can_title_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
         exception, message = Validator.validate_object_type(value, Price)
         if not exception:
             exception, message = MoneyValidator.validate(value.value, minimum, maximum)
         if not exception:
-            exception, message = TitleValidator.validate(value.title, can_title_be_empty)
+            exception, message = TitleValidator.validate(value.title)
         return exception, message

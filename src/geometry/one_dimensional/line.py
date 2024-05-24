@@ -6,8 +6,8 @@ from . import _line_operate
 
 from .. import LENGTH_TYPES
 
-from ... import OPERATORS
 from ... import _error, _type_error, _validate, _validation_operation
+from ...constants import OPERATORS
 from ...measurement import Length, LengthValidator, MeterConverter
 from ...value_objects import Title
 
@@ -37,8 +37,10 @@ class Line:
     @length.setter
     def length(self, length: Length) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, length, 0)
+        
         self._length = MeterConverter.auto_convert(length)
         
     @property

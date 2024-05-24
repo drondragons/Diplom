@@ -13,8 +13,8 @@ __all__ = [
 class FlatBuilder:
     
     def __init__(self) -> None:
-        self.footage = Flat.DEFAULT_FOOTAGE
-        self.price_per_meter = Flat.DEFAULT_PRICE_PER_METER
+        self.footage = Flat.MINIMUM_FOOTAGE
+        self.price_per_meter = Flat.MINIMUM_PRICE_PER_METER
         self.title = Title(Flat.DEFAULT_TITLE)
         
     def add_footage(self, value: LENGTH_TYPES) -> "FlatBuilder":

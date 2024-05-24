@@ -41,25 +41,30 @@ class MeterConverter(LengthConverter):
     @classmethod
     def convert(cls, input: Length, output: Type = Length) -> Length:
         s = f"\n\t{cls.__name__}.convert: "
-        handler = Validator._handle_exception
         meter_types = cls.get_meter_types() + [Length]
+        
+        handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, input, meter_types)
         handler(Validator.validate_type_of_type, s, output, meter_types)
+        
         return cls._convert(input, output)
     
     @classmethod
-    def _auto_convert(cls, value: Length) -> Length:
-        if type(value) != Length:
-            value = cls._decrease_meter_type(value) \
-                        if value <= 1 else \
-                            cls._increase_meter_type(value)
-        return value
+    def _auto_convertation(cls, value: Length) -> Length:
+        return cls._auto_convert(
+            value,
+            Length,
+            cls._decrease_meter_type,
+            cls._increase_meter_type
+        )
     
     @classmethod
     def auto_convert(cls, value: Length) -> Length:
         s = f"\n\t{cls.__name__}.auto_convert: "
-        handler = Validator._handle_exception
         meter_types = cls.get_meter_types() + [Length]
+        
+        handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, value, meter_types)
-        return cls._auto_convert(value)
+        
+        return cls._auto_convertation(value)
                 

@@ -1,3 +1,4 @@
+import math
 import random
 
 from .real import Real
@@ -21,20 +22,24 @@ class RealFactoryMethod(FactoryMethod):
         maximum: Real | NUMBER_TYPES = FactoryMethod.DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True
     ) -> Real:
-        minimum = Real(minimum)
-        maximum = Real(maximum)
-        
         s = f"\n\t{cls.__name__}.generate: "
+        
         handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, is_int, bool)
+        handler(Validator.validate_object_type, s, minimum, Real | NUMBER_TYPES)
+        handler(Validator.validate_object_type, s, maximum, Real | NUMBER_TYPES)
         
-        new_minimum = min(minimum, maximum)
-        new_maximum = max(minimum, maximum)
-        if new_maximum - new_minimum < 1 and is_int:
-            message = s
-            message += "Невозможно сгенерировать целое число, "
-            message += f"так как разница между минимумом "
-            message += f"и максимумом меньше единицы!"
+        new_minimum = Real(min(minimum, maximum))
+        new_maximum = Real(max(minimum, maximum))
+        if math.ceil(new_minimum) > math.floor(new_maximum) and is_int:
+            message = s + "Невозможно сгенерировать целое число "
+            message += f"между {new_minimum} и {new_maximum}!"
             raise ValueError(message)
-        method = random.randint if is_int else random.uniform
-        return Real(method(new_minimum.value, new_maximum.value))
+        
+        new_minimum = new_minimum.value
+        new_maximum = new_maximum.value
+        if is_int:
+            value = random.randint(math.ceil(new_minimum), math.floor(new_maximum))
+        else:
+            value = random.uniform(new_minimum, new_maximum)
+        return Real(value)

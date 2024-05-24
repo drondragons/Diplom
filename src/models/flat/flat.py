@@ -3,10 +3,11 @@ from typing import Tuple
 
 from ..price import Price
 
-from ... import _validate, _error, _type_error, OPERATORS
+from ... import _validate, _error, _type_error
+from ...constants import OPERATORS
 from ...geometry import Line
 from ...measurement import Money, MoneyValidator, MoneyConverter, Ruble
-from ...measurement import Length, LengthValidator, Meter, SquarePrinter
+from ...measurement import Length, LengthValidator, Meter, SquarePrinter, MeterConverter
 from ...value_objects import Title
 
 
@@ -24,8 +25,9 @@ class Flat:
     ]
     
     DEFAULT_TITLE = "Квартира"
-    DEFAULT_FOOTAGE = Meter(33)
-    DEFAULT_PRICE_PER_METER = Money(100_000)
+    
+    MINIMUM_FOOTAGE = Meter(18)
+    MINIMUM_PRICE_PER_METER = Money(10_000)
     
     @property
     def class_name(self) -> str:
@@ -38,9 +40,13 @@ class Flat:
     @footage.setter
     def footage(self, footage: Length) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, footage, 0)
-        handler(LengthValidator.validate_object_type, s, footage, Length | Meter)
+        
+        footage = MeterConverter.convert(footage, Meter)
+        handler(LengthValidator.validate, s, footage, self.MINIMUM_FOOTAGE.value)
+        
         self._footage = Line(footage, "Метраж")
         
     @property
@@ -50,8 +56,13 @@ class Flat:
     @price_per_meter.setter
     def price_per_meter(self, price_per_meter: Money) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = MoneyValidator._handle_exception
         handler(MoneyValidator.validate, s, price_per_meter, 0)
+            
+        price_per_meter = MoneyConverter.convert(price_per_meter, Ruble)
+        handler(MoneyValidator.validate, s, price_per_meter, self.MINIMUM_PRICE_PER_METER.value)
+        
         self._price_per_meter = Price(price_per_meter, "Цена за квадратный метр")
         
     @property
@@ -77,8 +88,8 @@ class Flat:
     
     def __init__(
         self, 
-        footage: Length = DEFAULT_FOOTAGE,
-        price_per_meter: Money = DEFAULT_PRICE_PER_METER,
+        footage: Length = MINIMUM_FOOTAGE,
+        price_per_meter: Money = MINIMUM_PRICE_PER_METER,
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         self.footage = footage

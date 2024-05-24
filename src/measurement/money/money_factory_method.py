@@ -41,10 +41,14 @@ class MoneyFactoryMethod(RealFactoryMethod):
         s = f"\n\t{cls.__name__}.generate: "
         
         handler = Validator._handle_exception
-        handler(Validator.validate_object_type, s, minimum, REAL_TYPES)
-        handler(RealValidator.validate_interval, s, Real(minimum), 0)
-        handler(Validator.validate_object_type, s, maximum, REAL_TYPES)
         handler(Validator.validate_object_type, s, is_int, bool)
+        handler(Validator.validate_object_type, s, minimum, REAL_TYPES)
+        handler(Validator.validate_object_type, s, maximum, REAL_TYPES)
+        
+        minimum = Real(minimum)
+        maximum = Real(maximum)
+        handler(RealValidator.validate, s, minimum, 0)
+        handler(RealValidator.validate, s, maximum, 0)
         
         subclasses = [Money] + [subclass for subclass in Money.__subclasses__()]
         money_types = [NoneType] + subclasses

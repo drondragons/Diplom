@@ -29,8 +29,10 @@ class Parallelepiped(Rectangle):
     @height.setter
     def height(self, height: Length) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, height, 0)
+        
         self._height = Line(height, "Высота")
         
     @property

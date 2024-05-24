@@ -33,8 +33,10 @@ class Price:
     @value.setter
     def value(self, value: Money) -> None:
         s = f"\n\t{self.class_name}: "
+        
         handler = MoneyValidator._handle_exception
         handler(MoneyValidator.validate, s, value, 0)
+        
         self._value = MoneyConverter.convert(value, Ruble)
         
     @property

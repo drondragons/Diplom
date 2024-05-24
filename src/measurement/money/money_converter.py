@@ -77,28 +77,37 @@ class MoneyConverter(Converter):
     @classmethod
     def convert(cls, input: Money, output: Type = Money) -> Money:
         s = f"\n\t{cls.__name__}.convert: "
-        handler = Validator._handle_exception
         money_types = cls.get_money_types() + [Money]
+        
+        handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, input, money_types)
         handler(Validator.validate_type_of_type, s, output, money_types)
+        
         return cls._convert(input, output)
     
     @classmethod
-    def _increase_meter_type(cls, value: Money) -> Money:
+    def _increase_money_type(cls, value: Money) -> Money:
         return cls._increase_type(value, cls.get_money_types())
         
     @classmethod
-    def _decrease_meter_type(cls, value: Money) -> Money:
+    def _decrease_money_type(cls, value: Money) -> Money:
         return cls._decrease_type(value, cls.get_money_types())
+    
+    @classmethod
+    def _auto_convertation(cls, value: Money) -> Money:
+        return cls._auto_convert(
+            value,
+            Money,
+            cls._decrease_money_type,
+            cls._increase_money_type
+        )
     
     @classmethod
     def auto_convert(cls, value: Money) -> Money:
         s = f"\n\t{cls.__name__}.auto_convert: "
-        handler = Validator._handle_exception
         money_types = cls.get_money_types() + [Money]
+        
+        handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, value, money_types)
-        if type(value) != Money:
-            value = cls._decrease_meter_type(value) \
-                        if value <= 1 else \
-                            cls._increase_meter_type(value)
-        return value
+        
+        return cls._auto_convertation(value)

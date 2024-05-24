@@ -1,7 +1,7 @@
-from typing import List, Tuple, Type
+from typing import List, Tuple, Type, Union
 
+from . import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 from .validator import Validator
-from .constants import DEFAULT_NUMBER_MINIMUM, DEFAULT_NUMBER_MAXIMUM
 
 from .. import _format_number
 
@@ -14,20 +14,17 @@ __all__ = [
 class ListValidator(Validator):
     
     @classmethod
-    def validate_interval(
+    def _validate_interval(
         cls, 
         value_list: List[object], 
         minimum: int = DEFAULT_NUMBER_MINIMUM, 
         maximum: int = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | ValueError, str]:
-        exception, message = cls.validate_object_type(value_list, list)
+        exception, message = cls.validate_object_type(minimum, int)
+        if not exception:
+            exception, message = cls.validate_object_type(maximum, int)
         if exception:
             return exception, message
-        
-        for item in (minimum, maximum):
-            exception, message = cls.validate_object_type(item, int)
-            if exception:
-                return exception, message
         
         value_list = len(value_list)
         new_minimum = min(minimum, maximum)
@@ -43,26 +40,25 @@ class ListValidator(Validator):
         return None, str()
 
     @classmethod
-    def validate_elements_type(
+    def _validate_elements_type(
         cls,
         value_list: List[object],
         expected_type: Type
     ) -> Tuple[None | TypeError, str]:
-        exception, message = cls.validate_object_type(value_list, list)
-        if not exception:
-            exception, message = cls.validate_type(expected_type)
-        if not exception:
-            for element in value_list:
-                exception, message = cls.validate_object_type(element, expected_type)
-                if exception:
-                    break
+        exception, message = cls.validate_type(expected_type)
+        if exception:
+            return exception, message
+        for element in value_list:
+            exception, message = cls.validate_object_type(element, expected_type)
+            if exception:
+                break
         return exception, message
         
     @classmethod
     def validate(
         cls, 
         value_list: List[object],
-        element_type: Type,
+        element_type: Type | Union[Type] | List[Type] | Tuple[Type],
         minimum: int = DEFAULT_NUMBER_MINIMUM,
         maximum: int = DEFAULT_NUMBER_MAXIMUM
     ) -> Tuple[None | TypeError | ValueError, str]:
@@ -70,7 +66,7 @@ class ListValidator(Validator):
         if not exception:
             exception, message = cls.validate_object_type(value_list, list)
         if not exception:
-            exception, message = cls.validate_interval(value_list, minimum, maximum)
+            exception, message = cls._validate_interval(value_list, minimum, maximum)
         if not exception:
-            exception, message = cls.validate_elements_type(value_list, element_type)
+            exception, message = cls._validate_elements_type(value_list, element_type)
         return exception, message

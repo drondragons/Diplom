@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List
+from typing import List, Type, Callable
 
 
 __all__ = [
@@ -47,6 +47,18 @@ class Converter:
                     if value.value <= cls._convert(value, _type).value < 1000
         ]
         return cls._find_correct_type(result) if result else value
+    
+    @classmethod
+    def _auto_convert(
+        cls, 
+        value: object, 
+        _type: Type,
+        decrease_function: Callable,
+        increase_function: Callable
+    ) -> object:
+        if type(value) != _type:
+            value = decrease_function(value) if value <= 1 else increase_function(value)
+        return value
     
     def __new__(self) -> None:
         message = f"\n\t{self.__name__}: "

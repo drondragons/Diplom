@@ -32,12 +32,12 @@ class RectangleFactoryMethod(FactoryMethod):
     ) -> Rectangle:
         s = f"\n\t{cls.__name__}.generate: "
         
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, title, str | Title)
+        
         generator = LengthFactoryMethod.generate
         width = generator(minimum, maximum, is_int, length_type)
         length = generator(minimum, maximum, is_int, length_type)
-        
-        handler = Validator._handle_exception
-        handler(Validator.validate_object_type, s, title, str | Title)
         
         return Rectangle(length, width, title)
         
@@ -55,10 +55,10 @@ class SquareFactoryMethod(FactoryMethod):
     ) -> Square:
         s = f"\n\t{cls.__name__}.generate: "
         
-        generator = LengthFactoryMethod.generate
-        side = generator(minimum, maximum, is_int, length_type)
-        
         handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        side = generator(minimum, maximum, is_int, length_type)
         
         return Square(side, title)

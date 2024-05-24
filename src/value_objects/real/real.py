@@ -2,9 +2,9 @@ import math
 import operator
 from typing import Tuple
 
-from ... import OPERATORS
-from ... import _format_number
-from ... import _error, _validate, _operate, _type_error, _validation_operation
+from ... import _format_number, _error, _validate
+from ... import _operate, _type_error, _validation_operation
+from ...constants import OPERATORS
 from ...validators import NUMBER_TYPES
 from ...validators import NumberValidator
 
@@ -33,7 +33,10 @@ class Real:
     @value.setter
     def value(self, value: NUMBER_TYPES) -> None:
         s = f"\n\t{self.class_name}: "
-        NumberValidator._handle_exception(NumberValidator.validate, s, value, NUMBER_TYPES)
+        
+        handler = NumberValidator._handle_exception
+        handler(NumberValidator.validate, s, value, NUMBER_TYPES)
+        
         self._value = value
         
     def __init__(self, value: NUMBER_TYPES = DEFAULT_REAL_VALUE) -> None:

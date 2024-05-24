@@ -23,11 +23,10 @@ class LineValidator(Validator):
         value: Line,
         minimum: REAL_TYPES = Length.DEFAULT_LENGTH_VALUE,
         maximum: REAL_TYPES = DEFAULT_NUMBER_MAXIMUM,
-        can_title_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
         exception, message = Validator.validate_object_type(value, Line)
         if not exception:
             exception, message = LengthValidator.validate(value.length, minimum, maximum)
         if not exception:
-            exception, message = TitleValidator.validate(value.title, can_title_be_empty)
+            exception, message = TitleValidator.validate(value.title)
         return exception, message

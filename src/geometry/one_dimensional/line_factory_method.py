@@ -33,11 +33,11 @@ class LineFactoryMethod(FactoryMethod):
     ) -> Line:
         s = f"\n\t{cls.__name__}.generate: "
         
-        generator = LengthFactoryMethod.generate
-        length = generator(minimum, maximum, is_int, length_type)
-        
         handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, title, str | Title)
+        
+        generator = LengthFactoryMethod.generate
+        length = generator(minimum, maximum, is_int, length_type)
         
         titles = [Line.DEFAULT_TITLE] + DEFAULT_SIDE_TITLES
         title = random.choice(titles) if not title else title
