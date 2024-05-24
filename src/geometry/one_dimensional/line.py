@@ -143,7 +143,7 @@ class Line:
     # ------------------- Mathematical operators ---------------------------
     
     @staticmethod
-    def _math(right: object, left: object, operator: operator) -> "Length":
+    def _math(right: object, left: object, operator: operator) -> Length:
         return _validation_operation(right, left, operator, Line)
     
     def __add__(self, other: object) -> "Line":

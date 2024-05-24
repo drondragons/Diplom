@@ -12,6 +12,8 @@ from src import RectangleFactoryMethod, SquareFactoryMethod, NanoMeter, Parallel
 from types import NoneType
 from src import Validator, LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Parallelepiped
 
+from src import Flat, Price
+
 def main() -> None:
     print(RectangleFactoryMethod.generate())
     
@@ -65,21 +67,12 @@ def main() -> None:
     print(MoneyConverter.convert(Money(100), Dollar))
     print(MoneyConverter.convert(Yuan(100), Dollar))
     print(MoneyConverter.auto_convert(Ruble(100)))
-    # print(Cube(Line(Meter(12))))
-    # print(Cube())
-    # print(Parallelepiped())
     
+    flat = Flat(Meter(50), Ruble(100_000))
+    print(flat)
+    print(flat.__repr__())
     
-    # print(RectangleFactoryMethod.generate(length_type=Length))
-    # print(SquareFactoryMethod.generate())
-    # print(SquareConverter.auto_convert(FemtoMeter(0.01)))
-    # print(CentiMeter(10) + CentiMeter(10))
-    # print(CentiMeter(10) * CentiMeter(10))
-    # print(2 * (CentiMeter(10) + CentiMeter(10)))
-    # print(Rectangle(Line(CentiMeter(10)), Line(CentiMeter(15))))
-    # print(Rectangle(Line(Length(10)), Line(CentiMeter(15))))
-    # print(Rectangle(Line(CentiMeter(10)), Line(Length(15))))
-    # print(Rectangle(Line(Length(10)), Line(Length(15))))
+    print(Price(Euro(10), "Цена за метр"))
     
     
 if __name__ == "__main__":
