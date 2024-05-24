@@ -4,7 +4,7 @@ from typing import Tuple
 
 from ... import _error, _type_error, _operate, _validate, _validation_operation
 from ... import OPERATORS, REAL_TYPES
-from ...measurement import Money, MoneyValidator, MoneyConverter
+from ...measurement import Money, MoneyValidator, MoneyConverter, Ruble
 from ...value_objects import Title
 
 
@@ -35,7 +35,7 @@ class Price:
         s = f"\n\t{self.class_name}: "
         handler = MoneyValidator._handle_exception
         handler(MoneyValidator.validate, s, value, 0)
-        self._value = MoneyConverter.auto_convert(value)
+        self._value = MoneyConverter.convert(value, Ruble)
         
     @property
     def title(self) -> Title:

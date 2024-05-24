@@ -29,7 +29,7 @@ class PriceFactoryMethod(FactoryMethod):
         maximum: REAL_TYPES = DEFAULT_MAXIMUM_VALUE,
         is_int: bool = True,
         money_type: Type = NoneType,
-        title: str | Title = str()
+        title: str | Title = Price.DEFAULT_TITLE
     ) -> Price:
         s = f"\n\t{cls.__name__}.generate: "
         
@@ -39,4 +39,4 @@ class PriceFactoryMethod(FactoryMethod):
         handler = Validator._handle_exception
         handler(Validator.validate_object_type, s, title, str | Title)
         
-        return Price(money, Title(title))
+        return Price(money, title)

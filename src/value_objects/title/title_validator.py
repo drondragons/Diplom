@@ -22,11 +22,11 @@ class TitleValidator(StringValidator):
     def validate(
         cls, 
         value: Title, 
-        can_be_empty: bool = False
+        can_title_be_empty: bool = False
     ) -> Tuple[None | TypeError | ValueError, str]:
-        exception, message = cls.validate_object_type(can_be_empty, bool)
+        exception, message = cls.validate_object_type(can_title_be_empty, bool)
         if not exception:
             exception, message = cls.validate_object_type(value, Title)
-        if not exception and not can_be_empty:
+        if not exception and not can_title_be_empty:
             exception, message = cls.__validate_on_empty_title(value)
         return exception, message

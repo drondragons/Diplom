@@ -5,8 +5,8 @@ from ..price import Price
 
 from ... import _validate, _error, _type_error, OPERATORS
 from ...geometry import Line
-from ...measurement import Money, MoneyValidator, MoneyConverter
-from ...measurement import Length, LengthValidator
+from ...measurement import Money, MoneyValidator, MoneyConverter, Ruble
+from ...measurement import Length, LengthValidator, Meter, SquarePrinter
 from ...value_objects import Title
 
 
@@ -24,7 +24,7 @@ class Flat:
     ]
     
     DEFAULT_TITLE = "Квартира"
-    DEFAULT_FOOTAGE = Length(33)
+    DEFAULT_FOOTAGE = Meter(33)
     DEFAULT_PRICE_PER_METER = Money(100_000)
     
     @property
@@ -40,6 +40,7 @@ class Flat:
         s = f"\n\t{self.class_name}: "
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, footage, 0)
+        handler(LengthValidator.validate_object_type, s, footage, Length | Meter)
         self._footage = Line(footage, "Метраж")
         
     @property
@@ -51,7 +52,6 @@ class Flat:
         s = f"\n\t{self.class_name}: "
         handler = MoneyValidator._handle_exception
         handler(MoneyValidator.validate, s, price_per_meter, 0)
-        price_per_meter = MoneyConverter.auto_convert(price_per_meter)
         self._price_per_meter = Price(price_per_meter, "Цена за квадратный метр")
         
     @property
@@ -65,8 +65,7 @@ class Flat:
     @property
     def price(self) -> Price:
         price = self.footage.length.value * self.price_per_meter.value.value
-        price = MoneyConverter.auto_convert(type(self.price_per_meter.value)(price))
-        return Price(price, "Стоимость")
+        return Price(type(self.price_per_meter.value)(price))
     
     @property
     def maximum_person_amount(self) -> int:
@@ -88,9 +87,13 @@ class Flat:
         
     # ------------------- Output ---------------------------
 
+    def print_footage(self) -> str:
+        result = f"{self.footage.title}:\t"
+        return result + f"{SquarePrinter.print_full_form(self.footage.length)}"
+
     def __str__(self) -> str:
         result = f"{self.title}:"
-        result += f"\n\t{self.footage}\n\t{self.price_per_meter}"
+        result += f"\n\t{self.print_footage()}\n\t{self.price_per_meter}"
         return result + f"\n\t{self.price}\n"
     
     def __repr__(self) -> str:

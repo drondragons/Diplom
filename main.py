@@ -12,7 +12,7 @@ from src import RectangleFactoryMethod, SquareFactoryMethod, NanoMeter, Parallel
 from types import NoneType
 from src import Validator, LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Parallelepiped
 
-from src import Flat, Price
+from src import Flat, Price, PriceFactoryMethod, FlatFactoryMethod, FlatBuilder
 
 def main() -> None:
     print(RectangleFactoryMethod.generate())
@@ -73,6 +73,19 @@ def main() -> None:
     print(flat.__repr__())
     
     print(Price(Euro(10), "Цена за метр"))
+    print(PriceFactoryMethod.generate())
+    print(FlatFactoryMethod.generate())
+    
+    builder = FlatBuilder()
+    flat = builder.build()
+    print(flat)
+    
+    print(FlatFactoryMethod.generate_one_room_flat())
+    print(FlatFactoryMethod.generate_two_room_flat())
+    print(FlatFactoryMethod.generate_three_room_flat())
+    print(FlatFactoryMethod.generate_four_room_flat())
+    print(FlatFactoryMethod.generate_five_room_flat())
+    print(FlatFactoryMethod.generate_six_room_flat())
     
     
 if __name__ == "__main__":
