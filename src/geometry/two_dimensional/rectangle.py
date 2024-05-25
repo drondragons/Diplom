@@ -171,7 +171,8 @@ class Rectangle:
     def __eq__(self, other: object) -> bool:
         return Rectangle._equality(self, other, operator.eq)
     def __ne__(self, other: object) -> bool:
-        return Rectangle._equality(self, other, operator.ne)
+        Rectangle._validate(self, other, operator.ne)
+        return not Rectangle._equality(self, other, operator.eq)
     
     def __lt__(self, other: object) -> bool:
         raise TypeError(_error(self, _type_error(self, other, operator.lt)))

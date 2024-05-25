@@ -4,7 +4,7 @@ from ..price import Price
 
 from ... import _validate
 from ...measurement.money import Money, MoneyValidator
-from ...measurement.length import Length, LengthValidator
+from ...measurement.length import Length, LengthValidator, Meter, MeterConverter
 from ...measurement.square import SquareConverter
 from ...value_objects.title import Title
 from ...geometry.one_dimensional import Line
@@ -25,6 +25,58 @@ class Building(Parallelepiped):
     
     DEFAULT_TITLE = "Здание"
     DEFAULT_PRICE_TO_BUILD = Money(1_000_000_000)
+    
+    MINIMUM_LENGTH = Meter(70)
+    MINIMUM_WIDTH = Meter(40)
+    MINIMUM_HEIGHT = Meter(20)
+    
+    @property
+    def length(self) -> Line:
+        return self._length
+    
+    @length.setter
+    def length(self, length: Length) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, length, 0)
+        
+        length = MeterConverter.convert(length, Meter)
+        handler(LengthValidator.validate, s, length, self.MINIMUM_LENGTH.value)
+        
+        self._length = Line(length, "Длина")
+        
+    @property
+    def width(self) -> Line:
+        return self._width
+    
+    @width.setter
+    def width(self, width: Length) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, width, 0)
+        
+        width = MeterConverter.convert(width, Meter)
+        handler(LengthValidator.validate, s, width, self.MINIMUM_WIDTH.value)
+        
+        self._width = Line(width, "Ширина")
+    
+    @property
+    def height(self) -> Line:
+        return self._height
+    
+    @height.setter
+    def height(self, height: Length) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = LengthValidator._handle_exception
+        handler(LengthValidator.validate, s, height, 0)
+        
+        height = MeterConverter.convert(height, Meter)
+        handler(LengthValidator.validate, s, height, self.MINIMUM_HEIGHT.value)
+        
+        self._height = Line(height, "Высота")
     
     @property
     def indent(self) -> Line:
@@ -57,13 +109,21 @@ class Building(Parallelepiped):
         indent_area = self.indent.length + self.length.length
         return indent_area * (self.indent.length + self.width.length)
     
+    @property
+    def length_with_indent(self) -> Length:
+        return self.length.length + self.indent.length * 2
+    
+    @property
+    def width_with_indent(self) -> Length:
+        return self.width.length + self.indent.length * 2
+    
     def __init__(
         self, 
-        length: Length = Length(),
-        width: Length = Length(),
-        height: Length = Length(),
+        length: Length = MINIMUM_LENGTH,
+        width: Length = MINIMUM_WIDTH,
+        height: Length = MINIMUM_HEIGHT,
         indent: Length = Length(),
-        price_to_build: Money = Money(DEFAULT_PRICE_TO_BUILD),
+        price_to_build: Money = DEFAULT_PRICE_TO_BUILD,
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         super().__init__(length, width, height, title)
@@ -80,7 +140,6 @@ class Building(Parallelepiped):
         result += f"\n\t{self.length}\n\t{self.width}\n\t{self.height}"
         result += f"\n\t{self.print_volume()}\n\t{self.print_area()}"
         result += f"\n\t{self.print_area_with_indent()}"
-        result += f"\n\t{self.print_area_surface()}\n\t{self.perimeter}"
         return result + f"\n\t{self.indent}\n\t{self.price_to_build}\n"
     
     def __repr__(self) -> str:
@@ -116,4 +175,5 @@ class Building(Parallelepiped):
     def __eq__(self, other: object) -> bool:
         return Building._equality(self, other, operator.eq)
     def __ne__(self, other: object) -> bool:
-        return Building._equality(self, other, operator.ne)
+        Building._validate(self, other, operator.ne)
+        return not Building._equality(self, other, operator.eq)

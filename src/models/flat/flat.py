@@ -28,7 +28,7 @@ class Flat:
     DEFAULT_TITLE = "Квартира"
     
     MINIMUM_FOOTAGE = Meter(18)
-    MINIMUM_PRICE_PER_METER = Money(10_000)
+    MINIMUM_PRICE_PER_METER = Money(100_000)
     
     @property
     def class_name(self) -> str:
@@ -180,7 +180,8 @@ class Flat:
     def __eq__(self, other: object) -> bool:
         return Flat._equality(self, other, operator.eq)
     def __ne__(self, other: object) -> bool:
-        return Flat._equality(self, other, operator.ne)
+        Flat._validate(self, other, operator.ne)
+        return not Flat._equality(self, other, operator.eq)
         
     def __lt__(self, other: object) -> bool:
         raise TypeError(_error(self, _type_error(self, other, operator.lt)))

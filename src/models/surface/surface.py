@@ -1,5 +1,10 @@
+from typing import List
+
+from ..buildings import Building
+
 from ...geometry.two_dimensional import Rectangle
-from ...measurement.length import Length
+from ...measurement.length import Length, Meter
+from ...validators import ListValidator
 from ...value_objects.title import Title
 
 
@@ -19,6 +24,31 @@ class Surface(Rectangle):
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         super().__init__(length, width, title)
+    
+    def validate_placement_buildings(self, buildings: List[Building]) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = ListValidator._handle_exception
+        handler(ListValidator.validate, s, buildings, Building)
+        
+        sum_area = sum(building.area_with_indent for building in buildings)
+        if self.area < sum_area:
+            message = f"Здания имеют большую площадь ({self.area} < {sum_area}), "
+            message += f"чем {self.title.lower()}!"
+            raise ValueError(message)
+        
+        for building in buildings:
+            side = min(self.width, self.length)
+            if side < building.width_with_indent:
+                message = f"{building.title} невозможно расположить из-за ширины "
+                message += f"({side} < {building.width_with_indent}), "
+                message += f"большей чем может вместить {self.title.lower()}!"
+                raise ValueError(message)
+            if side < building.length_with_indent:
+                message = f"{building.title} невозможно расположить из-за длины "
+                message += f"({side} < {building.length_with_indent}), "
+                message += f"большей чем может вместить {self.title.lower()}!"
+                raise ValueError(message)
     
     # ------------------- Output ---------------------------
     

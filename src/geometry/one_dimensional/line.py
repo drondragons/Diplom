@@ -8,7 +8,7 @@ from .. import LENGTH_TYPES
 
 from ... import _error, _type_error, _validate, _validation_operation
 from ...constants import OPERATORS
-from ...measurement.length import Length, LengthValidator, MeterConverter
+from ...measurement.length import Length, LengthValidator, MeterConverter, Meter
 from ...value_objects.title import Title
 
 
@@ -41,7 +41,7 @@ class Line:
         handler = LengthValidator._handle_exception
         handler(LengthValidator.validate, s, length, 0)
         
-        self._length = MeterConverter.auto_convert(length)
+        self._length = MeterConverter.convert(length, Meter)
         
     @property
     def title(self) -> Title:

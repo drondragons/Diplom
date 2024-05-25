@@ -162,6 +162,11 @@ class Title:
     def isupper(self) -> bool:
         return self.value.isupper()
     
+    def lower(self) -> "Title":
+        return Title(self.value.lower())
+    def upper(self) -> "Title":
+        return Title(self.value.upper())
+    
     # ------------------- List operators ---------------------------
     
     def __iter__(self) -> Iterator:

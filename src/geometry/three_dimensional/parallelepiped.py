@@ -120,7 +120,8 @@ class Parallelepiped(Rectangle):
     def __eq__(self, other: object) -> bool:
         return Parallelepiped._equality(self, other, operator.eq)
     def __ne__(self, other: object) -> bool:
-        return Parallelepiped._equality(self, other, operator.ne)
+        Parallelepiped._validate(self, other, operator.ne)
+        return not Parallelepiped._equality(self, other, operator.eq)
     
     
 class Cube(Parallelepiped):
