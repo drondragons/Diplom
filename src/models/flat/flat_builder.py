@@ -1,8 +1,9 @@
 from .flat import Flat
 
 from ... import LENGTH_TYPES, REAL_TYPES
-from ...measurement import Length, Money
-from ...value_objects import Title
+from ...measurement.length import Length
+from ...measurement.money import Money
+from ...value_objects.title import Title
 
 
 __all__ = [

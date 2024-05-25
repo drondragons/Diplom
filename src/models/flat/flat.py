@@ -5,10 +5,11 @@ from ..price import Price
 
 from ... import _validate, _error, _type_error
 from ...constants import OPERATORS
-from ...geometry import Line
-from ...measurement import Money, MoneyValidator, MoneyConverter, Ruble
-from ...measurement import Length, LengthValidator, Meter, SquarePrinter, MeterConverter
-from ...value_objects import Title
+from ...geometry.one_dimensional import Line
+from ...measurement.money import Money, Ruble, MoneyValidator, MoneyConverter 
+from ...measurement.length import Length, Meter, LengthValidator, MeterConverter
+from ...measurement.square import SquarePrinter
+from ...value_objects.title import Title
 
 
 __all__ = [

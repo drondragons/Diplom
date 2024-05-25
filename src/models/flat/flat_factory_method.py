@@ -6,11 +6,10 @@ from .flat import Flat
 
 from ... import REAL_TYPES
 from ...validators import Validator
-from ...measurement import Length, Meter, Ruble
-from ...measurement import MoneyFactoryMethod
-from ...measurement import LengthFactoryMethod
-from ...value_objects import Title
-from ...value_objects import Real, RealValidator
+from ...measurement.length import Length, Meter, LengthFactoryMethod
+from ...measurement.money import MoneyFactoryMethod, Ruble
+from ...value_objects.title import Title
+from ...value_objects.real import Real, RealValidator
 from ...factory_method import FactoryMethod
 
 

@@ -16,6 +16,8 @@ from src import LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Par
 
 from src import Flat, Price, PriceFactoryMethod, FlatFactoryMethod, FlatBuilder
 
+from src import Surface, Building
+
 def main() -> None:
     print(Dollar(Real(13)))
     print(MoneyConverter.convert(Ruble(100), Ruble))
@@ -95,6 +97,16 @@ def main() -> None:
     print(FlatFactoryMethod.generate_four_room_flat())
     print(FlatFactoryMethod.generate_five_room_flat())
     print(FlatFactoryMethod.generate_six_room_flat())
+    
+    surface = Surface()
+    surface.length = Length(10)
+    surface.width = Meter(1000)
+    print(surface)
+    
+    print(Parallelepiped().__bool__())
+    print(not Parallelepiped())
+    
+    print(Building())
     
     
 if __name__ == "__main__":

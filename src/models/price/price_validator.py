@@ -3,10 +3,9 @@ from typing import Tuple
 from .price import Price
 
 from ... import REAL_TYPES
-from ...validators import Validator
-from ...validators import DEFAULT_NUMBER_MAXIMUM
-from ...measurement import Money, MoneyValidator
-from ...value_objects import TitleValidator
+from ...validators import Validator, DEFAULT_NUMBER_MAXIMUM
+from ...measurement.money import Money, MoneyValidator
+from ...value_objects.title import TitleValidator
 
 
 __all__ = [

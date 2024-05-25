@@ -5,8 +5,8 @@ from .. import REAL_TYPES
 from ..two_dimensional import Rectangle, Square
 
 from ...validators import Validator
-from ...measurement import Length, LengthFactoryMethod
-from ...value_objects import Title
+from ...measurement.length import Length, LengthFactoryMethod
+from ...value_objects.title import Title
 from ...factory_method import FactoryMethod
 
 

@@ -3,9 +3,10 @@ import operator
 from typing import Tuple
 
 from ... import _error, _type_error, _operate, _validate, _validation_operation
-from ... import OPERATORS, REAL_TYPES
-from ...measurement import Money, MoneyValidator, MoneyConverter, Ruble
-from ...value_objects import Title
+from ... import REAL_TYPES
+from ...constants import OPERATORS
+from ...measurement.money import Money, MoneyValidator, MoneyConverter, Ruble
+from ...value_objects.title import Title
 
 
 __all__ = [

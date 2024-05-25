@@ -8,8 +8,8 @@ from .. import LENGTH_TYPES
 
 from ... import _error, _type_error, _validate, _validation_operation
 from ...constants import OPERATORS
-from ...measurement import Length, LengthValidator, MeterConverter
-from ...value_objects import Title
+from ...measurement.length import Length, LengthValidator, MeterConverter
+from ...value_objects.title import Title
 
 
 __all__ = [

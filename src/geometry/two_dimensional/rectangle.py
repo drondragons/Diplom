@@ -3,9 +3,11 @@ from typing import Tuple
 
 from ..one_dimensional import Line
 
-from ... import _error, _validate, _type_error, OPERATORS
-from ...measurement import SquareConverter, Length, LengthValidator
-from ...value_objects import Title
+from ... import _error, _validate, _type_error
+from ...constants import OPERATORS
+from ...measurement.length import Length, LengthValidator
+from ...measurement.square import SquareConverter
+from ...value_objects.title import Title
 
 
 __all__ = [
@@ -63,9 +65,8 @@ class Rectangle:
         self._title = Title(title)
         
     @property
-    def area(self) -> str:
-        square = self.width.length * self.length.length
-        return SquareConverter.auto_convert(square)
+    def area(self) -> Length:
+        return self.width.length * self.length.length
     
     @property
     def perimeter(self) -> Line:
@@ -93,7 +94,7 @@ class Rectangle:
                 self.title
     
     def print_area(self) -> str:
-        return f"Площадь:\t{self.area}"
+        return f"Площадь:\t{SquareConverter.auto_convert(self.area)}"
     
     def __str__(self) -> str:
         result = f"{self.print_title()}:"

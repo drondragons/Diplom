@@ -2,8 +2,8 @@ from .rectangle import Rectangle, Square
 
 from .. import LENGTH_TYPES, REAL_TYPES
 
-from ...measurement import Length
-from ...value_objects import Title
+from ...measurement.length import Length
+from ...value_objects.title import Title
 
 
 __all__ = [

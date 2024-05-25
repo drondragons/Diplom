@@ -6,8 +6,8 @@ from .price import Price
 from ... import REAL_TYPES
 
 from ...validators import Validator
-from ...measurement import Money, MoneyFactoryMethod
-from ...value_objects import Title
+from ...measurement.money import Money, MoneyFactoryMethod
+from ...value_objects.title import Title
 from ...factory_method import FactoryMethod
 
 

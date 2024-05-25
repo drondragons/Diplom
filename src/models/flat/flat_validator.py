@@ -5,10 +5,9 @@ from .flat import Flat
 from ..price import PriceValidator
 
 from ... import REAL_TYPES
-from ...geometry import LineValidator
-from ...validators import Validator
-from ...validators import DEFAULT_NUMBER_MAXIMUM
-from ...value_objects import TitleValidator
+from ...geometry.one_dimensional import LineValidator
+from ...validators import Validator, DEFAULT_NUMBER_MAXIMUM
+from ...value_objects.title import TitleValidator
 
 
 __all__ = [

@@ -4,8 +4,10 @@ from ..one_dimensional import Line
 from ..two_dimensional import Rectangle
 
 from ... import _validate
-from ...measurement import SquareConverter, VolumeConverter, Length, LengthValidator
-from ...value_objects import Title
+from ...measurement.square import SquareConverter
+from ...measurement.volume import VolumeConverter
+from ...measurement.length import Length, LengthValidator
+from ...value_objects.title import Title
 
 
 __all__ = [
@@ -36,16 +38,15 @@ class Parallelepiped(Rectangle):
         self._height = Line(height, "Высота")
         
     @property
-    def volume(self) -> str:
-        volume = self.length.length * self.width.length * self.height.length
-        return VolumeConverter.auto_convert(volume)
+    def volume(self) -> Length:
+        return self.length.length * self.width.length * self.height.length
     
     @property
-    def area(self) -> str:
+    def area_surface(self) -> Length:
         area = self.length.length * self.width.length
         area += (self.length.length * self.height.length)
         area += (self.width.length * self.height.length)
-        return SquareConverter.auto_convert(2 * area)
+        return 2 * area
     
     @property
     def perimeter(self) -> Line:
@@ -74,21 +75,25 @@ class Parallelepiped(Rectangle):
             if self.title == self.DEFAULT_TITLE and self.is_cube() else \
                 self.title
     
+    def print_area_surface(self) -> str:
+        return f"Площадь поверхности:\t{SquareConverter.auto_convert(self.area_surface)}"
+    
     def print_area(self) -> str:
-        return f"Площадь поверхности:\t{self.area}"
+        return f"Площадь основания:\t{SquareConverter.auto_convert(self.area)}"
     
     def print_volume(self) -> str:
-        return f"Объём:\t{self.volume}"
+        return f"Объём:\t{VolumeConverter.auto_convert(self.volume)}"
     
     def __str__(self) -> str:
         result = f"{self.print_title()}:"
         result += f"\n\t{self.length}\n\t{self.width}\n\t{self.height}"
-        result += f"\n\t{self.print_volume()}"
-        return result + f"\n\t{self.print_area()}\n\t{self.perimeter}\n"
+        result += f"\n\t{self.print_volume()}\n\t{self.print_area()}"
+        return result + f"\n\t{self.print_area_surface()}\n\t{self.perimeter}\n"
     
     def __repr__(self) -> str:
         result = f"{self.class_name} (title: {self.title}, "
-        return result + f"length: {self.length}, width: {self.width})"
+        result += f"length: {self.length}, width: {self.width}, "
+        return result + f"height: {self.height})"
         
     # ------------------- Hash ---------------------------
     
@@ -104,7 +109,7 @@ class Parallelepiped(Rectangle):
     # ------------------- Comparison operators ---------------------------
     
     def __bool__(self) -> bool:
-        return self.length != 0 and self.width != 0 and self.height != 0
+        return super().__bool__() and self.height != 0
         
     @staticmethod
     def _equality(right: object, left: object, operator: operator) -> bool:

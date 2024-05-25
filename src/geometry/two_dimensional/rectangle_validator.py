@@ -5,10 +5,9 @@ from .rectangle import Rectangle, Square
 from .. import REAL_TYPES
 from ..one_dimensional import LineValidator
 
-from ...validators import Validator
-from ...validators import DEFAULT_NUMBER_MAXIMUM
-from ...measurement import Length
-from ...value_objects import TitleValidator
+from ...validators import Validator, DEFAULT_NUMBER_MAXIMUM
+from ...measurement.length import Length
+from ...value_objects.title import TitleValidator
 
 
 __all__ = [

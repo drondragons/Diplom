@@ -1,8 +1,8 @@
 from .price import Price
 
 from ... import REAL_TYPES
-from ...measurement import Money
-from ...value_objects import Title
+from ...measurement.money import Money
+from ...value_objects.title import Title
 
 
 __all__ = [
