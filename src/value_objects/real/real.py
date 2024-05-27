@@ -94,7 +94,7 @@ class Real:
         return Real(math.trunc(self.value))
     
     def __int__(self) -> int:
-        return math.floor(self.value)
+        return int(self.value)
     def __float__(self) -> float:
         return float(self.value)
     

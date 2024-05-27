@@ -24,9 +24,11 @@ class Building(Parallelepiped):
     ]
     
     DEFAULT_TITLE = "Здание"
+    
+    DEFAULT_INDENT = Meter(5)
     DEFAULT_PRICE_TO_BUILD = Money(1_000_000_000)
     
-    MINIMUM_LENGTH = Meter(70)
+    MINIMUM_LENGTH = Meter(40)
     MINIMUM_WIDTH = Meter(40)
     MINIMUM_HEIGHT = Meter(20)
     
@@ -106,8 +108,8 @@ class Building(Parallelepiped):
         
     @property
     def area_with_indent(self) -> Length:
-        indent_area = self.indent.length + self.length.length
-        return indent_area * (self.indent.length + self.width.length)
+        indent_area = 2 * self.indent.length + self.length.length
+        return indent_area * (2 * self.indent.length + self.width.length)
     
     @property
     def length_with_indent(self) -> Length:
@@ -122,7 +124,7 @@ class Building(Parallelepiped):
         length: Length = MINIMUM_LENGTH,
         width: Length = MINIMUM_WIDTH,
         height: Length = MINIMUM_HEIGHT,
-        indent: Length = Length(),
+        indent: Length = DEFAULT_INDENT,
         price_to_build: Money = DEFAULT_PRICE_TO_BUILD,
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:

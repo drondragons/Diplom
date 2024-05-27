@@ -55,3 +55,9 @@ DEFAULT_PLURAL_FORM = [
     "а",
     "ов",
 ]
+
+YEARS_FORMS = [
+    "год",
+    "года",
+    "лет",
+]

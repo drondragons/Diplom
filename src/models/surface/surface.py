@@ -31,12 +31,6 @@ class Surface(Rectangle):
         handler = ListValidator._handle_exception
         handler(ListValidator.validate, s, buildings, Building)
         
-        sum_area = sum(building.area_with_indent for building in buildings)
-        if self.area < sum_area:
-            message = f"Здания имеют большую площадь ({self.area} < {sum_area}), "
-            message += f"чем {self.title.lower()}!"
-            raise ValueError(message)
-        
         for building in buildings:
             side = min(self.width, self.length)
             if side < building.width_with_indent:

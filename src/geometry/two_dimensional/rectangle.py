@@ -76,6 +76,9 @@ class Rectangle:
     def is_square(self) -> bool:
         return self.length == self.width
     
+    def rotate(self) -> None:
+        self._width, self._length = self._length, self._width
+    
     def __init__(
         self, 
         length: Length = Length(),

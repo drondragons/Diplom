@@ -109,7 +109,7 @@ class Line:
         return Line(math.trunc(self.length), self.title)
     
     def __int__(self) -> int:
-        return math.floor(self.length)
+        return int(self.length)
     def __float__(self) -> float:
         return float(self.length)
     

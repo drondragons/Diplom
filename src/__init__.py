@@ -21,6 +21,9 @@ def _get_pretty_number(value: object) -> int | float:
     number = Decimal(rounded_value)
     return float(number) if "." in str(number) else int(number)
 
+def _get_year_form(value: object) -> str:
+    return f"{value} {_format_plural_form(value, YEARS_FORMS)}"
+
 def _format_plural_form(value: object, forms: list[str]) -> str:
     value = _get_pretty_number(value)
     if isinstance(value, float):

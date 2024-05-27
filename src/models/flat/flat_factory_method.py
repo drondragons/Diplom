@@ -1,13 +1,13 @@
 import random
 from types import NoneType
-from typing import Type, List
+from typing import Type, List, Tuple
 
-from .flat import Flat
+from .flat import Flat, Pavilion
 
 from ... import REAL_TYPES
 from ...validators import Validator, IntValidator
 from ...measurement.length import Length, Meter, LengthFactoryMethod
-from ...measurement.money import MoneyFactoryMethod, Ruble
+from ...measurement.money import MoneyFactoryMethod, Ruble, Money
 from ...value_objects.title import Title
 from ...value_objects.real import Real, RealValidator
 from ...factory_method import FactoryMethod
@@ -15,6 +15,7 @@ from ...factory_method import FactoryMethod
 
 __all__ = [
     "FlatFactoryMethod",
+    "PavilionFactoryMethod",
 ]
 
 
@@ -51,7 +52,7 @@ class FlatFactoryMethod(FactoryMethod):
     }
     
     @classmethod
-    def generate(
+    def _generate(
         cls,
         minimum_footage: REAL_TYPES = DEFAULT_MINIMUM_FOOTAGE,
         maximum_footage: REAL_TYPES = DEFAULT_MAXIMUM_FOOTAGE,
@@ -60,7 +61,7 @@ class FlatFactoryMethod(FactoryMethod):
         is_int: bool = True,
         length_type: Type = NoneType,
         title: str | Title = Flat.DEFAULT_TITLE
-    ) -> Flat:
+    ) -> Tuple[Length, Money, Title]:
         s = f"\n\t{cls.__name__}.generate: "
         
         footage_types = [Length, Meter]
@@ -83,7 +84,29 @@ class FlatFactoryMethod(FactoryMethod):
         generator = MoneyFactoryMethod.generate
         price_per_meter = generator(minimum_price_per_meter, maximum_price_per_meter, is_int, Ruble)
         
-        return Flat(footage, price_per_meter, title)
+        return footage, price_per_meter, title
+    
+    @classmethod
+    def generate(
+        cls,
+        minimum_footage: REAL_TYPES = DEFAULT_MINIMUM_FOOTAGE,
+        maximum_footage: REAL_TYPES = DEFAULT_MAXIMUM_FOOTAGE,
+        minimum_price_per_meter: REAL_TYPES = DEFAULT_MINIMUM_PRICE_PER_METER,
+        maximum_price_per_meter: REAL_TYPES = DEFAULT_MAXIMUM_PRICE_PER_METER,
+        is_int: bool = True,
+        length_type: Type = NoneType,
+        title: str | Title = Flat.DEFAULT_TITLE
+    ) -> Flat:
+        return Flat(*cls._generate(
+                minimum_footage,
+                maximum_footage,
+                minimum_price_per_meter,
+                maximum_price_per_meter,
+                is_int,
+                length_type,
+                title
+            )
+        )
     
     @classmethod
     def generate_one_room_flat(cls) -> Flat:
@@ -155,5 +178,58 @@ class FlatFactoryMethod(FactoryMethod):
             flats.append(cls.generate_two_room_flat())
         for _ in range(three_room_amount):
             flats.append(cls.generate_three_room_flat())
-        
         return flats
+    
+    
+class PavilionFactoryMethod(FlatFactoryMethod):
+    
+    DEFAULT_MINIMUM_FOOTAGE = Pavilion.MINIMUM_FOOTAGE.value
+    DEFAULT_MAXIMUM_FOOTAGE = FactoryMethod.DEFAULT_MAXIMUM_VALUE
+    
+    DEFAULT_MINIMUM_PRICE_PER_METER = Pavilion.MINIMUM_PRICE_PER_METER.value
+    DEFAULT_MAXIMUM_PRICE_PER_METER = Ruble(10_000).value
+    
+    @classmethod
+    def generate(
+        cls,
+        minimum_footage: REAL_TYPES = DEFAULT_MINIMUM_FOOTAGE,
+        maximum_footage: REAL_TYPES = DEFAULT_MAXIMUM_FOOTAGE,
+        minimum_price_per_meter: REAL_TYPES = DEFAULT_MINIMUM_PRICE_PER_METER,
+        maximum_price_per_meter: REAL_TYPES = DEFAULT_MAXIMUM_PRICE_PER_METER,
+        is_int: bool = True,
+        length_type: Type = NoneType,
+        title: str | Title = Pavilion.DEFAULT_TITLE
+    ) -> Pavilion:
+        return Pavilion(*cls._generate(
+                minimum_footage,
+                maximum_footage,
+                minimum_price_per_meter,
+                maximum_price_per_meter,
+                is_int,
+                length_type,
+                title
+            )
+        )
+        
+    @classmethod
+    def generate_pavilions(
+        cls,
+        minimum_pavilions_amount: int,
+        maximum_pavilions_amount: int
+    ) -> List[Pavilion]:
+        s = f"\n\t{cls.__name__}.generate_pavilions: "
+    
+        handler = Validator._handle_exception
+        handler(Validator.validate_object_type, s, minimum_pavilions_amount, int)
+        handler(Validator.validate_object_type, s, maximum_pavilions_amount, int)
+        handler(IntValidator.validate, s, minimum_pavilions_amount, 0)
+        handler(IntValidator.validate, s, maximum_pavilions_amount, 0)
+        
+        new_minimum = min(minimum_pavilions_amount, maximum_pavilions_amount)
+        new_maximum = max(minimum_pavilions_amount, maximum_pavilions_amount)
+        value = random.randint(new_minimum, new_maximum)
+        
+        pavilions = list()
+        for _ in range(value):
+            pavilions.append(cls.generate())
+        return pavilions

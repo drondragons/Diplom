@@ -14,6 +14,7 @@ from ...value_objects.title import Title
 
 __all__ = [
     "Flat",
+    "Pavilion",
 ]
 
 
@@ -309,3 +310,24 @@ class Flat:
             pass
         message = f"Класс '{self.class_name}' не содержит атрибут {name}!"
         raise AttributeError(_error(self, message))
+    
+    
+class Pavilion(Flat):
+    
+    DEFAULT_TITLE = "Торговый павильон"
+    
+    MINIMUM_FOOTAGE = Meter(30)
+    MINIMUM_PRICE_PER_METER = Money(1_500)
+    
+    @property
+    def price(self) -> Price:
+        price = self.footage.length.value * self.price_per_meter.value.value
+        return Price(type(self.price_per_meter.value)(price), "Аренда")
+    
+    def __init__(
+        self, 
+        footage: Length = MINIMUM_FOOTAGE,
+        price_per_meter: Money = MINIMUM_PRICE_PER_METER,
+        title: str | Title = Title(DEFAULT_TITLE)
+    ) -> None:
+        super().__init__(footage, price_per_meter, title)
