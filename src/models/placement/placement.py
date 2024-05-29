@@ -12,6 +12,7 @@ __all__ = [
 
 
 class Binpacker:
+    
     def __init__(self, width, height):
         self.root = {'width': width, 'height': height, 'x': 0, 'y': 0, 'used': False}
         self.placements = []
