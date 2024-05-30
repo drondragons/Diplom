@@ -197,7 +197,7 @@ class Binpacker:
                 )
                 ax.add_patch(smaller_rect)
                 ax.text(x + width/2, y + height/2, title, ha='center', va='center', rotation=45)
-    
+        return ax
         plt.title("Размещение объектов строительства на земельном участке", pad=20)
         plt.xlabel("Ширина земельного участка, в метрах", labelpad=7)
         plt.ylabel("Длина земельного участка, в метрах", labelpad=7)

@@ -1,24 +1,24 @@
-# from src import Validator, StringValidator, NumberValidator, ListValidator
-# from src import Title, TitleValidator
-# from src import Real, RealValidator, RealFactoryMethod
-# from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter, CentiMeter
+from src import Validator, StringValidator, NumberValidator, ListValidator
+from src import Title, TitleValidator
+from src import Real, RealValidator, RealFactoryMethod
+from src import Length, LengthValidator, LengthFactoryMethod, MeterConverter, KiloMeter, Meter, CentiMeter
 
-# from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro, DeciMeter
-# from src import SquarePrinter, SquareConverter, MoneyConverter, Yuan
-# from src import VolumePrinter, VolumeConverter, ParallelepipedFactoryMethod
-# from src import Line, LineFactoryMethod, Rectangle, CubeFactoryMethod, Square
-# from src import RectangleFactoryMethod, SquareFactoryMethod, NanoMeter, ParallelepipedBuilder
+from src import MoneyValidator, Money, MoneyFactoryMethod, Ruble, Dollar, Euro, DeciMeter
+from src import SquarePrinter, SquareConverter, MoneyConverter, Yuan
+from src import VolumePrinter, VolumeConverter, ParallelepipedFactoryMethod
+from src import Line, LineFactoryMethod, Rectangle, CubeFactoryMethod, Square
+from src import RectangleFactoryMethod, SquareFactoryMethod, NanoMeter, ParallelepipedBuilder
 
-# from types import NoneType
-# from src import Validator
-# from src import Money, MoneyConverter, MoneyFactoryMethod, MoneyValidator, Ruble, Dollar
-# from src import LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Parallelepiped
+from types import NoneType
+from src import Validator
+from src import Money, MoneyConverter, MoneyFactoryMethod, MoneyValidator, Ruble, Dollar
+from src import LineValidator, LineBuilder, RectangleBuilder, SquareBuilder, Parallelepiped
 
-# from src import Flat, Price, PriceFactoryMethod, FlatFactoryMethod, FlatBuilder
-# from src import PavilionFactoryMethod, Shop
-# from src import Surface, Building, Apartment, School, Hospital, Pavilion
+from src import Flat, Price, PriceFactoryMethod, FlatFactoryMethod, FlatBuilder
+from src import PavilionFactoryMethod, Shop
+from src import Surface, Building, Apartment, School, Hospital, Pavilion
 
-# from src import BoundedKnapsack, Binpacker, Kindergarten
+from src import BoundedKnapsack, Binpacker, Kindergarten
 
 import sys
 from src.gui import MainWindow
@@ -26,6 +26,11 @@ from PyQt6.QtWidgets import QApplication
 
 
 def main() -> None:
+    print([Length.FULL_FORM, Meter.FULL_FORM] + \
+        [subclass.FULL_FORM for subclass in Meter.__subclasses__()])
+    print(max(len(full_form) for full_form in [Length.FULL_FORM, Meter.FULL_FORM] + \
+        [subclass.FULL_FORM for subclass in Meter.__subclasses__()]))
+    
     application = QApplication(sys.argv)
     application.setStyle("fusion")
     
@@ -39,10 +44,10 @@ def main() -> None:
     # # surface.width = Meter(500)
     # # surface.length = Length(300)
     # # surface.width = Meter(200)
-    # surface.length = Length(500)
-    # surface.width = Meter(200)
-    # # surface.length = Length(150)
-    # # surface.width = Meter(120)
+    # # surface.length = Length(500)
+    # # surface.width = Meter(200)
+    # surface.length = Length(150)
+    # surface.width = Meter(120)
     # print(surface)
     
     # apartment = Apartment(title="7-этажный жилой дом")
@@ -61,7 +66,7 @@ def main() -> None:
     # )
     # print(fifteen_apartment)
     
-    # budget = Price(Ruble(15_000_000_000), "Бюджет")
+    # budget = Price(Ruble(10_000_000_000), "Бюджет")
     # buildings = [
     #     School(length=Meter(40), width=Meter(70)), 
     #     Hospital(length=Meter(50), width=Meter(60)), 
@@ -85,7 +90,7 @@ def main() -> None:
     # pacher = Binpacker(int(surface.width), int(surface.length))
     # while True:
     #     if pacher.fit_blocks(solution):
-    #         pacher.plot_packing()
+    #         print(pacher.plot_packing())
     #         break
         
     #     if not isinstance(solution[-1], Apartment | Shop):
