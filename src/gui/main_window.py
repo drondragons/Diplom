@@ -19,15 +19,11 @@ from PyQt6.QtWidgets import (
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
-from . import _find_money_form, _find_length_form
 from .help_window import HelpWindow
 from .custom_label import CustomLabel
-from .custom_spinbox import CustomIntSpinBox, CustomDoubleSpinBox
-from .custom_groupbox import CustomGroupBox
+from .custom_spinbox import Budget
+from .custom_groupbox import SurfaceGroupBox
 from .custom_combobox import CustomMoneyComboBox, CustomLengthComboBox
-
-from ..measurement.money import Money
-from ..measurement.length import Length, Meter
 
 
 __all__ = [
@@ -45,13 +41,6 @@ class MainWindow(QMainWindow):
     CURRENT_DIR = os.path.join(PROJECT_DIR, "src", "gui", "img")
     
     MAIN_ICON_PATH = os.path.join(CURRENT_DIR, "bmstu-logo.pdf")
-    
-    MONEY_FULL_FORM = \
-        [Money.FULL_FORM] + [subclass.FULL_FORM for subclass in Money.__subclasses__()]
-        
-    LENGTH_FULL_FORM = \
-        [Length.FULL_FORM, Meter.FULL_FORM] + \
-        [subclass.FULL_FORM for subclass in Meter.__subclasses__()]
     
     def __init__(self, application: QApplication) -> None:
         super().__init__()
@@ -84,171 +73,34 @@ class MainWindow(QMainWindow):
         self.input_and_figure_layout.addLayout(self.input_layout)
         
     def __set_input(self) -> None:
-        self.__set_money_layout()
+        self.__set_money_layout(True)
         self.__set_length_layout(True)
         self.__set_budget_layout()
         self.__set_surface()
         
     def __set_surface(self) -> None:
-        surface_groupbox = CustomGroupBox("Габариты земельного участка")
-        
-        surface_layout = QVBoxLayout()
-        
-        surface_width_layout = QHBoxLayout()
-        surface_width_label = CustomLabel("Ширина земельного участка:")
-        self.surface_width_spinbox = CustomDoubleSpinBox()
-        self.surface_width_spinbox.valueChanged.connect(self.__update_surface_width)
-        self.surface_width_measurement_label = CustomLabel()
-        self.surface_width_measurement_label.setFixedWidth(140)
-        self.surface_width_measurement_label.setText(
-            _find_length_form(
-                self.surface_width_spinbox.value(),
-                self.length_combobox.currentText()
-            )
-        )
-        surface_width_layout.addWidget(surface_width_label)
-        surface_width_layout.addWidget(self.surface_width_spinbox)
-        surface_width_layout.addWidget(self.surface_width_measurement_label)
-
-        # surface_length_layout = QHBoxLayout()
-        # surface_length_label = CustomLabel("Длина земельного участка")
-        # self.surface_length_spinbox = CustomIntSpinBox()
-        # surface_length_layout.addWidget(surface_length_label)
-        # surface_length_layout.addWidget(self.surface_length_spinbox)
-
-        # surface_layout.addLayout(surface_length_layout)
-        surface_layout.addLayout(surface_width_layout)
-        
-        surface_groupbox.setLayout(surface_layout)
-        
-        self.input_layout.addWidget(surface_groupbox)
-        
-        # surface_layout = QVBoxLayout()
-        
-        # surface_size_layout = QVBoxLayout()
-        # self.surface_width_spinbox = CustomIntSpinBox()
-        # self.surface_length_spinbox = CustomIntSpinBox()
-        # surface_size_layout.addWidget(self.surface_length_spinbox)
-        # surface_size_layout.addWidget(self.surface_width_spinbox)
-        
-        # surface_title_layout = QVBoxLayout()
-        # surface_width_label = CustomLabel("Ширина земельного участка:")
-        # surface_length_label = CustomLabel("Длина земельного участка:")
-        # surface_title_layout.addWidget(surface_length_label)
-        # surface_title_layout.addWidget(surface_width_label)
-        
-        # surface_measurements_layout = QVBoxLayout()
-        # self.surface_width_measurement_label = CustomLabel()
-        # self.surface_width_measurement_label.setText(
-        #     _find_length_form(
-        #         self.surface_width_spinbox.value(),
-        #         self.length_combobox.currentText()
-        #     )
-        # )
-        # self.surface_length_measurement_label = CustomLabel()
-        # self.surface_length_measurement_label.setText(
-        #     _find_length_form(
-        #         self.surface_length_spinbox.value(),
-        #         self.length_combobox.currentText()
-        #     )
-        # )
-        # surface_measurements_layout.addWidget(self.surface_length_measurement_label)
-        # surface_measurements_layout.addWidget(self.surface_width_measurement_label)
-        
-        # surface_layout.addLayout(surface_title_layout)
-        # surface_layout.addLayout(surface_size_layout)
-        # surface_layout.addLayout(surface_measurements_layout)
-        
-        # surface_groupbox.setLayout(surface_layout)
-        
-        # self.input_layout.addWidget(surface_groupbox)
-        
-    def __update_surface_width(self, value: object) -> None:
-        self.surface_width_measurement_label.setText(
-            _find_length_form(
-                value,
-                self.length_combobox.currentText()
-            )
-        )
+        self.surface_groupbox = SurfaceGroupBox(self.length_combobox)
+        self.input_layout.addWidget(self.surface_groupbox)
         
     def __set_money_layout(self, is_visible: bool = False) -> None:
-        money_layout = QHBoxLayout()
-        
-        money_label = CustomLabel("Валюта:")
-        money_label.setVisible(is_visible)
-        
-        self.money_combobox = CustomMoneyComboBox(self.MONEY_FULL_FORM)
-        self.money_combobox.setVisible(is_visible)
-        self.money_combobox.currentIndexChanged.connect(self.__money_combobox_changed)
-        
-        money_layout.addWidget(money_label)
-        money_layout.addWidget(self.money_combobox)
-        
-        self.input_layout.addLayout(money_layout)
+        self.money_combobox = CustomMoneyComboBox(self.__money_combobox_changed)
+        self.money_combobox.is_visible(is_visible)
+        self.input_layout.addLayout(self.money_combobox._layout)
     
     def __money_combobox_changed(self) -> None:
-        CustomLabel._set_label_text(
-            self.budget_currency_label, 
-            _find_money_form, 
-            self.budget_spinbox.value(),
-            self.money_combobox.currentText()
-        )
-        # self.budget_currency_label.setText(
-        #     _find_money_form(
-        #         self.budget_spinbox.value(), 
-        #         self.money_combobox.currentText()
-        #     )
-        # )
+        self.budget_spinbox._set_label_text()
         
     def __set_length_layout(self, is_visible: bool = False) -> None:
-        length_layout = QHBoxLayout()
-        
-        length_label = CustomLabel("Единица измерения:")
-        length_label.setVisible(is_visible)
-        
-        self.length_combobox = CustomLengthComboBox(self.LENGTH_FULL_FORM)
-        self.length_combobox.setVisible(is_visible)
-        self.length_combobox.currentIndexChanged.connect(self.__length_combobox_changed)
-        
-        length_layout.addWidget(length_label)
-        length_layout.addWidget(self.length_combobox)
-        
-        self.input_layout.addLayout(length_layout)
+        self.length_combobox = CustomLengthComboBox(self.__length_combobox_changed)
+        self.length_combobox.is_visible(is_visible)
+        self.input_layout.addLayout(self.length_combobox._layout)
         
     def __length_combobox_changed(self) -> None:
-        # self.surface_length_measurement_label.setText(
-        #     _find_length_form(
-        #         self.surface_length_spinbox.value(),
-        #         self.length_combobox.currentText()
-        #     )
-        # )
-        self.surface_width_measurement_label.setText(
-            _find_length_form(
-                self.surface_width_spinbox.value(),
-                self.length_combobox.currentText()
-            )
-        )
+        self.surface_groupbox._set_label_text()
         
     def __set_budget_layout(self) -> None:
-        budget_layout = QHBoxLayout()
-        
-        budget_label = CustomLabel("Бюджет застройщика:")
-        
-        self.budget_spinbox = CustomIntSpinBox()
-        
-        self.budget_currency_label = CustomLabel()
-        CustomLabel._set_label_text(
-            self.budget_currency_label, 
-            _find_money_form, 
-            self.budget_spinbox.value(),
-            self.money_combobox.currentText()
-        )
-        
-        budget_layout.addWidget(budget_label)
-        budget_layout.addWidget(self.budget_spinbox)
-        budget_layout.addWidget(self.budget_currency_label)
-        
-        self.input_layout.addLayout(budget_layout)
+        self.budget_spinbox = Budget(self.money_combobox)
+        self.input_layout.addLayout(self.budget_spinbox._layout)
         
     def __set_menu_bar(self) -> None:
         self.dark_theme_action = QAction("Тёмная тема", self)
@@ -259,7 +111,9 @@ class MainWindow(QMainWindow):
         self.light_theme_action.setCheckable(True)
         
         menubar = self.menuBar()
+        menubar.setFont(QFont("Candara", 10))
         settings_menu = menubar.addMenu("Настройки")
+        settings_menu.setFont(QFont("Candara", 10))
         
         desktop_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_DesktopIcon)
         theme_menu = settings_menu.addMenu(desktop_icon, "Сменить тему")

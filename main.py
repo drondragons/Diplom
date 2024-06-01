@@ -19,6 +19,7 @@ from src import PavilionFactoryMethod, Shop
 from src import Surface, Building, Apartment, School, Hospital, Pavilion
 
 from src import BoundedKnapsack, Binpacker, Kindergarten
+from src import _get_pretty_number
 
 import sys
 from src.gui import MainWindow
@@ -26,11 +27,6 @@ from PyQt6.QtWidgets import QApplication
 
 
 def main() -> None:
-    print([Length.FULL_FORM, Meter.FULL_FORM] + \
-        [subclass.FULL_FORM for subclass in Meter.__subclasses__()])
-    print(max(len(full_form) for full_form in [Length.FULL_FORM, Meter.FULL_FORM] + \
-        [subclass.FULL_FORM for subclass in Meter.__subclasses__()]))
-    
     application = QApplication(sys.argv)
     application.setStyle("fusion")
     

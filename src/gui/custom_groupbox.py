@@ -1,65 +1,109 @@
-from PyQt6.QtGui import QFont
+from typing import Tuple, Callable
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGroupBox, QWidget#, QVBoxLayout, QHBoxLayout
+from PyQt6.QtWidgets import QGroupBox, QWidget, QVBoxLayout, QHBoxLayout
 
-# from . import _find_length_form
-# from .custom_label import CustomLabel
-# from .custom_spinbox import CustomDoubleSpinBox
+from . import _find_length_form
+from .font import MAIN_FONT
+from .custom_label import CustomLabel
+from .custom_spinbox import CustomDoubleSpinBox
+from .custom_combobox import CustomLengthComboBox
 
 
 __all__ = [
     "CustomGroupBox",
+    "SurfaceGroupBox",
 ]
 
 
 class CustomGroupBox(QGroupBox):
     
-    GROUPBOX_FONT = QFont("Times New Roman", 12)
+    GROUPBOX_FONT = MAIN_FONT
     
     def __init__(self, text: str = str(), parent: QWidget | None = None) -> None:
         super().__init__(text, parent)
-        
-        self.GROUPBOX_FONT.setBold(True)
-        
         self.setFont(self.GROUPBOX_FONT)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         
-# class SurfaceGroupBox(CustomGroupBox):
+class SurfaceGroupBox(CustomGroupBox):
     
-#     TITLE = "Габариты земельного участка"
+    STEP = 10
+    MAXIMUM = 10 ** 6
+    DEFAULT_VALUE = 10 ** 2
     
-#     def __init__(self, parent: QWidget | None = None) -> None:
-#         super().__init__(self.TITLE, parent)
+    MEASUREMENT_LABEL_FIXED_WIDTH = 14 * 10
+    
+    def __init__(
+        self, 
+        combobox: CustomLengthComboBox,
+        parent: QWidget | None = None
+    ) -> None:
+        super().__init__("Габариты земельного участка", parent)
+        self.combobox = combobox
+        self.__setup()
         
-#         surface_layout = QVBoxLayout()
+    def __set_part(
+        self, 
+        label_text: str, 
+        width: int,
+        function: Callable,
+        combobox: CustomLengthComboBox, 
+        main_layout: QVBoxLayout | QHBoxLayout
+    ) -> Tuple[CustomDoubleSpinBox, CustomLabel]:
+        layout = QHBoxLayout()
         
-#         surface_width_layout = QHBoxLayout()
-#         surface_width_label = CustomLabel("Ширина земельного участка")
-#         self.surface_width_spinbox = CustomDoubleSpinBox()
-#         self.surface_width_spinbox.valueChanged.connect(self.__update_surface_width)
-#         self.surface_width_measurement_label = CustomLabel()
-#         surface_width_layout.addWidget(surface_width_label)
-#         surface_width_layout.addWidget(self.surface_width_spinbox)
-#         surface_width_layout.addWidget(self.surface_width_measurement_label)
-
-#         surface_length_layout = QHBoxLayout()
-#         surface_length_label = CustomLabel("Длина земельного участка")
-#         self.surface_length_spinbox = CustomDoubleSpinBox()
-#         surface_length_layout.addWidget(surface_length_label)
-#         surface_length_layout.addWidget(self.surface_length_spinbox)
-
-#         surface_layout.addLayout(surface_length_layout)
-#         surface_layout.addLayout(surface_width_layout)
+        label = CustomLabel(label_text)
+        result = CustomLabel()
+        result.setFixedWidth(width)
         
-#         self.setLayout(surface_layout)
+        spinbox = CustomDoubleSpinBox()
+        spinbox.setSingleStep(self.STEP)
+        spinbox.setValue(self.DEFAULT_VALUE)
+        spinbox.setMaximum(self.MAXIMUM)
+        spinbox.valueChanged.connect(
+            lambda value: CustomLabel._set_label_text(result, function, value, combobox.currentText())
+        )
         
-#     def __update_surface_width(self, value: float) -> None:
+        CustomLabel._set_label_text(result, function, spinbox.value(), combobox.currentText())
         
-#     def __set_value(self, value: float) -> None:
-#         self.surface_width_measurement_label.setText(
-#             _find_length_form(
-#                 value,
-#                 self.
-#             )
-#         )
+        layout.addWidget(label)
+        layout.addWidget(spinbox)
+        layout.addWidget(result)
+        
+        main_layout.addLayout(layout)
+        
+        return spinbox, result
+        
+    def __set_surface_part(
+        self, 
+        label_text: str,
+        main_layout: QVBoxLayout | QHBoxLayout
+    ) -> Tuple[CustomDoubleSpinBox, CustomLabel]:
+        return self.__set_part(
+            label_text,
+            self.MEASUREMENT_LABEL_FIXED_WIDTH, 
+            _find_length_form, 
+            self.combobox,
+            main_layout
+        )
+        
+    def __setup(self) -> None:
+        layout = QVBoxLayout()
+        
+        self.length_spinbox, self.length_label = self.__set_surface_part(
+            "Длина земельного участка:", 
+            layout
+        )
+        self.width_spinbox, self.width_label = self.__set_surface_part(
+            "Ширина земельного участка:", 
+            layout
+        )
+        
+        self.setLayout(layout)
+        
+    def __set_label_text(self, label: CustomLabel, value: object) -> None:
+        CustomLabel._set_label_text(label, _find_length_form, value, self.combobox.currentText())
+        
+    def _set_label_text(self) -> None:
+        self.__set_label_text(self.length_label, self.length_spinbox.value())
+        self.__set_label_text(self.width_label, self.width_spinbox.value())

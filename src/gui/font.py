@@ -1,0 +1,8 @@
+from PyQt6.QtGui import QFont
+
+
+MAIN_FONT_SIZE = 12
+
+MAIN_FONT_FAMILY = "Candara"
+
+MAIN_FONT = QFont(MAIN_FONT_FAMILY, MAIN_FONT_SIZE)

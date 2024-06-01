@@ -1,59 +1,98 @@
 from PyQt6.QtGui import QFont, QKeyEvent
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QDoubleSpinBox, QWidget
+from PyQt6.QtWidgets import QDoubleSpinBox, QWidget, QHBoxLayout
 
-from .. import _get_pretty_number
-from .. import DEFAULT_NUMBER_MAXIMUM
+from . import _find_money_form
+from .custom_label import CustomLabel
+from .custom_combobox import CustomMoneyComboBox
 
 
 __all__ = [
     "CustomSpinBox",
     "CustomIntSpinBox",
     "CustomDoubleSpinBox",
+    "Budget",
 ]
 
 
 class CustomSpinBox(QDoubleSpinBox):
     
-    SPINBOX_FONT = QFont("Times New Roman", 12)
+    SPINBOX_MINIMUM = 1
+    SPINBOX_MAXIMUM = 2 ** 48
+    
+    SPINBOX_STEP = 10 ** 3
+    DEFAULT_VALUE = 10 ** 9
+    
+    FIXED_WIDTH = 3 * 10 ** 2
+    
+    SPINBOX_FONT = QFont("Times New Roman", 10)
     
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        
-        self.SPINBOX_FONT.setBold(True)
-        
         self.setFont(self.SPINBOX_FONT)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.setRange(1, DEFAULT_NUMBER_MAXIMUM)
-        self.setSingleStep(1_000)
-        self.setValue(1_000_000_000)
+        self.setRange(self.SPINBOX_MINIMUM, self.SPINBOX_MAXIMUM)
+        self.setSingleStep(self.SPINBOX_STEP)
+        self.setValue(self.DEFAULT_VALUE)
         self.setGroupSeparatorShown(True)
-        self.setFixedWidth(300)
+        self.setFixedWidth(self.FIXED_WIDTH)
         
         
 class CustomIntSpinBox(CustomSpinBox):
     
+    MAXIMUM_DECIMALS = 0
+    
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.setDecimals(self.MAXIMUM_DECIMALS)
         
-        self.setDecimals(0)
+    def keyPressEvent(self, event: QKeyEvent | None) -> None:
+        if event.key() == Qt.Key.Key_Comma:
+            return
+        return super().keyPressEvent(event)
         
     
 class CustomDoubleSpinBox(CustomSpinBox):
     
+    MAXIMUM_DECIMALS = 2
+    
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-
-        self.setDecimals(6)
-        self.valueChanged.connect(self.update_decimals)
+        self.setDecimals(self.MAXIMUM_DECIMALS)
         
-    def keyPressEvent(self, event: QKeyEvent | None) -> None:
-        super().keyPressEvent(event)
-        if isinstance(_get_pretty_number(self.value()), int) and \
-            event.key() == Qt.Key.Key_Comma or event.key() == Qt.Key.Key_Period:
-            self.setDecimals(6)
         
-    def update_decimals(self) -> None:
-        self.textChanged.emit
-        if isinstance(_get_pretty_number(self.value()), int):
-            self.setDecimals(0)
+class Budget(CustomDoubleSpinBox):
+    
+    def __init__(
+        self, 
+        combobox: CustomMoneyComboBox,
+        parent: QWidget | None = None
+    ) -> None:
+        super().__init__(parent)
+        self.combobox = combobox
+        self.__setup()
+        
+    def __set(self, value: object) -> None:
+        CustomLabel._set_label_text(self.currency_label, _find_money_form, value, self.combobox.currentText())
+        
+    def __setup(self) -> None:
+        self._layout = QHBoxLayout()
+        
+        label = CustomLabel("Бюджет застройщика:")
+        
+        self.currency_label = CustomLabel()
+        self.__set(self.value())
+        
+        self.valueChanged.connect(lambda value: self.__set(value))
+        
+        self._layout.addWidget(label)
+        self._layout.addWidget(self)
+        self._layout.addWidget(self.currency_label)
+    
+    def _set_label_text(self) -> None:
+        CustomLabel._set_label_text(
+            self.currency_label,
+            _find_money_form,
+            self.value(),
+            self.combobox.currentText()
+        )

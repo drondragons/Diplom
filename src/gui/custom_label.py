@@ -1,7 +1,8 @@
 from typing import Callable
 
-from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QLabel, QWidget
+
+from .font import MAIN_FONT
 
 
 __all__ = [
@@ -11,15 +12,13 @@ __all__ = [
 
 class CustomLabel(QLabel):
     
-    LABEL_FONT = QFont("Times New Roman", 12)
+    LABEL_FONT = MAIN_FONT
     
     def __init__(self, text: str = str(), parent: QWidget | None = None) -> None:
         super().__init__(text, parent)
-        
-        self.LABEL_FONT.setBold(True)
-        
         self.setFont(self.LABEL_FONT)
         
     @staticmethod
     def _set_label_text(label: QLabel, function: Callable, value: object, text: str) -> None:
+        print("Custom label _set_label_text", function(value, text))
         label.setText(function(value, text))
