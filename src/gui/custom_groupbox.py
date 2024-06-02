@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QGroupBox, QWidget, QVBoxLayout, QHBoxLayout
 
 from . import _find_length_form
-from .font import MAIN_FONT
+from .font import MAIN_FONT, MAIN_FONT_METRICS
 from .custom_label import CustomLabel
 from .custom_spinbox import CustomDoubleSpinBox
 from .custom_combobox import CustomLengthComboBox
@@ -31,7 +31,7 @@ class SurfaceGroupBox(CustomGroupBox):
     MAXIMUM = 10 ** 6
     DEFAULT_VALUE = 10 ** 2
     
-    MEASUREMENT_LABEL_FIXED_WIDTH = 14 * 10
+    # MEASUREMENT_LABEL_FIXED_WIDTH = 14 * 10
     
     def __init__(
         self, 
@@ -40,6 +40,9 @@ class SurfaceGroupBox(CustomGroupBox):
     ) -> None:
         super().__init__("Габариты земельного участка", parent)
         self.combobox = combobox
+        self.MEASUREMENT_LABEL_FIXED_WIDTH = MAIN_FONT_METRICS.horizontalAdvance(
+            max(CustomLengthComboBox.LENGTH_FULL_FORM, key = len)
+        )
         self.__setup()
         
     def __set_part(

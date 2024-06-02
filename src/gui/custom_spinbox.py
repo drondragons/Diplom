@@ -3,6 +3,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QDoubleSpinBox, QWidget, QHBoxLayout
 
 from . import _find_money_form
+from .font import NUMBER_FONT
 from .custom_label import CustomLabel
 from .custom_combobox import CustomMoneyComboBox
 
@@ -25,11 +26,9 @@ class CustomSpinBox(QDoubleSpinBox):
     
     FIXED_WIDTH = 3 * 10 ** 2
     
-    SPINBOX_FONT = QFont("Times New Roman", 10)
-    
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self.setFont(self.SPINBOX_FONT)
+        self.setFont(NUMBER_FONT)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.setRange(self.SPINBOX_MINIMUM, self.SPINBOX_MAXIMUM)
         self.setSingleStep(self.SPINBOX_STEP)

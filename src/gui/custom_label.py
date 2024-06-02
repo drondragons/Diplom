@@ -20,5 +20,4 @@ class CustomLabel(QLabel):
         
     @staticmethod
     def _set_label_text(label: QLabel, function: Callable, value: object, text: str) -> None:
-        print("Custom label _set_label_text", function(value, text))
         label.setText(function(value, text))

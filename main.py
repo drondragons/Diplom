@@ -28,7 +28,7 @@ from PyQt6.QtWidgets import QApplication
 
 def main() -> None:
     application = QApplication(sys.argv)
-    application.setStyle("fusion")
+    application.setStyle("windowsvista")
     
     main_window = MainWindow(application)
     main_window.show()

@@ -26,6 +26,7 @@ class Building(Parallelepiped):
     DEFAULT_TITLE = "Здание"
     
     DEFAULT_INDENT = Meter(5)
+    DEFAULT_INCOME = Money(0)
     DEFAULT_PRICE_TO_BUILD = Money(1_000_000_000)
     
     MINIMUM_LENGTH = Meter(40)

@@ -21,6 +21,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 
 from .help_window import HelpWindow
 from .custom_label import CustomLabel
+from .custom_table import BuildingTable
 from .custom_spinbox import Budget
 from .custom_groupbox import SurfaceGroupBox
 from .custom_combobox import CustomMoneyComboBox, CustomLengthComboBox
@@ -73,10 +74,15 @@ class MainWindow(QMainWindow):
         self.input_and_figure_layout.addLayout(self.input_layout)
         
     def __set_input(self) -> None:
-        self.__set_money_layout(True)
-        self.__set_length_layout(True)
+        self.__set_money_layout()
+        self.__set_length_layout()
         self.__set_budget_layout()
         self.__set_surface()
+        self.__set_building_table()
+        
+    def __set_building_table(self) -> None:
+        self.building_table = BuildingTable(self.length_combobox, self.money_combobox)
+        self.input_layout.addLayout(self.building_table._layout)
         
     def __set_surface(self) -> None:
         self.surface_groupbox = SurfaceGroupBox(self.length_combobox)
@@ -89,6 +95,7 @@ class MainWindow(QMainWindow):
     
     def __money_combobox_changed(self) -> None:
         self.budget_spinbox._set_label_text()
+        self.building_table._set_column_headers_text()
         
     def __set_length_layout(self, is_visible: bool = False) -> None:
         self.length_combobox = CustomLengthComboBox(self.__length_combobox_changed)
@@ -97,6 +104,7 @@ class MainWindow(QMainWindow):
         
     def __length_combobox_changed(self) -> None:
         self.surface_groupbox._set_label_text()
+        self.building_table._set_column_headers_text()
         
     def __set_budget_layout(self) -> None:
         self.budget_spinbox = Budget(self.money_combobox)
@@ -105,10 +113,10 @@ class MainWindow(QMainWindow):
     def __set_menu_bar(self) -> None:
         self.dark_theme_action = QAction("Тёмная тема", self)
         self.dark_theme_action.setCheckable(True)
-        self.dark_theme_action.setChecked(True)
         
         self.light_theme_action = QAction("Светлая тема", self)
         self.light_theme_action.setCheckable(True)
+        self.light_theme_action.setChecked(True)
         
         menubar = self.menuBar()
         menubar.setFont(QFont("Candara", 10))
