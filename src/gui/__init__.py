@@ -1,6 +1,7 @@
 from .. import _format_plural_form
 from ..constants import DEFAULT_PLURAL_FORM
 from ..measurement import DEFAULT_FORMS
+from ..models.buildings import Building
 from ..measurement.money import Money
 from ..measurement.length import Length, Meter
 
@@ -23,6 +24,11 @@ def _find_length_form(value: object, text: str) -> str:
     if _type != Length:
         forms = [_type.FULL_FORM + form for form in DEFAULT_PLURAL_FORM]
     return _format_plural_form(value, forms)
+
+def _find_building_type(text: str) -> Building:
+    return next((subclass \
+        for subclass in (Building.__subclasses__() + [Building]) \
+            if subclass.DEFAULT_TITLE == text), None)
 
 
 from .main_window import *
