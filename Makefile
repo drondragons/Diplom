@@ -1,16 +1,26 @@
-.PHONY: run
+.PHONY: run clean test
+
+.DEFAULT_GOAL := run
 
 run:
 	python main.py
 
-.DEFAULT_GOAL := run
+create-allure-dirs:
+	mkdir -p allure allure/allure-results allure/allure-report
 
-.PHONY: clean
+run-tests:
+	pytest --clean-alluredir --alluredir=allure/allure-results
+
+generate-report:
+	allure --verbose generate allure/allure-results --clean \
+	--report-dir allure/allure-report --report-name "Testing report"
+
+open-report:
+	allure --verbose open allure/allure-report
+
+test: create-allure-dirs run-tests generate-report open-report
 
 clean:
-	rm -rf build 
-	rm -rf src/*.egg-info
-	rm -rf __pycache__ src/__pycache__ 
-	rm -rf src/validators/__pycache__
-	rm -rf src/real/__pycache__
-	rm -rf src/measurement/__pycache__
+	rm -rf build .pytest_cache allure
+	find . -name '*.egg-info' -exec rm -rf {} +
+	find . -name '__pycache__' -exec rm -rf {} + 
