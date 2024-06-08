@@ -1,3 +1,4 @@
+import re
 from typing import Type
 
 from PyQt6.QtCore import QAbstractItemModel, QModelIndex, QObject
@@ -34,7 +35,7 @@ class ValidationDelegate(QStyledItemDelegate):
                     message = "\n\tСтрока не должна быть пустой! "
                     message += f"{Validator.validate_type_of_type(str, self.class_type)[1]}"
                     raise ValueError(message)
-                self.class_type(Real(int(value)))
+                self.class_type(Real(int(re.sub(r" ", "", value))))
             model.setData(index, value)
             
         except Exception as exception:

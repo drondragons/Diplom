@@ -22,6 +22,7 @@ class Kindergarten(Building):
         height: Length = Building.MINIMUM_HEIGHT,
         indent: Length = Building.DEFAULT_INDENT,
         price_to_build: Money = DEFAULT_PRICE_TO_BUILD,
+        income: Money = Building.DEFAULT_INCOME,
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
-        super().__init__(length, width, height, indent, price_to_build, title)
+        super().__init__(length, width, height, indent, price_to_build, income, title)

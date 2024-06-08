@@ -17,6 +17,9 @@ class Binpacker:
         self.root = {'width': width, 'height': height, 'x': 0, 'y': 0, 'used': False}
         self.placements = []
 
+    def sort_blocks_by_title(self, blocks, is_reverse):
+        return sorted(blocks, key=lambda block: block[0]['title'], reverse=is_reverse)
+    
     def sort_blocks_by_area(self, blocks, is_reverse):
         # return sorted(blocks, key=lambda block: block['height'] * block['width'], reverse=is_reverse)
         return sorted(blocks, key=lambda block: block[0]['height'] * block[0]['width'], reverse=is_reverse)
@@ -30,11 +33,12 @@ class Binpacker:
         return sorted(blocks, key=lambda block: block[0]['height'], reverse=is_reverse)
 
     def __make_block(self, blocks):
-        result = []
+        result = list()
         for block in blocks:
             result.append(
                 {
-                    "title": str(block.title.value.split()[0]),
+                    "title": str(block.title),
+                    "indent": int(block.indent),
                     "width": int(block.width + 2 * block.indent),
                     "height": int(block.length + 2 * block.indent),
                 }
@@ -47,18 +51,19 @@ class Binpacker:
         if not blocks:
             return True
         
-        def fit_block(root, block_title, block_width, block_height):
+        def fit_block(root, block_title, block_indent, block_width, block_height):
             tail = blocks[1:] 
             node = self.__find_node(root, block_width, block_height)
             if node is None:
                 return False
             else:
                 self.__split_node(node, block_width, block_height)
-                self.placements.append((block_title, block_width, block_height, node['x'], node['y']))
+                self.placements.append((block_title, block_indent, block_width, block_height, node['x'], node['y']))
                 return self.fittable(tail, rotatable, root)
 
         block = blocks[0]
-        return fit_block(copy.deepcopy(root), block['title'], block['width'], block['height']) or (rotatable and fit_block(copy.deepcopy(root), block['title'], block['height'], block['width']))
+        return fit_block(copy.deepcopy(root), block['title'], block['indent'], block['width'], block['height']) or \
+            (rotatable and fit_block(copy.deepcopy(root), block['title'], block['indent'], block['height'], block['width']))
 
     def __find_node(self, root, width, height):
         if not 'used' in root:
@@ -158,48 +163,50 @@ class Binpacker:
 
     def generate_sort_permutations(self):
         return [
-            (self.sort_blocks_by_area, False),
             (self.sort_blocks_by_area, True),
-            (self.sort_blocks_by_height, False),
+            (self.sort_blocks_by_area, False),
             (self.sort_blocks_by_height, True),
-            (self.sort_blocks_by_width, False),
+            (self.sort_blocks_by_height, False),
             (self.sort_blocks_by_width, True),
+            (self.sort_blocks_by_width, False),
+            (self.sort_blocks_by_title, False),
+            (self.sort_blocks_by_title, True),
         ]
 
     def generate_color(self):
-        return "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
+        def pastel_color_component():
+            return random.randint(150, 255)
+
+        r = pastel_color_component()
+        g = pastel_color_component()
+        b = pastel_color_component()
+        return f'#{r:02X}{g:02X}{b:02X}'
+        # return "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
         
-    def plot_packing(self):
-        fig, ax = plt.subplots()
+    def plot_packing(self, ax):
         ax.set_xlim(0, self.root['width'])
         ax.set_ylim(self.root['height'], 0)
         ax.set_aspect('equal', 'box')
         ax.invert_yaxis()
         
         titles = {}
-        for title, width, height, x, y in self.placements:
+        for title, indent, width, height, x, y in self.placements:
             if title in titles:
-                titles[title].append((title, width, height, x, y))
+                titles[title].append((title, indent, width, height, x, y))
             else:
-                titles[title] = [(title, width, height, x, y)]
+                titles[title] = [(title, indent, width, height, x, y)]
                 
         for blocks in titles.values():
             color = self.generate_color()
-            for title, width, height, x, y in blocks:
+            for title, indent, width, height, x, y in blocks:
                 rect = patches.Rectangle((x, y), width, height, edgecolor='black', facecolor='none')
                 ax.add_patch(rect)
                 smaller_rect = patches.Rectangle(
-                    (x + int(Building.DEFAULT_INDENT), y + int(Building.DEFAULT_INDENT)), 
-                    width - int(Building.DEFAULT_INDENT * 2), 
-                    height - int(Building.DEFAULT_INDENT * 2),
+                    (x + int(indent), y + int(indent)), 
+                    width - int(indent * 2), 
+                    height - int(indent * 2),
                     edgecolor='black', 
                     facecolor=color
                 )
                 ax.add_patch(smaller_rect)
                 ax.text(x + width/2, y + height/2, title, ha='center', va='center', rotation=45)
-        return ax
-        plt.title("Размещение объектов строительства на земельном участке", pad=20)
-        plt.xlabel("Ширина земельного участка, в метрах", labelpad=7)
-        plt.ylabel("Длина земельного участка, в метрах", labelpad=7)
-        plt.gcf().canvas.manager.set_window_title("Размещение объектов строительства на земельном участке")
-        plt.show()

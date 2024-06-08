@@ -9,7 +9,7 @@ from ..price import Price
 from ... import _get_year_form, _validate
 from ...geometry.one_dimensional import Line
 from ...measurement.length import Meter, Length, LengthValidator, MeterConverter
-from ...measurement.money import Money, Ruble
+from ...measurement.money import Money, Ruble, MoneyValidator
 from ...validators import ListValidator
 from ...value_objects.title import Title
 from ...value_objects.real import RealValidator
@@ -105,21 +105,33 @@ class Shop(Building):
         
     @property
     def income(self) -> Price:
+        if self._income != Building.DEFAULT_INCOME:
+            return Price(self._income.value, f"Доход с аренды (за {_get_year_form(self.YEARS)})")
+        
         if self._income_cache is None:
             income = sum(pavilion.price.value for pavilion in self.pavilions) * 12 * self.YEARS
-            self._income_cache = Price(income, "Доход с аренды")
+            self._income_cache = Price(income, f"Доход с аренды (за {_get_year_form(self.YEARS)})")
+            
         return self._income_cache
+    
+    @income.setter
+    def income(self, income: Money) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = MoneyValidator._handle_exception
+        handler(MoneyValidator.validate, s, income, 0)
+        
+        self._income = Price(income, f"Доход с аренды (за {_get_year_form(self.YEARS)})")
     
     @property
     def profit(self) -> Price:
-        if self._profit_cache is None:
-            profit = self.income.value.value - self.price_to_build.value.value
-            if profit <= 0:
-                message = f"\n\t{self.class_name}: "
-                message += f"Прибыль ({_get_year_form(self.YEARS)} окупаемости) "
-                message += f"'{self.title}' {profit} <= 0!"
-                raise ValueError(message)
-            self._profit_cache = Price(Ruble(profit), f"Прибыль ({_get_year_form(self.YEARS)} окупаемости)")
+        profit = self.income.value.value - self.price_to_build.value.value
+        if profit <= 0:
+            message = f"\n\t{self.class_name}: "
+            message += f"Прибыль ({_get_year_form(self.YEARS)} окупаемости) "
+            message += f"'{self.title}' {profit} <= 0!"
+            raise ValueError(message)
+        self._profit_cache = Price(Ruble(profit), f"Прибыль ({_get_year_form(self.YEARS)} окупаемости)")
         return self._profit_cache
     
     def __init__(
@@ -129,16 +141,18 @@ class Shop(Building):
         height: Length = MINIMUM_HEIGHT,
         indent: Length = Building.DEFAULT_INDENT,
         price_to_build: Money = Building.DEFAULT_PRICE_TO_BUILD,
+        income: Money = Building.DEFAULT_INCOME,
         floor_height: Length = MINIMUM_FLOOR_HEIGHT,
         pavilions: List[Pavilion] = list(),
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
-        super().__init__(length, width, height, indent, price_to_build, title)
+        super().__init__(length, width, height, indent, price_to_build, income, title)
         self.floor_height = floor_height
-        self.pavilions = pavilions if pavilions else PavilionFactoryMethod.generate_pavilions(
-            self.minimum_pavilions_amount,
-            self.minimum_pavilions_amount
-        )
+        if income == Building.DEFAULT_INCOME:
+            self.pavilions = pavilions if pavilions else PavilionFactoryMethod.generate_pavilions(
+                self.minimum_pavilions_amount,
+                self.minimum_pavilions_amount
+            )
         
     # ------------------- Output ---------------------------
     
@@ -151,7 +165,7 @@ class Shop(Building):
         result += f"\n\t{self.print_volume()}\n\t{self.print_area()}"
         result += f"\n\t{self.print_area_with_indent()}"
         result += f"\n\t{self.indent}\n\t{self.price_to_build}"
-        result += f"\n\t{self.print_pavilions_amount()}\n\t{self.income}"
+        result += f"\n\t{self.income}"
         return result + f"\n\t{self.profit}\n"
     
     def __repr__(self) -> str:
@@ -182,14 +196,11 @@ class Shop(Building):
     def _equality(right: object, left: object, operator: operator) -> bool:
         Shop._validate(right, left, operator)
         
-        sorted_list1 = sorted(right.pavilions, key=lambda pavilion: (pavilion.footage, pavilion.price_per_meter))
-        sorted_list2 = sorted(left.pavilions, key=lambda pavilion: (pavilion.footage, pavilion.price_per_meter))
-        
         return operator(right.length, left.length) and operator(right.width, left.width) and \
             operator(right.height, left.height) and operator(right.indent, left.indent) and \
             operator(right.price_to_build, left.price_to_build) and \
-            operator(right.pavilions_amount, left.pavilions_amount) and \
-            all(pavilion1 == pavilion2 for pavilion1, pavilion2 in zip(sorted_list1, sorted_list2))
+            operator(right.floor_height, left.floor_height) and \
+            operator(right.income, left.income)
         
     def __eq__(self, other: object) -> bool:
         return Shop._equality(self, other, operator.eq)

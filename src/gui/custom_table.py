@@ -1,29 +1,39 @@
 import re
 import copy
-from typing import List, Callable
+from typing import List, Callable, Tuple, Type
 
-from PyQt6.QtGui import QAction, QKeyEvent
+from PyQt6.QtGui import QAction, QKeyEvent, QShowEvent, QGuiApplication
 from PyQt6.QtCore import Qt, QPoint, QEvent
 from PyQt6.QtWidgets import (
     QWidget,
     QTableWidget,
     QHeaderView,
     QVBoxLayout,
+    QHBoxLayout,
     QMenu,
     QTableWidgetItem,
+    QStyle,
+    QMessageBox
 )
 
-from . import _find_money_type, _find_length_type, _find_building_type
-from .font import MAIN_FONT, MAIN_BOLD_FONT, NUMBER_FONT, NUMBER_BOLD_FONT
-from .custom_combobox import CustomComboBox
+from . import _find_money_type, _find_length_type, _find_money_form
+from . import _find_length_form
+from .font import MAIN_FONT, MAIN_BOLD_FONT, NUMBER_FONT, NUMBER_BOLD_FONT, MAIN_FONT_METRICS
+from .custom_label import CustomLabel
+from .custom_spinbox import CustomDoubleSpinBox
+from .custom_combobox import CustomComboBox, CustomLengthComboBox, CustomMoneyComboBox
+from .custom_pushbutton import CustomPushButton
 from .validation_delegate import ValidationDelegate
 
 from .. import _format_number
+from ..models.price import Price
 from ..models.buildings import Building, Apartment, Shop, School, Hospital, Kindergarten
 from ..measurement.money import Money
 from ..measurement.square import SquarePrinter
 from ..measurement.length import Length
+from ..value_objects.real import Real
 from ..value_objects.title import Title
+from ..geometry.one_dimensional import Line
 
 
 __all__ = [
@@ -108,6 +118,10 @@ class FullScreenTable(QWidget):
     def __init__(self, table: CustomTableWidget, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setWindowTitle(self.WINDOW_TITLE)
+        icon = self.style().standardIcon(
+            QStyle.StandardPixmap.SP_DesktopIcon
+        )
+        self.setWindowIcon(icon)
 
         layout = QVBoxLayout()
 
@@ -127,14 +141,225 @@ class FullScreenTable(QWidget):
         self.destroyed.emit()
         
         
-# class EditCommercialBuilding(QWidget):
+class EditCommercialBuilding(QWidget):
     
-#     WINDOW_TITLE = f"""Редактирование данных объекта '{text}'."""
+    COLUMN_HEADERS = [
+        "Длина",
+        "Ширина",
+        "Высота",
+        "Отступ",
+        "Стоимость постройки",
+        "Доход",
+        "Высота этажа",
+    ]
     
-#     def __init__(self, parent: QWidget | None = None) -> None:
-#         super().__init__(parent)
-#         self.setWindowTitle(self.WINDOW_TITLE)
+    def __init__(
+        self,
+        row: int,
+        building: Building,
+        length_combobox: CustomComboBox,
+        money_combobox: CustomComboBox,
+        parent: QWidget | None = None
+    ) -> None:
+        super().__init__(parent)
         
+        self.money_combobox = money_combobox
+        self.length_combobox = length_combobox
+        
+        self.length_label_width = MAIN_FONT_METRICS.horizontalAdvance(
+            max(CustomLengthComboBox.LENGTH_FULL_FORM, key = len)
+        )
+        self.money_label_width = MAIN_FONT_METRICS.horizontalAdvance(
+            max(CustomMoneyComboBox.MONEY_FULL_FORM, key = len)
+        )
+        
+        self.row = row
+        self.building = building
+        
+        self.setWindowTitle(f"""Редактирование данных объекта «{building.title}».""")
+        icon = self.style().standardIcon(
+            QStyle.StandardPixmap.SP_DesktopIcon
+        )
+        self.setWindowIcon(icon)
+        
+        self._layout = QVBoxLayout(self)
+        
+        self.length_spinbox, self.length_label = self._set_part_1(
+            self.building.length,
+            minimum = self.building.MINIMUM_LENGTH
+        )
+        self.width_spinbox, self.width_label = self._set_part_1(
+            self.building.width,
+            minimum = self.building.MINIMUM_WIDTH
+        )
+        self.height_spinbox, self.height_label = self._set_part_1(
+            self.building.height,
+            minimum = self.building.MINIMUM_HEIGHT
+        )
+        self.indent_spinbox, self.indent_label = self._set_part_1(
+            self.building.indent,
+            1,
+            100,
+            0
+        )
+        self.price_to_build_spinbox, self.price_to_build_label = self._set_part_2(
+            self.building.price_to_build
+        )
+        self.income_spinbox, self.income_label = self._set_part_2(
+            self.building.income,
+        )
+        self.floor_height_spinbox, self.floor_height_label = self._set_part_1(
+            self.building.floor_height,
+            0.01,
+            Apartment.MAXIMUM_FLOOR_HEIGHT,
+            Apartment.MINIMUM_FLOOR_HEIGHT
+        )
+        
+        self.button = CustomPushButton("Сохранить изменения")
+        self.button.clicked.connect(self._on_button_clicked)
+        self._layout.addWidget(self.button)
+        
+        self.result = None
+    
+    def _on_button_clicked(self) -> None:    
+        try:
+            building = type(self.building)(
+                Length(Real(self.length_spinbox.value())),
+                Length(Real(self.width_spinbox.value())),
+                Length(Real(self.height_spinbox.value())),
+                Length(Real(self.indent_spinbox.value())),
+                Money(Real(self.price_to_build_spinbox.value())),
+                Money(Real(self.income_spinbox.value())),
+                Length(Real(self.floor_height_spinbox.value()))
+            )
+            
+            if self.building == building:
+                self.hide()
+                return
+            
+            self.building = building
+            
+            self.hide()
+            self.destroyed.emit()
+            
+        except Exception as exception:
+            message = type(exception).__name__ + ":" + str(exception)
+            QMessageBox.warning(None, "Ошибка ввода данных.", message)
+        
+    def _set_part_1(
+        self,
+        value: Line,
+        step: float = 10,
+        maximum: float = 10 ** 6,
+        minimum: float = 1
+    ) -> Tuple[CustomDoubleSpinBox, CustomLabel]:
+        layout = QHBoxLayout()
+        
+        label = CustomLabel(str(value.title))
+        
+        spinbox = CustomDoubleSpinBox()
+        spinbox.setSingleStep(step)
+        spinbox.setValue(float(value.length))
+        spinbox.setMaximum(maximum)
+        spinbox.setMinimum(minimum)
+        
+        result = CustomLabel()
+        result.setFixedWidth(self.length_label_width)
+        
+        spinbox.valueChanged.connect(
+            lambda v: CustomLabel._set_label_text(
+                result,
+                _find_length_form,
+                v,
+                self.length_combobox.currentText()
+            )
+        )
+        CustomLabel._set_label_text(
+            result,
+            _find_length_form,
+            spinbox.value(),
+            self.length_combobox.currentText()
+        )
+        
+        layout.addWidget(label)
+        layout.addWidget(spinbox)
+        layout.addWidget(result)
+        
+        self._layout.addLayout(layout)
+        
+        return spinbox, result
+    
+    def _set_part_2(self, value: Price) -> Tuple[CustomDoubleSpinBox, CustomLabel]:
+        layout = QHBoxLayout()
+        
+        label = CustomLabel(str(value.title))
+        
+        spinbox = CustomDoubleSpinBox()
+        spinbox.setValue(int(value.value))
+        
+        result = CustomLabel()
+        result.setFixedWidth(self.money_label_width)
+        
+        spinbox.valueChanged.connect(
+            lambda v: CustomLabel._set_label_text(
+                result,
+                _find_money_form,
+                v,
+                self.money_combobox.currentText()
+            )
+        )
+        CustomLabel._set_label_text(
+            result,
+            _find_money_form,
+            spinbox.value(),
+            self.money_combobox.currentText()
+        )
+        
+        layout.addWidget(label)
+        layout.addWidget(spinbox)
+        layout.addWidget(result)
+        
+        self._layout.addLayout(layout)
+        
+        return spinbox, result
+        
+    def showEvent(self, event: QShowEvent = None) -> None:
+        qr = self.frameGeometry()           
+        cp = QGuiApplication.primaryScreen().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+        
+    def __set_length_label_text(self, label: CustomLabel, value: int | float) -> None:
+        CustomLabel._set_label_text(
+            label,
+            _find_length_form, 
+            value, 
+            self.length_combobox.currentText()
+        )
+        
+    def __set_money_label_text(self, label: CustomLabel, value: int | float) -> None:
+        CustomLabel._set_label_text(
+            label,
+            _find_money_form, 
+            value, 
+            self.money_combobox.currentText()
+        )
+        
+    def __set_length_labels_text(self) -> None:
+        self.__set_length_label_text(self.length_label, self.length_spinbox.value())
+        self.__set_length_label_text(self.width_label, self.width_spinbox.value())
+        self.__set_length_label_text(self.height_label, self.height_spinbox.value())
+        self.__set_length_label_text(self.indent_label, self.indent_spinbox.value())
+        self.__set_length_label_text(self.floor_height_label, self.floor_height_spinbox.value())
+        
+        self.__set_money_label_text(self.price_to_build_label, self.price_to_build_spinbox.value())
+        self.__set_money_label_text(self.income_label, self.income_spinbox.value())
+        
+    def _set_label_text(self) -> None:
+        self.__set_length_labels_text()
+        
+    def closeEvent(self, event: QEvent) -> None:
+        self.hide()
 
     
 class BuildingTable:
@@ -151,6 +376,18 @@ class BuildingTable:
         "Потенциальный доход",
         "Прибыль",
     ]
+    
+    COLUMN_MAPPING = {
+        1: 'length',
+        2: 'width',
+        3: 'height',
+        4: 'indent',
+        5: 'area',
+        6: 'area_with_indent',
+        7: 'price_to_build',
+        8: 'income',
+        9: 'profit'
+    }
     
     BUILDINGS = [building for building in Building.__subclasses__()]
     COMMERCIAL_BUILDINGS = [Apartment, Shop]
@@ -180,9 +417,15 @@ class BuildingTable:
         money_combobox: CustomComboBox
     ) -> None:
         self.table = CustomTableWidget(0, len(self.COLUMN_HEADERS))
+        
         self.money_combobox = money_combobox
         self.length_combobox = length_combobox
+        
         self.is_full_screen = False
+        self.is_changed = False
+        
+        self.buildings = list()
+        
         self.__set_columns()
         self.__setup()
         self.__fill_table_by_default_buildings()
@@ -213,7 +456,9 @@ class BuildingTable:
         self.table.customContextMenuRequested.connect(self._show_context_menu)
         
         self.table.itemChanged.connect(self.__item_changed)
-        self.table.verticalHeader().sectionDoubleClicked.connect(self.__vertical_header_double_clicked)
+        self.table.verticalHeader().sectionDoubleClicked.connect(
+            self.__vertical_header_double_clicked
+        )
     
         self._layout = QVBoxLayout()
         self._layout.addWidget(self.table)
@@ -224,70 +469,77 @@ class BuildingTable:
                 return False
         return True
     
-    def __get_item_value(self, row: int, column: int) -> str:
-        return re.sub(r" ", "", self.table.item(row, column).text())
-    
-    def __get_width(self, row: int) -> int:
-        return int(self.__get_item_value(row, 2))
-    
-    def __get_length(self, row: int) -> int:
-        return int(self.__get_item_value(row, 1))
-    
-    def __get_indent(self, row: int) -> int:
-        return int(self.__get_item_value(row, 4))
-    
-    def __get_income(self, row: int) -> int:
-        return int(self.__get_item_value(row, 8))
-    
-    def __get_price_to_build(self, row: int) -> int:
-        return int(self.__get_item_value(row, 7))
-    
-    def __count_area(self, row: int) -> int:
-        return self.__get_width(row) * self.__get_length(row)
-    
-    def __count_area_with_indent(self, row: int) -> int:
-        area = self.__count_area(row)
-        area += 2 * self.__get_indent(row) * (self.__get_width(row) + self.__get_length(row))
-        return area + 4 * self.__get_indent(row) ** 2
-        
-    def __count_profit(self, row: int) -> int:
-        return self.__get_income(row) - self.__get_price_to_build(row)
-    
     def __create_table_widget_item(self, value: int) -> QTableWidgetItem:
         return QTableWidgetItem(_format_number(value))
+      
+    def __make_building_attribute(self, item: QTableWidgetItem, _type = Type) -> Money | Length:
+        return _type(Real(int(re.sub(r" ", "", item.text()))))
+        
+    def __building_change(self, row: int) -> None:
+        for col in [1, 2, 3, 4, 7, 8]:
+            if col in [1, 2, 3, 4]:
+                attribute_type = Length
+            else:
+                attribute_type = Money    
+            setattr(
+                self.buildings[row],
+                self.COLUMN_MAPPING[col], 
+                self.__make_building_attribute(self.table.item(row, col), attribute_type)
+            )
+            
+        self.is_changed = True
         
     def __item_changed(self, item: QTableWidgetItem) -> None:
         row = item.row()
         column = item.column()
         titles = [building.DEFAULT_TITLE for building in self.COMMERCIAL_BUILDINGS]
+        if not self.buildings or len(self.buildings) - 1 < row:
+            return
+        if self.is_changed:
+            return
         if self.table.item(row, 0).text() in titles:
             return
-        if column not in [1, 2, 4, 7, 8]:
+        if column not in [1, 2, 3, 4, 7, 8]:
             return
         if not self.__is_row_filled(row):
             return
         
-        area_item = self.__create_table_widget_item(self.__count_area(row))
-        area_with_indent_item = self.__create_table_widget_item(self.__count_area_with_indent(row))
-        profit = self.__create_table_widget_item(self.__count_profit(row))
-        match column:
-            case 1 | 2:
-                self.table.setItem(row, 5, area_item)
-                self.table.setItem(row, 6, area_with_indent_item)
-            case 4:
-                self.table.setItem(row, 6, area_with_indent_item)
-            case 7 | 8:
-                self.table.setItem(row, 9, profit)
+        try:
+            self.__building_change(row)
+        
+            for col, attr in self.COLUMN_MAPPING.items():
+                value = getattr(self.buildings[row], attr) 
+                value = value.length if col < 5 else value.value if col != 9 else value
+                value = int(value)
+                self.table.setItem(row, col, self.__create_table_widget_item(value))
+            
+        except Exception as exception:
+            message = type(exception).__name__ + ":" + str(exception)
+            QMessageBox.warning(None, "Ошибка ввода данных.", message)
+                
+            value = getattr(self.buildings[row], self.COLUMN_MAPPING[column])
+            value = value.length if column < 5 else value.value if column != 9 else value
+            item = self.__create_table_widget_item(int(value))
+            
+            self.is_changed = True
+            self.table.setItem(row, column, item)
+        
         self.__set_column(row)
-    
+        self.is_changed = False
+        
     def __vertical_header_double_clicked(self, row: int) -> None:
-        print("Double clicked vertical header")
         titles = [building.DEFAULT_TITLE for building in self.COMMERCIAL_BUILDINGS]
         if self.table.item(row, 0).text() not in titles:
             return
         
-        
-        print("Commercial")
+        self.edit_window = EditCommercialBuilding(
+            row,
+            self.buildings[row],
+            self.length_combobox,
+            self.money_combobox
+        )
+        self.edit_window.show()
+        self.edit_window.destroyed.connect(self._on_edit_window_closed)
     
     def _set_columns_unchanged(self) -> None:
         self.table._iterate_on_table(self._set_column_unchanged)
@@ -300,7 +552,7 @@ class BuildingTable:
         if item:
             is_commercial = item.text() in titles
             
-        unchangable_columns = [0, 3, 5, 6, 9] if not is_commercial else list(range(10))
+        unchangable_columns = [0, 5, 6, 9] if not is_commercial else list(range(10))
         for column in unchangable_columns:
             item = self.table.item(row, column)
             if item:
@@ -317,7 +569,7 @@ class BuildingTable:
         action.triggered.connect(lambda: self._add_table_row(building))
         return action
     
-    def _add_table_row(self, _type: Building) -> None:
+    def _add_table_row(self, _type: Building) -> Building:
         self.table.setSortingEnabled(False)
         
         row_amount = self.table.rowCount()
@@ -326,7 +578,7 @@ class BuildingTable:
         building = _type()
         is_commercial = _type in self.COMMERCIAL_BUILDINGS
         income = int(building.income.value) if is_commercial else int(building.DEFAULT_INCOME)
-        profit = int(building.profit.value) if is_commercial else int(building.price_to_build.value) - income
+        profit = int(building.profit.value) if is_commercial else income - int(building.price_to_build.value)
 
         default_values = [
             building.DEFAULT_TITLE,
@@ -348,6 +600,9 @@ class BuildingTable:
         
         self.table.setSortingEnabled(True)
         self.table.sortByColumn(0, Qt.SortOrder.AscendingOrder)
+        
+        self.buildings.append(building)
+        self.buildings = sorted(self.buildings, key = lambda b: b.title)
         
     def _show_context_menu(self, pos: QPoint) -> None:
         context = QMenu(self.table)
@@ -371,3 +626,13 @@ class BuildingTable:
         self.table = self.full_screen_table.table
         self._layout.addWidget(self.table)
         self.is_full_screen = False
+        
+    def _on_edit_window_closed(self):
+        row = self.edit_window.row
+        for col, attr in self.COLUMN_MAPPING.items():
+            value = getattr(self.edit_window.building, attr) 
+            value = value.length if col < 5 else value.value if col != 9 else value
+            value = int(value)
+            self.table.setItem(row, col, self.__create_table_widget_item(value))
+        self.buildings[row] = self.edit_window.building
+        self.__set_column(row)

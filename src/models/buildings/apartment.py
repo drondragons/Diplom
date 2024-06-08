@@ -9,7 +9,7 @@ from ..price import Price
 from ... import _validate
 from ...geometry.one_dimensional import Line
 from ...measurement.length import Length, LengthValidator, MeterConverter, Meter
-from ...measurement.money import Money, Ruble
+from ...measurement.money import Money, Ruble, MoneyValidator
 from ...validators import ListValidator
 from ...value_objects.title import Title
 from ...value_objects.real import RealValidator
@@ -104,20 +104,32 @@ class Apartment(Building):
         
     @property
     def income(self) -> Price:
+        if self._income != Building.DEFAULT_INCOME:
+            return Price(self._income.value, "Доход с продаж квартир")
+        
         if self._income_cache is None:
             income = sum(flat.price.value for flat in self.flats)
             self._income_cache =  Price(income, "Доход с продаж квартир")
+            
         return self._income_cache
+    
+    @income.setter
+    def income(self, income: Money) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = MoneyValidator._handle_exception
+        handler(MoneyValidator.validate, s, income, 0)
+        
+        self._income = Price(income, "Доход с продаж квартир")
     
     @property
     def profit(self) -> Price:
-        if self._profit_cache is None:
-            profit = self.income.value.value - self.price_to_build.value.value
-            if profit <= 0:
-                message = f"\n\t{self.class_name}: "
-                message += f"Прибыль с постройки здания '{self.title}' {profit} <= 0!"
-                raise ValueError(message)
-            self._profit_cache = Price(Ruble(profit), "Прибыль с постройки")
+        profit = self.income.value.value - self.price_to_build.value.value
+        if profit <= 0:
+            message = f"\n\t{self.class_name}: "
+            message += f"Прибыль с постройки здания '{self.title}' {profit} <= 0!"
+            raise ValueError(message)
+        self._profit_cache = Price(Ruble(profit), "Прибыль с постройки")
         return self._profit_cache
     
     def __init__(
@@ -127,16 +139,18 @@ class Apartment(Building):
         height: Length = MINIMUM_HEIGHT,
         indent: Length = Building.DEFAULT_INDENT,
         price_to_build: Money = Building.DEFAULT_PRICE_TO_BUILD,
+        income: Money = Building.DEFAULT_INCOME,
         floor_height: Length = MINIMUM_FLOOR_HEIGHT,
         flats: List[Flat] = list(),
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
-        super().__init__(length, width, height, indent, price_to_build, title)
+        super().__init__(length, width, height, indent, price_to_build, income, title)
         self.floor_height = floor_height
-        self.flats = flats if flats else FlatFactoryMethod.generate_flats(
-            self.minimum_flats_amount,
-            self.minimum_flats_amount
-        )
+        if income == Building.DEFAULT_INCOME:
+            self.flats = flats if flats else FlatFactoryMethod.generate_flats(
+                self.minimum_flats_amount,
+                self.minimum_flats_amount
+            )
         
     # ------------------- Output ---------------------------
     
@@ -149,7 +163,7 @@ class Apartment(Building):
         result += f"\n\t{self.print_volume()}\n\t{self.print_area()}"
         result += f"\n\t{self.print_area_with_indent()}"
         result += f"\n\t{self.indent}\n\t{self.price_to_build}"
-        result += f"\n\t{self.print_flats_amount()}\n\t{self.income}"
+        result += f"\n\t{self.income}"
         return result + f"\n\t{self.profit}\n"
     
     def __repr__(self) -> str:
@@ -180,14 +194,11 @@ class Apartment(Building):
     def _equality(right: object, left: object, operator: operator) -> bool:
         Apartment._validate(right, left, operator)
         
-        sorted_list1 = sorted(right.flats, key=lambda flat: (flat.footage, flat.price_per_meter))
-        sorted_list2 = sorted(left.flats, key=lambda flat: (flat.footage, flat.price_per_meter))
-        
         return operator(right.length, left.length) and operator(right.width, left.width) and \
             operator(right.height, left.height) and operator(right.indent, left.indent) and \
             operator(right.price_to_build, left.price_to_build) and \
-            operator(right.flats_amount, left.flats_amount) and \
-            all(flat1 == flat2 for flat1, flat2 in zip(sorted_list1, sorted_list2))
+            operator(right.floor_height, left.floor_height) and \
+            operator(right.income, left.income)
         
     def __eq__(self, other: object) -> bool:
         return Apartment._equality(self, other, operator.eq)

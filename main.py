@@ -31,7 +31,7 @@ def main() -> None:
     application.setStyle("windowsvista")
     
     main_window = MainWindow(application)
-    main_window.show()
+    main_window.showMaximized()
     
     sys.exit(application.exec())
     

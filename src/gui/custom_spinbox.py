@@ -80,6 +80,7 @@ class Budget(CustomDoubleSpinBox):
         label = CustomLabel("Бюджет застройщика:")
         
         self.currency_label = CustomLabel()
+        self.setValue(10 ** 10)
         self.__set(self.value())
         
         self.valueChanged.connect(lambda value: self.__set(value))

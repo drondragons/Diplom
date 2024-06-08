@@ -1,13 +1,14 @@
+import copy
 from typing import List, Tuple
 
-import heapq
+# import heapq
 
 from ..price import Price
 from ..buildings import Building, Apartment, Shop
 
-from ...geometry.one_dimensional import Line
+# from ...geometry.one_dimensional import Line
 from ...measurement.length import Length, LengthValidator, Meter
-from ...measurement.square import SquareConverter
+# from ...measurement.square import SquareConverter
 
 
 __all__ = [
@@ -33,15 +34,29 @@ class BoundedKnapsack:
                 required_buildings.append(building)
             else:
                 new_buildings.append(building)
-        # print(budget)
+
         amounts = list()
         for building in new_buildings:
             amount = int(budget // building.price_to_build)
             if amount > 1 and not isinstance(building, Apartment):
                 amount = 1
             amounts.append(amount)
-        # print(result)
+    
         return area, new_buildings, amounts, required_buildings
+    
+    @classmethod
+    def _convert_to_binary_knapsack(cls, buildings, amounts):
+        result = list()
+        count = copy.deepcopy(amounts)
+        for i, building in enumerate(buildings):
+            j = 1
+            while count[i] >= j:
+                result.append((j * building.area_with_indent, j * building.profit))
+                count[i] -= j
+                j *= 2
+            if count[i] > 0:
+                result.append((count[i] * building.area_with_indent, count[i] * building.profit))
+        return result, count
     
     @classmethod
     def solve_dynamic(
@@ -59,6 +74,72 @@ class BoundedKnapsack:
                 for building, amount in zip(new_buildings, amounts) \
                     for _ in range(amount)]
         
+        # print(amounts)
+        
+        for i, (building, amount) in enumerate(zip(new_buildings, amounts)):
+            building_area = building.area_with_indent * amount
+            if building_area > capacity - area:
+                amounts[i] = int((capacity - area) // building.area_with_indent)
+    
+        # print(amounts)
+        
+        # result, new_amounts = BoundedKnapsack._convert_to_binary_knapsack(new_buildings, amounts)
+        # print(result)
+        # print(new_amounts)
+        # # input()
+        
+        # n = len(result)
+        # W = int(round(capacity - area)) // 100
+        # table = [[0.0 for _ in range(W + 1)] for _ in range(n + 1)]
+        # print(n, W, capacity, area)
+        # print(table)
+        # # input()
+        
+        # for i in range(1, n + 1):
+        #     area_with_indent, profit = result[i - 1]
+        #     for c in range(1, W + 1):
+        #         table[i][c] = table[i - 1][c]
+        #         if c >= int(area_with_indent // 100):
+        #             table[i][c] = max(
+        #                 table[i][c], 
+        #                 table[i - 1][c - int(area_with_indent // 100)] + profit
+        #             )
+                    
+        # print(table)
+        # # input()
+        
+        # solution = required_buildings
+        # remaining_capacity = W
+        
+        # for i in range(min(n, len(amounts)), 0, -1):
+        #     area_with_indent, profit = result[i - 1]
+        #     if remaining_capacity >= int(area_with_indent // 100) and \
+        #         table[i][remaining_capacity] == table[i - 1][remaining_capacity - int(area_with_indent // 100)] + profit:
+        #         print(i - 1)
+        #         print(amounts)
+        #         print(amounts[i - 1])
+        #         solution.append(new_buildings[(i - 1) // amounts[i - 1]])  # Определяем оригинальное здание
+        #         remaining_capacity -= int(area_with_indent // 100)
+        
+        # i = n
+        # while i > 0 and remaining_capacity > 0:
+        #     print(table[i][remaining_capacity])
+        #     print(table[i - 1][remaining_capacity])
+        #     if table[i][remaining_capacity] != table[i - 1][remaining_capacity]:
+        #         area_with_indent, profit = result[i - 1]
+        #         print(area_with_indent, profit)
+        #         # Определяем оригинальное здание
+        #         original_building_index = (i - 1) // len(amounts)
+        #         print(i - 1, len(amounts), original_building_index)
+        #         print(len(new_buildings))
+        #         original_building = new_buildings[original_building_index - 1]
+        #         solution.append(original_building)
+        #         remaining_capacity -= int(area_with_indent // 100)
+        #     i -= 1
+        
+        # return solution
+    
+    
         # W = int(round(capacity - area)) // 100
         # table = [[[] for _ in range(W + 1)] for _ in range(len(new_buildings) + 1)]
         # table[0][0] = [(0, [])]

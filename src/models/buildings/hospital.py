@@ -12,7 +12,7 @@ __all__ = [
 
 class Hospital(Building):
     
-    DEFAULT_TITLE = "Больница"
+    DEFAULT_TITLE = "Медучреждение"
     DEFAULT_PRICE_TO_BUILD = Money(5_000_000_000)
     
     def __init__(
@@ -22,6 +22,7 @@ class Hospital(Building):
         height: Length = Building.MINIMUM_HEIGHT,
         indent: Length = Building.DEFAULT_INDENT,
         price_to_build: Money = DEFAULT_PRICE_TO_BUILD,
+        income: Money = Building.DEFAULT_INCOME,
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
-        super().__init__(length, width, height, indent, price_to_build, title)
+        super().__init__(length, width, height, indent, price_to_build, income, title)

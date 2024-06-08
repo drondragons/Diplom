@@ -6,8 +6,8 @@
     <CharCode>AUD</CharCode>
     <Nominal>1</Nominal>
     <Name>Австралийский доллар</Name>
-    <Value>59,3990</Value>
-    <VunitRate>59,399</VunitRate>
+    <Value>59,1834</Value>
+    <VunitRate>59,1834</VunitRate>
   </row>
   <row>
     <ID>R01020A</ID>
@@ -15,8 +15,8 @@
     <CharCode>AZN</CharCode>
     <Nominal>1</Nominal>
     <Name>Азербайджанский манат</Name>
-    <Value>52,5738</Value>
-    <VunitRate>52,5738</VunitRate>
+    <Value>52,2102</Value>
+    <VunitRate>52,2102</VunitRate>
   </row>
   <row>
     <ID>R01035</ID>
@@ -24,8 +24,8 @@
     <CharCode>GBP</CharCode>
     <Nominal>1</Nominal>
     <Name>Фунт стерлингов Соединенного королевства</Name>
-    <Value>113,7839</Value>
-    <VunitRate>113,7839</VunitRate>
+    <Value>113,3610</Value>
+    <VunitRate>113,361</VunitRate>
   </row>
   <row>
     <ID>R01060</ID>
@@ -33,8 +33,8 @@
     <CharCode>AMD</CharCode>
     <Nominal>100</Nominal>
     <Name>Армянских драмов</Name>
-    <Value>23,0635</Value>
-    <VunitRate>0,230635</VunitRate>
+    <Value>22,9146</Value>
+    <VunitRate>0,229146</VunitRate>
   </row>
   <row>
     <ID>R01090B</ID>
@@ -42,8 +42,8 @@
     <CharCode>BYN</CharCode>
     <Nominal>1</Nominal>
     <Name>Белорусский рубль</Name>
-    <Value>27,9876</Value>
-    <VunitRate>27,9876</VunitRate>
+    <Value>27,9392</Value>
+    <VunitRate>27,9392</VunitRate>
   </row>
   <row>
     <ID>R01100</ID>
@@ -51,8 +51,8 @@
     <CharCode>BGN</CharCode>
     <Nominal>1</Nominal>
     <Name>Болгарский лев</Name>
-    <Value>49,5902</Value>
-    <VunitRate>49,5902</VunitRate>
+    <Value>49,2020</Value>
+    <VunitRate>49,202</VunitRate>
   </row>
   <row>
     <ID>R01115</ID>
@@ -60,8 +60,8 @@
     <CharCode>BRL</CharCode>
     <Nominal>1</Nominal>
     <Name>Бразильский реал</Name>
-    <Value>17,0522</Value>
-    <VunitRate>17,0522</VunitRate>
+    <Value>16,9481</Value>
+    <VunitRate>16,9481</VunitRate>
   </row>
   <row>
     <ID>R01135</ID>
@@ -69,8 +69,8 @@
     <CharCode>HUF</CharCode>
     <Nominal>100</Nominal>
     <Name>Венгерских форинтов</Name>
-    <Value>24,8314</Value>
-    <VunitRate>0,248314</VunitRate>
+    <Value>24,6775</Value>
+    <VunitRate>0,246775</VunitRate>
   </row>
   <row>
     <ID>R01150</ID>
@@ -78,8 +78,8 @@
     <CharCode>VND</CharCode>
     <Nominal>10000</Nominal>
     <Name>Вьетнамских донгов</Name>
-    <Value>36,8392</Value>
-    <VunitRate>0,00368392</VunitRate>
+    <Value>36,6070</Value>
+    <VunitRate>0,0036607</VunitRate>
   </row>
   <row>
     <ID>R01200</ID>
@@ -87,8 +87,8 @@
     <CharCode>HKD</CharCode>
     <Nominal>1</Nominal>
     <Name>Гонконгский доллар</Name>
-    <Value>11,4481</Value>
-    <VunitRate>11,4481</VunitRate>
+    <Value>11,3806</Value>
+    <VunitRate>11,3806</VunitRate>
   </row>
   <row>
     <ID>R01210</ID>
@@ -96,8 +96,8 @@
     <CharCode>GEL</CharCode>
     <Nominal>1</Nominal>
     <Name>Грузинский лари</Name>
-    <Value>31,9781</Value>
-    <VunitRate>31,9781</VunitRate>
+    <Value>31,7967</Value>
+    <VunitRate>31,7967</VunitRate>
   </row>
   <row>
     <ID>R01215</ID>
@@ -105,8 +105,8 @@
     <CharCode>DKK</CharCode>
     <Nominal>1</Nominal>
     <Name>Датская крона</Name>
-    <Value>13,0035</Value>
-    <VunitRate>13,0035</VunitRate>
+    <Value>12,9013</Value>
+    <VunitRate>12,9013</VunitRate>
   </row>
   <row>
     <ID>R01230</ID>
@@ -114,8 +114,8 @@
     <CharCode>AED</CharCode>
     <Nominal>1</Nominal>
     <Name>Дирхам ОАЭ</Name>
-    <Value>24,3364</Value>
-    <VunitRate>24,3364</VunitRate>
+    <Value>24,1681</Value>
+    <VunitRate>24,1681</VunitRate>
   </row>
   <row>
     <ID>R01235</ID>
@@ -123,8 +123,8 @@
     <CharCode>USD</CharCode>
     <Nominal>1</Nominal>
     <Name>Доллар США</Name>
-    <Value>89,3755</Value>
-    <VunitRate>89,3755</VunitRate>
+    <Value>88,7574</Value>
+    <VunitRate>88,7574</VunitRate>
   </row>
   <row>
     <ID>R01239</ID>
@@ -132,8 +132,8 @@
     <CharCode>EUR</CharCode>
     <Nominal>1</Nominal>
     <Name>Евро</Name>
-    <Value>96,8721</Value>
-    <VunitRate>96,8721</VunitRate>
+    <Value>96,5630</Value>
+    <VunitRate>96,563</VunitRate>
   </row>
   <row>
     <ID>R01240</ID>
@@ -141,8 +141,8 @@
     <CharCode>EGP</CharCode>
     <Nominal>10</Nominal>
     <Name>Египетских фунтов</Name>
-    <Value>18,9592</Value>
-    <VunitRate>1,89592</VunitRate>
+    <Value>18,7093</Value>
+    <VunitRate>1,87093</VunitRate>
   </row>
   <row>
     <ID>R01270</ID>
@@ -150,8 +150,8 @@
     <CharCode>INR</CharCode>
     <Nominal>10</Nominal>
     <Name>Индийских рупий</Name>
-    <Value>10,7596</Value>
-    <VunitRate>1,07596</VunitRate>
+    <Value>10,6294</Value>
+    <VunitRate>1,06294</VunitRate>
   </row>
   <row>
     <ID>R01280</ID>
@@ -159,8 +159,8 @@
     <CharCode>IDR</CharCode>
     <Nominal>10000</Nominal>
     <Name>Индонезийских рупий</Name>
-    <Value>54,9969</Value>
-    <VunitRate>0,00549969</VunitRate>
+    <Value>54,7041</Value>
+    <VunitRate>0,00547041</VunitRate>
   </row>
   <row>
     <ID>R01335</ID>
@@ -168,8 +168,8 @@
     <CharCode>KZT</CharCode>
     <Nominal>100</Nominal>
     <Name>Казахстанских тенге</Name>
-    <Value>19,9833</Value>
-    <VunitRate>0,199833</VunitRate>
+    <Value>19,8527</Value>
+    <VunitRate>0,198527</VunitRate>
   </row>
   <row>
     <ID>R01350</ID>
@@ -177,8 +177,8 @@
     <CharCode>CAD</CharCode>
     <Nominal>1</Nominal>
     <Name>Канадский доллар</Name>
-    <Value>65,5390</Value>
-    <VunitRate>65,539</VunitRate>
+    <Value>65,0953</Value>
+    <VunitRate>65,0953</VunitRate>
   </row>
   <row>
     <ID>R01355</ID>
@@ -186,8 +186,8 @@
     <CharCode>QAR</CharCode>
     <Nominal>1</Nominal>
     <Name>Катарский риал</Name>
-    <Value>24,5537</Value>
-    <VunitRate>24,5537</VunitRate>
+    <Value>24,3839</Value>
+    <VunitRate>24,3839</VunitRate>
   </row>
   <row>
     <ID>R01370</ID>
@@ -195,8 +195,8 @@
     <CharCode>KGS</CharCode>
     <Nominal>10</Nominal>
     <Name>Киргизских сомов</Name>
-    <Value>10,1910</Value>
-    <VunitRate>1,0191</VunitRate>
+    <Value>10,1381</Value>
+    <VunitRate>1,01381</VunitRate>
   </row>
   <row>
     <ID>R01375</ID>
@@ -204,8 +204,8 @@
     <CharCode>CNY</CharCode>
     <Nominal>1</Nominal>
     <Name>Китайский юань</Name>
-    <Value>12,3011</Value>
-    <VunitRate>12,3011</VunitRate>
+    <Value>12,2248</Value>
+    <VunitRate>12,2248</VunitRate>
   </row>
   <row>
     <ID>R01500</ID>
@@ -213,8 +213,8 @@
     <CharCode>MDL</CharCode>
     <Nominal>10</Nominal>
     <Name>Молдавских леев</Name>
-    <Value>50,5078</Value>
-    <VunitRate>5,05078</VunitRate>
+    <Value>50,1653</Value>
+    <VunitRate>5,01653</VunitRate>
   </row>
   <row>
     <ID>R01530</ID>
@@ -222,8 +222,8 @@
     <CharCode>NZD</CharCode>
     <Nominal>1</Nominal>
     <Name>Новозеландский доллар</Name>
-    <Value>54,7157</Value>
-    <VunitRate>54,7157</VunitRate>
+    <Value>54,8609</Value>
+    <VunitRate>54,8609</VunitRate>
   </row>
   <row>
     <ID>R01535</ID>
@@ -231,8 +231,8 @@
     <CharCode>NOK</CharCode>
     <Nominal>10</Nominal>
     <Name>Норвежских крон</Name>
-    <Value>85,2064</Value>
-    <VunitRate>8,52064</VunitRate>
+    <Value>84,4979</Value>
+    <VunitRate>8,44979</VunitRate>
   </row>
   <row>
     <ID>R01565</ID>
@@ -240,8 +240,8 @@
     <CharCode>PLN</CharCode>
     <Nominal>1</Nominal>
     <Name>Польский злотый</Name>
-    <Value>22,6261</Value>
-    <VunitRate>22,6261</VunitRate>
+    <Value>22,4998</Value>
+    <VunitRate>22,4998</VunitRate>
   </row>
   <row>
     <ID>R01585F</ID>
@@ -249,8 +249,8 @@
     <CharCode>RON</CharCode>
     <Nominal>1</Nominal>
     <Name>Румынский лей</Name>
-    <Value>19,4625</Value>
-    <VunitRate>19,4625</VunitRate>
+    <Value>19,3976</Value>
+    <VunitRate>19,3976</VunitRate>
   </row>
   <row>
     <ID>R01589</ID>
@@ -258,8 +258,8 @@
     <CharCode>XDR</CharCode>
     <Nominal>1</Nominal>
     <Name>СДР (специальные права заимствования)</Name>
-    <Value>118,2920</Value>
-    <VunitRate>118,292</VunitRate>
+    <Value>117,4536</Value>
+    <VunitRate>117,4536</VunitRate>
   </row>
   <row>
     <ID>R01625</ID>
@@ -267,8 +267,8 @@
     <CharCode>SGD</CharCode>
     <Nominal>1</Nominal>
     <Name>Сингапурский доллар</Name>
-    <Value>66,1502</Value>
-    <VunitRate>66,1502</VunitRate>
+    <Value>65,9122</Value>
+    <VunitRate>65,9122</VunitRate>
   </row>
   <row>
     <ID>R01670</ID>
@@ -276,8 +276,8 @@
     <CharCode>TJS</CharCode>
     <Nominal>10</Nominal>
     <Name>Таджикских сомони</Name>
-    <Value>83,0357</Value>
-    <VunitRate>8,30357</VunitRate>
+    <Value>82,4576</Value>
+    <VunitRate>8,24576</VunitRate>
   </row>
   <row>
     <ID>R01675</ID>
@@ -285,8 +285,8 @@
     <CharCode>THB</CharCode>
     <Nominal>10</Nominal>
     <Name>Таиландских батов</Name>
-    <Value>24,3192</Value>
-    <VunitRate>2,43192</VunitRate>
+    <Value>24,2666</Value>
+    <VunitRate>2,42666</VunitRate>
   </row>
   <row>
     <ID>R01700J</ID>
@@ -294,8 +294,8 @@
     <CharCode>TRY</CharCode>
     <Nominal>10</Nominal>
     <Name>Турецких лир</Name>
-    <Value>27,7884</Value>
-    <VunitRate>2,77884</VunitRate>
+    <Value>27,5795</Value>
+    <VunitRate>2,75795</VunitRate>
   </row>
   <row>
     <ID>R01710A</ID>
@@ -303,8 +303,8 @@
     <CharCode>TMT</CharCode>
     <Nominal>1</Nominal>
     <Name>Новый туркменский манат</Name>
-    <Value>25,5359</Value>
-    <VunitRate>25,5359</VunitRate>
+    <Value>25,3593</Value>
+    <VunitRate>25,3593</VunitRate>
   </row>
   <row>
     <ID>R01717</ID>
@@ -312,8 +312,8 @@
     <CharCode>UZS</CharCode>
     <Nominal>10000</Nominal>
     <Name>Узбекских сумов</Name>
-    <Value>70,9338</Value>
-    <VunitRate>0,00709338</VunitRate>
+    <Value>70,3589</Value>
+    <VunitRate>0,00703589</VunitRate>
   </row>
   <row>
     <ID>R01720</ID>
@@ -321,8 +321,8 @@
     <CharCode>UAH</CharCode>
     <Nominal>10</Nominal>
     <Name>Украинских гривен</Name>
-    <Value>22,0477</Value>
-    <VunitRate>2,20477</VunitRate>
+    <Value>21,9255</Value>
+    <VunitRate>2,19255</VunitRate>
   </row>
   <row>
     <ID>R01760</ID>
@@ -330,8 +330,8 @@
     <CharCode>CZK</CharCode>
     <Nominal>10</Nominal>
     <Name>Чешских крон</Name>
-    <Value>39,2032</Value>
-    <VunitRate>3,92032</VunitRate>
+    <Value>38,9475</Value>
+    <VunitRate>3,89475</VunitRate>
   </row>
   <row>
     <ID>R01770</ID>
@@ -339,8 +339,8 @@
     <CharCode>SEK</CharCode>
     <Nominal>10</Nominal>
     <Name>Шведских крон</Name>
-    <Value>84,9227</Value>
-    <VunitRate>8,49227</VunitRate>
+    <Value>84,3871</Value>
+    <VunitRate>8,43871</VunitRate>
   </row>
   <row>
     <ID>R01775</ID>
@@ -348,8 +348,8 @@
     <CharCode>CHF</CharCode>
     <Nominal>1</Nominal>
     <Name>Швейцарский франк</Name>
-    <Value>99,0201</Value>
-    <VunitRate>99,0201</VunitRate>
+    <Value>99,1703</Value>
+    <VunitRate>99,1703</VunitRate>
   </row>
   <row>
     <ID>R01805F</ID>
@@ -357,8 +357,8 @@
     <CharCode>RSD</CharCode>
     <Nominal>100</Nominal>
     <Name>Сербских динаров</Name>
-    <Value>82,8561</Value>
-    <VunitRate>0,828561</VunitRate>
+    <Value>82,7053</Value>
+    <VunitRate>0,827053</VunitRate>
   </row>
   <row>
     <ID>R01810</ID>
@@ -366,8 +366,8 @@
     <CharCode>ZAR</CharCode>
     <Nominal>10</Nominal>
     <Name>Южноафриканских рэндов</Name>
-    <Value>47,8000</Value>
-    <VunitRate>4,78</VunitRate>
+    <Value>47,3764</Value>
+    <VunitRate>4,73764</VunitRate>
   </row>
   <row>
     <ID>R01815</ID>
@@ -375,8 +375,8 @@
     <CharCode>KRW</CharCode>
     <Nominal>1000</Nominal>
     <Name>Вон Республики Корея</Name>
-    <Value>64,9484</Value>
-    <VunitRate>0,0649484</VunitRate>
+    <Value>64,5039</Value>
+    <VunitRate>0,0645039</VunitRate>
   </row>
   <row>
     <ID>R01820</ID>
@@ -384,7 +384,7 @@
     <CharCode>JPY</CharCode>
     <Nominal>100</Nominal>
     <Name>Японских иен</Name>
-    <Value>56,8727</Value>
-    <VunitRate>0,568727</VunitRate>
+    <Value>56,7503</Value>
+    <VunitRate>0,567503</VunitRate>
   </row>
 </data>

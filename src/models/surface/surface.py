@@ -33,14 +33,15 @@ class Surface(Rectangle):
         
         for building in buildings:
             side = min(self.width, self.length)
+            message = "\n\tSurface.validate_placement_buildings:\tОбъект "
             if side < building.width_with_indent:
-                message = f"{building.title} невозможно расположить из-за ширины "
-                message += f"({side} < {building.width_with_indent}), "
+                message += f"«{building.title}» невозможно расположить из-за ширины "
+                message += f"({side.length} < {building.width_with_indent}), "
                 message += f"большей чем может вместить {self.title.lower()}!"
                 raise ValueError(message)
             if side < building.length_with_indent:
-                message = f"{building.title} невозможно расположить из-за длины "
-                message += f"({side} < {building.length_with_indent}), "
+                message += f"«{building.title}» невозможно расположить из-за длины "
+                message += f"({side.length} < {building.length_with_indent}), "
                 message += f"большей чем может вместить {self.title.lower()}!"
                 raise ValueError(message)
     

@@ -2,10 +2,11 @@ import operator
 
 from ..price import Price
 
-from ... import _validate
+from ... import _validate, _format_number
 from ...measurement.money import Money, MoneyValidator
 from ...measurement.length import Length, LengthValidator, Meter, MeterConverter
 from ...measurement.square import SquareConverter
+from ...value_objects.real import Real
 from ...value_objects.title import Title
 from ...geometry.one_dimensional import Line
 from ...geometry.three_dimensional import Parallelepiped
@@ -20,7 +21,8 @@ class Building(Parallelepiped):
     
     __slots__ = [
         "_indent",
-        "_price_to_build"
+        "_price_to_build",
+        "_income",
     ]
     
     DEFAULT_TITLE = "Здание"
@@ -120,6 +122,23 @@ class Building(Parallelepiped):
     def width_with_indent(self) -> Length:
         return self.width.length + self.indent.length * 2
     
+    @property
+    def income(self) -> Price:
+        return self._income
+    
+    @income.setter
+    def income(self, income: Money) -> None:
+        s = f"\n\t{self.class_name}: "
+        
+        handler = MoneyValidator._handle_exception
+        handler(MoneyValidator.validate, s, income, 0)
+        
+        self._income = Price(income, "Доход")
+        
+    @property
+    def profit(self) -> Real:
+        return self.income.value.value - self.price_to_build.value.value
+    
     def __init__(
         self, 
         length: Length = MINIMUM_LENGTH,
@@ -127,29 +146,36 @@ class Building(Parallelepiped):
         height: Length = MINIMUM_HEIGHT,
         indent: Length = DEFAULT_INDENT,
         price_to_build: Money = DEFAULT_PRICE_TO_BUILD,
+        income: Money = DEFAULT_INCOME,
         title: str | Title = Title(DEFAULT_TITLE)
     ) -> None:
         super().__init__(length, width, height, title)
         self.indent = indent
         self.price_to_build = price_to_build
+        self.income = income
         
     # ------------------- Output ---------------------------
     
     def print_area_with_indent(self) -> str:
         return f"Площадь основания с отступами:\t{SquareConverter.auto_convert(self.area_with_indent)}"
     
+    def print_profit(self) -> str:
+        return f"Прибыль:\t{_format_number(self.profit.value)}\n"
+    
     def __str__(self) -> str:
         result = f"{self.print_title()}:"
         result += f"\n\t{self.length}\n\t{self.width}\n\t{self.height}"
         result += f"\n\t{self.print_volume()}\n\t{self.print_area()}"
         result += f"\n\t{self.print_area_with_indent()}"
-        return result + f"\n\t{self.indent}\n\t{self.price_to_build}\n"
+        result += f"\n\t{self.indent}\n\t{self.price_to_build}\n\t{self.income}"
+        return result + f"\n\t{self.print_profit()}"
+        
     
     def __repr__(self) -> str:
         result = f"{self.class_name} (title: {self.title}, "
         result += f"length: {self.length}, width: {self.width}, "
         result += f"height: {self.height}, indent: {self.indent}, "
-        return result + f"price_to_build: {self.price_to_build})"
+        return result + f"price_to_build: {self.price_to_build}, income: {self.income})"
     
     # ------------------- Hash ---------------------------
     
