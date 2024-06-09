@@ -9,7 +9,7 @@ create-allure-dirs:
 	mkdir -p allure allure/allure-results allure/allure-report allure/allure-single-report
 
 run-tests:
-	pytest --verbose --clean-alluredir --alluredir=allure/allure-results
+	pytest --random-order --verbose --clean-alluredir --alluredir=allure/allure-results
 
 generate-report:
 	allure --verbose generate allure/allure-results --clean \
